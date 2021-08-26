@@ -1,0 +1,117 @@
+#
+# Common functions for Unibuild
+#
+
+[ -d "${UNIBUILD}" ] || die "Can't find Unibuild directory."
+
+WHOAMI=$(basename $0)
+WHEREAMI=$(dirname $0)
+
+die()
+{
+    [ "$@" ] && echo "$@" 1>&2
+    exit 1
+}
+
+
+
+export UNIBUILD_COMMANDS="${UNIBUILD}/commands"
+export UNIBUILD_LIB="${UNIBUILD}/lib"
+
+
+
+#
+# INFORMATION ABOUT THE OPERATING SYSTEM
+#
+
+OSINFO_OS=$(uname -s)
+
+# This page has some useful information about figuring out what
+# distribution you're running:
+# http://linuxmafia.com/faq/Admin/release-files.html
+if [ -e '/etc/redhat-release' ]; then
+    OSINFO_FAMILY=RedHat
+elif [ -e '/etc/debian_version' ]; then
+    OSINFO_FAMILY=Debian
+fi
+
+OSINFO_DISTRO=$(lsb_release --id --short)
+OSINFO_RELEASE=$(lsb_release --release --short)
+OSINFO_MAJOR=$(echo "${OSINFO_RELEASE}" | cut -d . -f 1)
+OSINFO_MINOR=$(echo "${OSINFO_RELEASE}" | cut -d . -f 2)
+OSINFO_ARCH=$(uname -m)
+
+case "${OSINFO_FAMILY}" in
+    RedHat)
+        OSINFO_PACKAGING=rpm
+        ;;
+    Debian)
+        OSINFO_PACKAGING=deb
+        ;;
+    *)
+        die "Unsupported OS family '${OSINFO_FAMILY}'"
+	;;
+esac
+
+
+#
+# PACKAGE BUILD ORDER AND BUNDLE FILTERING
+#
+
+bundle_filter()
+{
+    case "$1" in
+        "")
+            cat
+            ;;
+        none)
+            egrep -v -e '--bundle\s*[^\s]+'
+            ;;
+        *)
+            egrep -e "--bundle\s{1,}$1"
+            ;;
+    esac
+}
+
+
+build_order()
+{
+    BUNDLE="$1"
+
+    # Make arguments for M4, which is every set variable that begins with
+    # OSINFO_.
+    DEFINES=$(set \
+	| sed -e '/^OSINFO_/!d; s/^OSINFO_\([^=]\+\)=\(.*\)$/-D '\''\1=\2'\''/' \
+	| tr '\n' ' ')
+
+
+    # Process file file:
+    #  - Strip comments
+    #  - Run through M4
+    #  - Drop blank lines
+    #  - Filter bundles we want or don't want
+    #  - Grab package names only
+    sed -e 's/\s*#.*$//' \
+	| sh -c "m4 ${DEFINES}" \
+	| sed -e '/^\s*$/d' \
+	| bundle_filter "${BUNDLE}" \
+	| awk '{ print $1 }'
+}
+
+
+#
+# TEMPORARY FILES
+#
+
+TMPBASE="${TMPDIR:-/tmp}/${WHOAMI}.$$"
+
+
+#
+# CLEANUP ON EXIT
+#
+
+unibuild_cleanup()
+{
+    rm -rf ${TMPBASE}*
+}
+trap unibuild_cleanup EXIT

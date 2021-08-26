@@ -1,0 +1,14 @@
+#!/bin/sh
+#
+# xyzzy - A do-nothing command.
+
+case "$1" in
+    --*)
+	printf "\nNothing optional happens.\n\n"
+	;;
+    *)
+	printf "\nNothing happens.\n\n"
+	;;
+esac
+
+exit 0

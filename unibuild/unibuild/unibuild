@@ -1,0 +1,60 @@
+#!/bin/sh -e
+#
+# unibuild - Front-end CLI program for Unibuild
+#
+
+WHOAMI=$(basename $0)
+WHEREAMI=$(dirname $0)
+
+UNIBUILD_CANONICAL=$(readlink -e "$0")
+export UNIBUILD=$(dirname "${UNIBUILD_CANONICAL}")
+
+. "${UNIBUILD}/lib/common"
+
+
+help()
+{
+    echo "Usage: ${WHOAMI} command [ arguments ]"
+    echo
+    echo "Commands:  (Use 'command --help' for further help.)"
+    echo
+    ls "${UNIBUILD_COMMANDS}" \
+	| pr -4 -T -t \
+	| sed -e 's/^/    /g'
+    echo
+}
+
+
+if [ $# -lt 1 ]
+then
+    COMMAND=build
+else
+    COMMAND="$1"
+    shift
+fi
+
+
+case "${COMMAND}" in
+    
+    --help|-h|help)
+	help
+	exit 0
+	;;
+
+    --*)
+	die "Unknown option ${COMMAND}.  Use --help for help."
+	exit 1
+	;;
+
+    *)
+	RUN="${UNIBUILD_COMMANDS}/${COMMAND}"
+
+	[ -x "${RUN}" ] \
+	    || die "${COMMAND}: Unknown command.  Use --help for help."
+
+	exec "${RUN}" "$@"
+	;;
+
+esac
+
+die "Internal error:  this should not be reached."

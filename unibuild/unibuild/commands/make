@@ -1,0 +1,85 @@
+#!/bin/sh -e
+#
+# make - Run target(s) for all packages.
+#
+
+. "${UNIBUILD}/lib/common"
+
+help()
+{
+    cat <<EOF
+Usage: ${WHOAMI} [ OPTIONS ] [ TARGET [ TARGET ... ] ]
+
+Where TARGETs are a list of make targets to build.  No no targets are
+specified, the default target will be built.
+
+OPTIONS:
+
+  --dry      Do a dry run
+  --file F   Get order from file F instead of unibuild-order
+  --start P  Start with package P
+
+EOF
+}
+
+
+BUNDLE=
+DRY=
+[ -t 0 ] \
+    && FILE=unibuild-order \
+    || FILE=""
+START=
+
+
+while [ "$1" ]
+do
+    case "$1" in
+
+	--bundle)
+	    BUNDLE="$2"
+	    shift
+	    shift
+	    ;;
+
+	--dry)
+	    DRY=echo
+	    shift
+	    ;;
+
+	--file)
+	    FILE="$2"
+	    shift
+	    shift
+	    ;;
+
+	--start)
+	    START="$2"
+	    shift
+	    shift
+	    ;;
+
+	--help)
+	    help
+	    exit 0
+	    ;;
+
+	--*)
+	    die "Unknown option '$1'"
+	    ;;
+
+	*)
+	    break
+	    ;;
+    esac
+done
+
+cat ${FILE} \
+    | build_order "${BUNDLE}" \
+    | ([ -n "${START}" ] && sed -n "/^${START}\$/,\$p" || cat) \
+    | while read PACKAGE
+do
+    printf "\n\n#\n# BUILDING ${PACKAGE}\n#\n\n"
+    ${DRY} make -C "${PACKAGE}" "$@"
+done
+
+exit 0
