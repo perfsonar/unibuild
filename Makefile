@@ -4,7 +4,7 @@
 
 default:  build
 
-UNIBUILD=./unibuild/unibuild/unibuild
+UNIBUILD=./unibuild/unibuild/libexec/unibuild
 
 BUILD_LOG=LOG
 TO_CLEAN += $(BUILD_LOG)

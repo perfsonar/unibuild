@@ -13,12 +13,13 @@ endif
 
 # Basic package information
 
-DEBIAN_DIR := $(shell find . -type d -name "debian" | egrep -ve '^$(BUILD_DIR)')
+# We don't care about rpm directories in anything we built
+DEBIAN_DIR := $(shell find . -type d -name "deb" | egrep -ve '^./$(UNIBUILD_DIR)/')
 ifeq "$(DEBIAN_DIR)" ""
-$(error "Unable to find debian directory.")
+$(error "Unable to find Debian (deb) directory.")
 endif
 ifneq "$(words $(DEBIAN_DIR))" "1"
-$(error "Found more than one debian directory.  There can be only one.")
+$(error "Found more than one Debian (deb) directory.  There can be only one.")
 endif
 DEBIAN_DIR_PARENT := $(dir $(DEBIAN_DIR))
 
@@ -114,7 +115,7 @@ $(BUILD_PATCHES_SERIES): $(BUILD_PATCHES_DIR) $(DEBIAN_PATCHES_SERIES)
 # patches or override others.
 $(BUILD_PATCHES_DIR)/%: $(BUILD_PATCHES_SERIES)
 	@[ -e "$(DEBIAN_PATCHES_DIR)/$(notdir $@)" ] && cp -v "$(DEBIAN_PATCHES_DIR)/$(notdir $@)" '$@' || true
-	@[ -e "$(DEBIAN_PATCHES_DIR)/../..$(notdir $@)" ] && cp -v "$(DEBIAN_PATCHES_DIR)/../../$(notdir $@)" '$@' || true
+	@[ -e "$(DEBIAN_PATCHES_DIR)/../../$(notdir $@)" ] && cp -v "$(DEBIAN_PATCHES_DIR)/../../$(notdir $@)" '$@' || true
 	@[ ! -e "$@" ] || echo "  $(notdir $@)"
 	@[ -e "$@" ] || (echo "Can't find patch $(notdir $@)" && false)
 
@@ -184,6 +185,15 @@ endif
 	fi
 	find "$(PRODUCTS_DIR)" -name '*.deb' -exec cp {} "$(PRODUCTS_DEST)" \;
 
+
+# TODO: This doesn't work.
+uninstall:
+	@printf "\nUninstall packages:\n"
+	@awk '$$1 == "Package:" { print $$2 }' ./unibuild/packaging/deb/control \
+	| ( while read PACKAGE ; do \
+	    echo "    $${PACKAGE}" ; \
+	    yes | sudo apt remove -f $$PACKAGE ; \
+	    done )
 
 
 dump: _built

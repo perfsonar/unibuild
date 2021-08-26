@@ -3,7 +3,7 @@
 # gather - Gather all products into a single directory
 #
 
-. "$(dirname $0)/../lib/common"
+. "$(dirname $0)/../common"
 
 help()
 {

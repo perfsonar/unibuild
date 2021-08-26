@@ -3,7 +3,7 @@
 # order - Dump the build order, optionally for a bundle.
 #
 
-. "$(dirname $0)/../lib/common"
+. "${UNIBUILD}/common"
 
 help()
 {

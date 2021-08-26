@@ -3,4 +3,4 @@
 # build - Do the default build.
 #
 
-time $(dirname $0)/make clean build install
+exec $(dirname $0)/make clean build install

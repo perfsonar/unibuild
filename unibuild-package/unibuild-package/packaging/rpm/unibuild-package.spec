@@ -24,9 +24,11 @@ Provides:	%{name} = %{version}-%{release}
 # own code to build itself.
 
 BuildRequires:	make
+BuildRequires:	rpm-with-deps
 BuildRequires:	spectool
 
 Requires:	make
+Requires:	rpm-with-deps
 Requires:	spectool
 
 

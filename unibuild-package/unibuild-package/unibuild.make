@@ -35,7 +35,7 @@ TO_CLEAN += $(UNIBUILD_DIR)
 # Where patches live
 
 # Where the build happens
-BUILD_DIR := $(UNIBUILD_DIR)/build
+BUILD_DIR := $(UNIBUILD_DIR)/BUILD
 $(BUILD_DIR)::
 	mkdir -p $@
 TO_BUILD += $(BUILD_DIR)

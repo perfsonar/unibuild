@@ -1,4 +1,4 @@
-unibuild-package (1.0-1) perfsonar-4.4; urgency=low
+unibuild (1.0-1) perfsonar-4.4; urgency=low
 
   * First version
 

@@ -4,9 +4,15 @@
 	dh $@
 
 
-override_dh_install:
-	make DESTDIR=$(CURDIR)/debian/unibuild install
+CURDEB := $(CURDIR)/debian/unibuild
 
+override_dh_install:
+	make \
+	    BINDIR=$(CURDEB)/usr/bin \
+	    DOCDIR=$(CURDEB)/usr/share/unibuild \
+	    LIBEXECDIR=$(CURDEB)/usr/libexec \
+	    LIBEXECINSTALLEDDIR=/usr/libexec \
+	    install
 
 override_dh_auto_install:
 	@true

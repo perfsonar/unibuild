@@ -38,21 +38,16 @@ systems.  systems.  See documentation in %{docdir}.
 %setup -q
 
 
-
-
 %install
-%{__mkdir_p} $RPM_BUILD_ROOT/%{directory}
-%{__cp} -r commands lib %{name} $RPM_BUILD_ROOT/%{directory}
-
-%{__mkdir_p} $RPM_BUILD_ROOT/%{_bindir}
-%{__ln_s} %{directory}/%{name} $RPM_BUILD_ROOT/%{_bindir}
-
-%{__mkdir_p} $RPM_BUILD_ROOT/%{docdir}
-%{__install} -m 444 *.md $RPM_BUILD_ROOT/%{docdir}
-
+make \
+    BINDIR=$RPM_BUILD_ROOT/%{_bindir} \
+    LIBEXECDIR=$RPM_BUILD_ROOT/%{_libexecdir}/%{name} \
+    LIBEXECINSTALLEDDIR=%{_libexecdir}/%{name} \
+    DOCDIR=$RPM_BUILD_ROOT/%{docdir} \
+    install
 
 %files
 %defattr(-,root,root,-)
 %{_bindir}/*
-%{directory}/*
+%{directory}
 %{docdir}/*

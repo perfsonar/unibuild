@@ -5,7 +5,7 @@
 
 
 override_dh_install:
-	make DESTDIR=$(CURDIR)/debian/unibuild-package/usr/include/make install
+	make DESTDIR=$(CURDIR)/debian/unibuild-package/usr/include/unibuild install
 
 
 override_dh_auto_install:

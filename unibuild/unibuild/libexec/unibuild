@@ -9,16 +9,17 @@ WHEREAMI=$(dirname $0)
 UNIBUILD_CANONICAL=$(readlink -e "$0")
 export UNIBUILD=$(dirname "${UNIBUILD_CANONICAL}")
 
-. "${UNIBUILD}/lib/common"
+. "${UNIBUILD}/common"
 
 
 help()
 {
-    echo "Usage: ${WHOAMI} command [ arguments ]"
+    echo "Usage: ${WHOAMI} COMMAND [ ARGUMENTS ]"
     echo
-    echo "Commands:  (Use 'command --help' for further help.)"
+    echo "Commands:  (Use 'COMMAND --help' for further help.)"
     echo
     ls "${UNIBUILD_COMMANDS}" \
+        | fgrep -x -v -e xyzzy \
 	| pr -4 -T -t \
 	| sed -e 's/^/    /g'
     echo

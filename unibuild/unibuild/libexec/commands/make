@@ -3,7 +3,7 @@
 # make - Run target(s) for all packages.
 #
 
-. "${UNIBUILD}/lib/common"
+. "$(dirname $0)/../common"
 
 help()
 {
