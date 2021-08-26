@@ -11,5 +11,5 @@ build:
 
 
 clean:
-	$(UNIBUILD) clean
+	$(UNIBUILD) make $@
 	rm -rf $(TO_CLEAN)
