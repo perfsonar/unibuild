@@ -1,0 +1,8 @@
+# Things we ignore
+
+LOG
+*/LOG
+UNIBUILD-WORK
+*/UNIBUILD-WORK
+
+*~

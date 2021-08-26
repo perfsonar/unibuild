@@ -29,7 +29,7 @@ endif
 
 TOP := $(CURDIR)
 
-UNIBUILD_DIR := unibuild-work
+UNIBUILD_DIR := UNIBUILD-WORK
 TO_CLEAN += $(UNIBUILD_DIR)
 
 # Where patches live

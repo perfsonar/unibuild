@@ -1,4 +1,5 @@
 #!/bin/bash
+#           ^ The lack of a -e is intenetional.
 #
 # NOTE: This uses BASH arrays.
 # TODO: Try and find a way to be POSIX sh compatible

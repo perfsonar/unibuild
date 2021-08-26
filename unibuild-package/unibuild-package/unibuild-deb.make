@@ -108,8 +108,6 @@ $(BUILD_PATCHES_SERIES): $(BUILD_PATCHES_DIR) $(DEBIAN_PATCHES_SERIES)
 	@echo "Installing patches in $(BUILD_PATCHES_DIR):"
 
 
-# TODO: This has been changed and needs to be tested.
-
 # This searches for patches first in Debian's patch directory and then
 # in the packaging directory (../..), allowing Debian to add its own
 # patches or override others.
@@ -173,7 +171,6 @@ install: _built
 
 
 # Copy the products to a destination named by PRODUCTS_DEST
-# TODO: This needs to be tested.
 install-products: $(PRODUCTS_DIR)
 ifndef PRODUCTS_DEST
 	@printf "\nERROR: No PRODUCTS_DEST defined for $@.\n\n"
