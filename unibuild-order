@@ -43,5 +43,6 @@ changecom()dnl
 # whatever packaging applies on this system, it will not be built.
 #
 
+ifelse(PACKAGING,rpm,rpm-with-deps)
 unibuild-package
 unibuild

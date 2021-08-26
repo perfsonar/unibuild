@@ -18,6 +18,10 @@ die()
 export UNIBUILD_COMMANDS="${UNIBUILD}/commands"
 export UNIBUILD_LIB="${UNIBUILD}/lib"
 
+[ -t 0 ] \
+    && UNIBUILD_ORDER_FILE=unibuild-order \
+    || UNIBUILD_ORDER_FILE=""
+
 
 
 #
@@ -115,3 +119,17 @@ unibuild_cleanup()
     rm -rf ${TMPBASE}*
 }
 trap unibuild_cleanup EXIT
+
+
+
+#
+# EVERYTHING ELSE
+#
+
+section()
+{
+    printf "\n\n#\n# "
+    echo "$@"
+    printf "#\n\n"
+}
+

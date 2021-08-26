@@ -78,7 +78,7 @@ cat ${FILE} \
     | ([ -n "${START}" ] && sed -n "/^${START}\$/,\$p" || cat) \
     | while read PACKAGE
 do
-    printf "\n\n#\n# BUILDING ${PACKAGE}\n#\n\n"
+    section BUILDING ${PACKAGE}
     ${DRY} make -C "${PACKAGE}" "$@"
 done
 

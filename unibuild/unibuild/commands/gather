@@ -1,0 +1,83 @@
+#!/bin/sh
+#
+# gather - Gather all products into a single directory
+#
+
+. "$(dirname $0)/../lib/common"
+
+help()
+{
+    cat <<EOF
+Usage: ${WHOAMI} [ OPTIONS ] DESTINATION
+
+Where DESTINATION is the directory where all products should be
+deposited.
+
+OPTIONS:
+
+  --bundle B   Include only bundle B in the output
+  --file F     Take input from file F
+
+EOF
+}
+
+BUNDLE=
+
+[ -t 0 ] \
+    && FILE=unibuild-order \
+    || FILE=""
+
+while [ "$1" ]
+do
+    case "$1" in
+
+	--bundle)
+	    BUNDLE="$2"
+	    shift
+	    shift
+	    ;;
+
+	--file)
+	    FILE="$2"
+	    shift
+	    shift
+	    ;;
+
+	--help)
+	    help
+	    exit 0
+	    ;;
+
+	--*)
+	    die "Unknown option '$1'"
+	    ;;
+
+	*)
+	    break
+	    ;;
+    esac
+done
+
+if [ $# -ne 1 ]
+then
+    help
+    die
+fi
+
+DEST=$1
+[ -d "${DEST}" ] || die "${DEST}: Not a directory"
+
+
+BUILD_LIST="${TMPBASE}.list"
+
+cat ${FILE} | build_order "${BUNDLE}" > "${BUILD_LIST}"
+
+# Make sure all products were produced
+
+cat "${BUILD_LIST}" | while read PACKAGE
+do
+    section GATHERING ${PACKAGE}
+    make "PRODUCTS_DEST=${DEST}" -C "${PACKAGE}" install-products
+done
+
+exit 0
