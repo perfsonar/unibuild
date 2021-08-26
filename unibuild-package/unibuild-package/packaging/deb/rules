@@ -1,0 +1,16 @@
+#!/usr/bin/make -f
+
+%:
+	dh $@
+
+
+override_dh_install:
+	make DESTDIR=$(CURDIR)/debian/unibuild-package/usr/include/make install
+
+
+override_dh_auto_install:
+	@true
+
+
+override_dh_installdocs:
+	dh_installdocs README.md

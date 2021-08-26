@@ -1,0 +1,47 @@
+changequote(<!,!>)dnl
+changecom()dnl
+#
+# Build Order for Unibuild
+#
+#
+# This file is preprocessed with the M4 macro processor and then
+# all blank lines and comments are removed.
+#
+# Packages must be listed in an order where dependent packages are
+# built after their dependencies.
+#
+#
+# Options that can be added to a package line:
+#
+#  --bundle b   Include the package in bundle b and not the default
+#               full bundle.
+#
+# The following macros are provided to use in determining whether or
+# not to build a package:
+#
+# OS         Operating system, per 'uname -s'       Linux, Darwin
+# FAMILY     OS family, empty if not applicable     RHEL, Debian
+# DISTRO     OS distribution (LSB ID)               RHEL, CentOS, Oracle, Debian, Ubuntu
+# RELEASE    Distribution release                   7.8.2003
+# MAJOR      Major part of RELEASE                  7
+# MINOR      Minor part of RELEASE                  8
+# ARCH       System architecture, per 'uname -m'    x86_64, armhf
+# PACKAGING  Type of packaging on this system       rpm, deb
+#
+#
+# Examples of making decisions based on these macros:
+#
+# ifelse(DISTRO/MAJOR,CentOS/7,centos-7-only-thing)
+#
+# ifelse(FAMILY/MAJOR,Debian/9,,
+#        FAMILY/ARCH,Debian/arm64,,
+#        FAMILY/ARCH,Debian/ppc64el,,
+#        non-debian-9-or-arm64-or-ppc64el-thing))
+#
+# Note that there is no need to make decisions for RPM- or Debian-only
+# builds in this file; if there is no packaging information for
+# whatever packaging applies on this system, it will not be built.
+#
+
+unibuild-package
+unibuild

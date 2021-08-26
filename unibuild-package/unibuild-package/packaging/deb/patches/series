@@ -1,0 +1,11 @@
+#
+# List patches here but don't install them in this directory.  The
+# builder will assemble everything necessary.
+#
+
+# These patches exist only to exercise the build infrastructure and
+# don't make any changes to the source code.
+unibuild-package-00-nothing.patch
+unibuild-package-01-nothing2.patch
+unibuild-package-99-deb-only.patch
+
