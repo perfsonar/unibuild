@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+# Unibuild Hello World for RPM systems
+#
+
+echo "Hello, RPM world!"
+
+exit 0

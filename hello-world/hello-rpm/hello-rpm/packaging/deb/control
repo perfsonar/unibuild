@@ -1,0 +1,14 @@
+Source: hello-rpm
+Section: misc
+Priority: optional
+Maintainer: The perfSONAR Development Team <perfsonar-developer@internet2.edu>
+Build-Depends: debhelper (>= 9), perl
+Standards-Version: 3.9.6
+Homepage: https://github.com/perfsonar/unibuild
+Vcs-Git: git://github.com/perfsonar/unibuild
+Vcs-Browser: https://github.com/perfsonar/unibuild
+
+Package: hello
+Architecture: all
+Depends: ${misc:Depends}
+Description: Hello world for Unibuild for Debian-based systems

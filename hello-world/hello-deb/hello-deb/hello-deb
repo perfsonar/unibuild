@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+# Unibuild Hello World for Debian systems
+#
+
+echo "Hello, Debian world!"
+
+exit 0
