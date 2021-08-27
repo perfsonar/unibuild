@@ -14,7 +14,7 @@ default: build
 DISTRO_FAMILY := $(shell lsb_release --id --short)
 
 ifeq "$(DISTRO_FAMILY)" ""
-$(error "Unable to determine Linux distribution.  (Is lsb_releases installed?)")
+$(error Unable to determine Linux distribution.  (Is lsb_releases installed?))
 endif
 
 ifneq "$(filter AlmaLinux CentOS Fedora,$(DISTRO_FAMILY))" ""
@@ -26,7 +26,7 @@ PACKAGE_FORMAT := deb
 endif
 
 ifeq "$(PACKAGE_FORMAT)" ""
-$(error "Don't know how to package for $(DISTRO_FAMILY)")
+$(error No support for packaging on $(DISTRO_FAMILY))
 endif
 
 

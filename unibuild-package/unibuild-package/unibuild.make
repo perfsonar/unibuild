@@ -21,7 +21,7 @@ ifneq ($(wildcard /etc/redhat-release),)
 else ifneq ($(wildcard /etc/debian_version),)
   PACKAGE_FORMAT := deb
 else
-  $(error "Unable to determine this system's package format")
+  $(error Unable to determine the package format on this system.)
 endif
 
 

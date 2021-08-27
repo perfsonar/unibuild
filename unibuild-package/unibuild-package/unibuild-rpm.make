@@ -8,7 +8,7 @@
 #
 
 ifndef UNIBUILD_PACKAGE_MAKE
-$(error "Include unibuild-package.make, not an environment-specific template.")
+$(error Include unibuild-package.make, not an environment-specific template.)
 endif
 
 
@@ -17,10 +17,10 @@ endif
 # We don't care about rpm directories in anything we built
 RPM_DIR := $(shell find . -type d -name "rpm" | egrep -ve '^./$(UNIBUILD_DIR)/')
 ifeq "$(RPM_DIR)" ""
-$(error "Unable to find rpm directory.")
+$(error Unable to find rpm directory.)
 endif
 ifneq "$(words $(RPM_DIR))" "1"
-$(error "Found more than one rpm directory.  There can be only one.")
+$(error Found more than one rpm directory.  There can be only one.)
 endif
 
 
@@ -208,7 +208,7 @@ PATH_SEARCH := \
 	$(addsuffix /yum,$(PATH_WORDS))
 YUM := $(firstword $(wildcard $(PATH_SEARCH)))
 ifndef YUM
-$(error "Unable to find YUM or DNF on this system.")
+$(error Unable to find YUM or DNF on this system.)
 endif
 
 

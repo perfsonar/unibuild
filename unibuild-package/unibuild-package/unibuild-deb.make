@@ -7,7 +7,7 @@
 #
 
 ifndef UNIBUILD_PACKAGE_MAKE
-$(error "Include unibuild-package.make, not an environment-specific template.")
+$(error Include unibuild-package.make, not an environment-specific template.)
 endif
 
 
@@ -16,10 +16,10 @@ endif
 # We don't care about rpm directories in anything we built
 DEBIAN_DIR := $(shell find . -type d -name "deb" | egrep -ve '^./$(UNIBUILD_DIR)/')
 ifeq "$(DEBIAN_DIR)" ""
-$(error "Unable to find Debian (deb) directory.")
+$(error Unable to find Debian (deb) directory.)
 endif
 ifneq "$(words $(DEBIAN_DIR))" "1"
-$(error "Found more than one Debian (deb) directory.  There can be only one.")
+$(error Found more than one Debian (deb) directory.  There can be only one.)
 endif
 DEBIAN_DIR_PARENT := $(dir $(DEBIAN_DIR))
 
@@ -28,7 +28,7 @@ CONTROL := $(DEBIAN_DIR)/control
 
 SOURCE := $(shell awk '-F: ' '$$1 == "Source" { print $$2 }' $(CONTROL))
 ifeq "$(SOURCE)" ""
-$(error "Unable to find source name in $(CONTROL).")
+$(error Unable to find source name in $(CONTROL).)
 endif
 
 
@@ -39,7 +39,7 @@ VERSION := $(shell egrep -e '^[^[:space:]]+[[:space:]]+' '$(CHANGELOG)' \
 	| sed -e 's/-.*$$//' \
 	)
 ifeq "$(VERSION)" ""
-$(error "Unable to find version in $(CHANGELOG).")
+$(error Unable to find version in $(CHANGELOG).)
 endif
 
 
