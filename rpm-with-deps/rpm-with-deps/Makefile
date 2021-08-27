@@ -4,7 +4,7 @@
 
 NAME=rpm-with-deps
 
-# TODO: This is an ugly hack to deal with the fact that VirtualBox
+# This is an ugly hack to deal with the fact that VirtualBox
 # guests do not, by default, allow the creation of symbolic links in
 # shared folders.
 COPIES=rpmbuild-with-deps
