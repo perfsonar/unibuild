@@ -250,3 +250,8 @@ endif
 # Placeholder for running unit tests.
 test::
 	@true
+
+
+# Make this available so the primitive build process can tell if
+# loading up was successful.
+UNIBUILD_MAKE_FULLY_INCLUDED := 1

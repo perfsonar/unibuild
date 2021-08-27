@@ -202,3 +202,7 @@ dump: _built
 	        dpkg --contents "$$DEB" ; \
 	        echo ; \
 	    done)
+
+# Make this available so the primitive build process can tell if
+# loading up was successful.
+UNIBUILD_MAKE_FULLY_INCLUDED := 1
