@@ -2,12 +2,15 @@
 # Makefile for Unibuild
 #
 
-default:  build
-
 UNIBUILD=./unibuild/unibuild/libexec/unibuild
 
 BUILD_LOG=LOG
 TO_CLEAN += $(BUILD_LOG)
+
+REPO=REPO
+TO_CLEAN += $(REPO)
+
+default: $(REPO)
 
 build:
 	(((( \
@@ -20,6 +23,24 @@ build:
 	$(UNIBUILD)
 
 
+
+$(REPO): build
+	(((( \
+		mkdir -p $@ ; \
+		unibuild gather $$(readlink -e '$@') ;\
+		echo $$? >&3 \
+	) \
+	| tee -a $(BUILD_LOG) >&4) 3>&1) \
+	| (read XS; exit $$XS) \
+	) 4>&1
+
+
+
+
 clean:
 	$(UNIBUILD) make $@
 	rm -rf $(TO_CLEAN)
+
+
+todo:
+	fgrep -r TODO .

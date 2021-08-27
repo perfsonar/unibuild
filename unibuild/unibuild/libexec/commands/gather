@@ -64,9 +64,26 @@ then
     die
 fi
 
-DEST=$1
-[ -d "${DEST}" ] || die "${DEST}: Not a directory"
+REPO=$1
+[ -d "${REPO}" ] || die "${REPO}: Not a directory"
 
+case "${OSINFO_PACKAGING}" in
+    rpm)
+	DEST="${REPO}/RPMS"
+	mkdir -p "${DEST}"
+	;;    
+    deb)
+	# TODO: Is anything needed for Debian?
+	DEST="${REPO}"
+	;;
+    *)
+	die "Don't know how to build a repository for ${OSINFO_FAMILY}"
+	;;
+esac
+
+# Find the absolute path because it's going to be handed to Makefiles
+# in other directories.
+DEST=$(readlink -e "${DEST}")
 
 BUILD_LIST="${TMPBASE}.list"
 
@@ -79,5 +96,26 @@ do
     section GATHERING ${PACKAGE}
     make "PRODUCTS_DEST=${DEST}" -C "${PACKAGE}" install-products
 done
+
+
+section BUILDING REPOSITORY
+
+case "${OSINFO_PACKAGING}" in
+    rpm)
+	# TODO: Arrange files into RPMs and SRPMs
+	SOURCES="${REPO}/SRPMS"
+	mkdir -p "${SOURCES}"
+	find "${DEST}" -name '*.src.rpm' -exec mv {} "${SOURCES}" \;
+	createrepo "${REPO}"
+	;;    
+    deb)
+	# TODO: What to do for Debian?
+	die "INCOMPLETE: BUILD DEBIAN REPOSITORY"
+	;;
+    *)
+	die "Unable to build a repository for ${OSINFO_FAMILY}"
+	;;
+esac
+
 
 exit 0

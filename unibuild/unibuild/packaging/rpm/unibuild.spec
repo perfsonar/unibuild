@@ -18,9 +18,13 @@ Provides:	%{name} = %{version}-%{release}
 # These two sections should be identical since the package uses its
 # own code to build itself.
 
+# TODO: Re-enable this
+#BuildRequires:  creatrepo
 BuildRequires:	unibuild-package
-Requires:	make
+BuildRequires:	make
 
+# TODO: Re-enable this
+#Requires:       createrepo
 Requires:	unibuild-package
 Requires:	make
 
