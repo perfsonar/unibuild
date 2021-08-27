@@ -23,13 +23,31 @@ Provides:	%{name} = %{version}-%{release}
 # These two sections should be identical since the package uses its
 # own code to build itself.
 
+%if 0%{?el8}
+BuildRequires:	dnf
+%endif
 BuildRequires:	make
+BuildRequires:	rpm
+BuildRequires:	rpm-build
 BuildRequires:	rpm-with-deps
 BuildRequires:	spectool
+BuildRequires:	sudo
+%if 0%{?el7}
+BuildRequires:	yum
+%endif
 
+%if 0%{?el8}
+Requires:	dnf
+%endif
 Requires:	make
+Requires:	rpm
+Requires:	rpm-build
 Requires:	rpm-with-deps
 Requires:	spectool
+Requires:	sudo
+%if 0%{?el7}
+Requires:	yum
+%endif
 
 
 %define directory %{_includedir}/unibuild
