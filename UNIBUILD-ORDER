@@ -1,0 +1,5 @@
+# Package order for Unibuild
+
+ifelse(PACKAGING,rpm,rpm-with-deps)
+unibuild-package
+unibuild
