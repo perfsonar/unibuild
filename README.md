@@ -64,19 +64,19 @@ some-unibuild-project/
     package2/
     ...
     packageN/
-    UNIBUILD-ORDER
+    unibuild-order
 ```
 
-#### The `UNIBUILD-ORDER` File
+#### The `unibuild-order` File
 
 The order in which the packages are built is determined by the
-contents of `UNIBUILD-ORDER`.  This is a flat file containing a list
+contents of `unibuild-order`.  This is a flat file containing a list
 of package names to be built.  Each package is found in a same-named
 directory (e.g., the package `foo` would be located in the directory
 `./foo`).
 
 To allow intelligent decision making about what packages to build on
-what platforms, `UNIBUILD-ORDER` is processed with the [GNU M4 Macro
+what platforms, `unibuild-order` is processed with the [GNU M4 Macro
 Processor](https://www.gnu.org/software/m4).  To assist in this
 process, Unibuild makes the following macros available:
 
@@ -137,8 +137,8 @@ These are the available commands:
 | `build` | Builds all packages (equivalent to `unibuild make clean build install`) and gathers the results into a repository (equivalent to `unibuild gather`). ||
 | `make` | Runs `make` against targets in each package directory. |
 | `gather` | Gathers the products of building each package into a repository. |
-| `macros` | Displays the macros available for use in `UNIBUILD-ORDER` files and their values on this system. |
-| `order` | Processes the `UNIBUILD-ORDER` file and displays the results. |
+| `macros` | Displays the macros available for use in `unibuild-order` files and their values on this system. |
+| `order` | Processes the `unibuild-order` file and displays the results. |
 
 
 The `--help` switch may be used with all commands for further
@@ -196,7 +196,7 @@ include unibuild/unibuild.make
 ```
 TOP
  |
- +-- UNIBUILD-ORDER
+ +-- unibuild-order
  |
  +-- package1
  +-- package2

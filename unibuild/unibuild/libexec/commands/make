@@ -16,7 +16,7 @@ specified, the default target will be built.
 OPTIONS:
 
   --dry      Do a dry run
-  --file F   Get order from file F instead of UNIBUILD-ORDER
+  --file F   Get order from file F instead of unibuild-order
   --start P  Start with package P
 
 EOF
@@ -26,7 +26,7 @@ EOF
 BUNDLE=
 DRY=
 [ -t 0 ] \
-    && FILE=UNIBUILD-ORDER \
+    && FILE=unibuild-order \
     || FILE=""
 START=
 

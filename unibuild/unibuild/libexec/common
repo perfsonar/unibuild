@@ -19,7 +19,7 @@ export UNIBUILD_COMMANDS="${UNIBUILD}/commands"
 export UNIBUILD_LIB="${UNIBUILD}/lib"
 
 [ -t 0 ] \
-    && UNIBUILD_ORDER_FILE=UNIBUILD-ORDER \
+    && UNIBUILD_ORDER_FILE=unibuild-order \
     || UNIBUILD_ORDER_FILE=""
 
 
