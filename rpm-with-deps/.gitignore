@@ -1,4 +1,5 @@
 # Ignore build by-prodicts
 BUILD
+log
 .rpmmacros
 *.tar.gz
