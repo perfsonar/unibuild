@@ -117,7 +117,7 @@ ifelse(DISTRO/eval(MAJOR < 20),Ubuntu/1,quux)
 
 # Built everywhere except on Debian 9 or anything Debian on ARM 64 or
 # PowerPC 64.
-ifelse(FAMILY/MAJOR,Debian/9,,
+ifelse(DISTRO/MAJOR,Debian/9,,
        FAMILY/ARCH,Debian/arm64,,
        FAMILY/ARCH,Debian/ppc64el,,
        xyzzy)
