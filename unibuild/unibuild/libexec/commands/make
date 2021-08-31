@@ -79,7 +79,9 @@ cat ${FILE} \
     | while read PACKAGE
 do
     section BUILDING ${PACKAGE}
-    ${DRY} make -C "${PACKAGE}" "$@"
+    [ -d "${PACKAGE}" ] \
+	&& ${DRY} make -C "${PACKAGE}" "$@" \
+	|| die "\n${PACKAGE}: No such directory\n"
 done
 
 exit 0
