@@ -19,4 +19,8 @@ then
 fi
 
 
-exec $(dirname $0)/make clean build install
+$(dirname $0)/make clean build install
+
+REPO=unibuild-repo
+mkdir -p "${REPO}"
+exec $(dirname $0)/gather "${REPO}"

@@ -9,8 +9,6 @@ TO_CLEAN += $(REPO)
 
 build:
 	unibuild
-	mkdir -p $(REPO)
-	unibuild gather $(REPO)
 
 clean:
 	unibuild make clean
