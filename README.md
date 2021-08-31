@@ -13,9 +13,9 @@ RPM or Debian format.  It consists of two parts:
 
 
 
-## Installation
+# Installation
 
-### Prerequisites
+## Prerequisites
 
  * A POSIX-compliant shell
  * POSIX-compliant command-line utilities
@@ -36,7 +36,7 @@ user can acquire superuser privileges using `sudo`.  For unattended
 builds, this access must require no human interaction.
 
 
-### Build and Install
+# Build and Install
 
 In the directory containing this file, run `make`.  Unibuild will
 install any dependencies, self-build and install.  A repository
@@ -53,7 +53,7 @@ $ make
 
 
 
-## Using Unibuild
+# Using Unibuild
 
 Building a repository with Unibuild requires establishing a directory
 where all of the sources live and a file the determines what packages
@@ -68,7 +68,7 @@ some-unibuild-project/
     unibuild-order
 ```
 
-#### The `unibuild-order` File
+## The `unibuild-order` File
 
 The order in which the packages are built is determined by the
 contents of `unibuild-order`.  This is a flat file containing a list
@@ -82,7 +82,7 @@ Processor](https://www.gnu.org/software/m4).  To assist in this
 process, Unibuild makes the following macros available:
 
 | Macro | Description | Example |
-|-------|:-----------:|---------|
+|-------|-------------|---------|
 | `OS` | The operating system as reported by `uname(1)` | `Linux` |
 | `DISTRO` | The name of the operating system distribution | `CentOS` |
 | `FAMILY` | The family to which the operating system belongs.  For systems where this does not apply (e.g., `Darwin`), this will be empty. | RedHat |
@@ -124,7 +124,7 @@ ifelse(FAMILY/MAJOR,Debian/9,,
 ```
 
 
-### Unibuild Commands
+## Unibuild Commands
 
 Unibuild is invoked by running `unibuild` on the command line with a
 command and optional arguments.  IIf no command is provided, the
@@ -148,12 +148,12 @@ information on invoking them.
 
 
 
-### Preparing Individual Packages
+## Preparing Individual Packages
 
 As noted above, each package to be built as part of a repository lives
 in a directory.
 
-#### Tarball
+### Tarball
 
 ```
 foomatic/
@@ -172,7 +172,7 @@ include unibuild/unibuild.make
 
 
 
-#### Raw Sources
+### Raw Sources
 
 ```
 foomatic/
@@ -192,7 +192,7 @@ include unibuild/unibuild.make
 
 
 
-### Building Repositories with Unibuild
+## Building Repositories with Unibuild
 
 ```
 TOP
