@@ -49,7 +49,7 @@ TO_BUILD += $(PRODUCTS_DIR)
 TO_CLEAN += $(PRODUCTS_DIR)
 
 # Build log
-BUILD_LOG := LOG
+BUILD_LOG := unibuild-log
 TO_CLEAN += $(BUILD_LOG)
 
 # A place to create temporary files

@@ -1,7 +1,7 @@
 # Things we ignore
 
-LOG
-*/LOG
+unibuild-log
+*/unibuild-log
 REPO
 UNIBUILD-WORK
 */UNIBUILD-WORK

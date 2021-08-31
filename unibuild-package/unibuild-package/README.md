@@ -179,4 +179,4 @@ The build process yields three by-products in the package directory:
 
 `PRODUCTS` - Finished products (e.g., RPMs or DEBs).
 
-`LOG` - A log of what transpired during the build process.
+`unibuild-log` - A log of what transpired during the build process.

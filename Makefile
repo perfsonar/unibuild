@@ -4,7 +4,7 @@
 
 UNIBUILD=./unibuild/unibuild/libexec/unibuild
 
-BUILD_LOG=LOG
+BUILD_LOG=unibuild-log
 TO_CLEAN += $(BUILD_LOG)
 
 REPO=REPO

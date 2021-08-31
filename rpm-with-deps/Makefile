@@ -47,7 +47,7 @@ $(RPMDIR): $(TARBALL)
 	cp -pf $(SPEC_FILE) $(RPMDIR)/SPECS
 TO_CLEAN += $(RPMDIR) $(BUILDROOT)
 
-LOG=LOG
+LOG=log
 build: .rpmmacros $(TARBALL) $(RPMDIR)
 	HOME=$(shell pwd) rpmbuild -v -ba --buildroot $(BUILDROOT) $(SPEC_FILE) 2>&1 \
                 | tee $(LOG)
