@@ -39,6 +39,7 @@ $(REPO): build
 
 clean:
 	$(UNIBUILD) make $@
+	make -C hello-world $@
 	rm -rf $(TO_CLEAN)
 
 
