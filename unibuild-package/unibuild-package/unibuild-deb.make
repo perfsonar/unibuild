@@ -109,8 +109,8 @@ $(BUILD_PATCHES_SERIES): $(BUILD_PATCHES_DIR) $(DEBIAN_PATCHES_SERIES)
 
 
 # This searches for patches first in Debian's patch directory and then
-# in the packaging directory (../..), allowing Debian to add its own
-# patches or override others.
+# in the unibuild-packaging directory (../..), allowing Debian to add
+# its own patches or override others.
 $(BUILD_PATCHES_DIR)/%: $(BUILD_PATCHES_SERIES)
 	@[ -e "$(DEBIAN_PATCHES_DIR)/$(notdir $@)" ] && cp -v "$(DEBIAN_PATCHES_DIR)/$(notdir $@)" '$@' || true
 	@[ -e "$(DEBIAN_PATCHES_DIR)/../../$(notdir $@)" ] && cp -v "$(DEBIAN_PATCHES_DIR)/../../$(notdir $@)" '$@' || true
@@ -186,7 +186,7 @@ endif
 # TODO: This doesn't work.
 uninstall:
 	@printf "\nUninstall packages:\n"
-	@awk '$$1 == "Package:" { print $$2 }' ./unibuild/packaging/deb/control \
+	@awk '$$1 == "Package:" { print $$2 }' ./unibuild/unibuild-packaging/deb/control \
 	| ( while read PACKAGE ; do \
 	    echo "    $${PACKAGE}" ; \
 	    yes | sudo apt remove -f $$PACKAGE ; \

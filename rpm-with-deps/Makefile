@@ -5,7 +5,7 @@
 # on it (RedHat-derived systems only).
 #
 
-SPEC_FILE := ./rpm-with-deps/packaging/rpm/rpm-with-deps.spec
+SPEC_FILE := ./rpm-with-deps/unibuild-packaging/rpm/rpm-with-deps.spec
 
 NAME=$(shell fgrep Name: $(SPEC_FILE) | awk '{ print $$2 }')
 VERSION=$(shell fgrep Version: $(SPEC_FILE) | awk '{ print $$2 }')

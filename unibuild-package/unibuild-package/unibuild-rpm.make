@@ -70,7 +70,7 @@ $(BUILD_SUBS):
 #
 
 # Patch files will either be in the same directory with the RPM spec
-# or the packaging directory above it.
+# or the unibuild-packaging directory above it.
 
 # Enable this to force an error.
 #PATCH_FILES += INTENTIONALLY-BAD.patch

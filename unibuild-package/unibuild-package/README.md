@@ -106,8 +106,8 @@ format
 ### Patches
 
 Files containing modifications to be made to the sources during the
-build should be placed in the `packaging` directory, named so they
-will sort into the order in which they should be applied.  For
+build should be placed in the `unibuild-packaging` directory, named so
+they will sort into the order in which they should be applied.  For
 example:
 
 ```

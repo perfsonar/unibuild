@@ -158,7 +158,7 @@ in a directory.
 foomatic/
     Makefile
     foomatic-1.23.tar.gz
-    packaging/
+    unibuild-packaging/
         deb
         rpm
 ```
@@ -178,7 +178,7 @@ foomatic/
     Makefile
     foomatic/
         ...foomatic sources...
-        packaging/
+        unibuild-packaging/
             deb
             rpm
 ```
