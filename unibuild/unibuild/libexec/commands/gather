@@ -73,8 +73,8 @@ case "${OSINFO_PACKAGING}" in
 	mkdir -p "${DEST}"
 	;;    
     deb)
-	# TODO: Is anything needed for Debian?
 	DEST="${REPO}"
+	mkdir -p "${DEST}"
 	;;
     *)
 	die "Don't know how to build a repository for ${OSINFO_FAMILY}"
@@ -101,17 +101,18 @@ done
 section BUILDING REPOSITORY
 
 case "${OSINFO_PACKAGING}" in
+
     rpm)
-	# TODO: Arrange files into RPMs and SRPMs
 	SOURCES="${REPO}/SRPMS"
 	mkdir -p "${SOURCES}"
 	find "${DEST}" -name '*.src.rpm' -exec mv {} "${SOURCES}" \;
 	createrepo "${REPO}"
 	;;    
+
     deb)
-	# TODO: What to do for Debian?
-	die "INCOMPLETE: BUILD DEBIAN REPOSITORY"
+	(cd "${REPO}" && dpkg-scanpackages . > Release)
 	;;
+    
     *)
 	die "Unable to build a repository for ${OSINFO_FAMILY}"
 	;;
