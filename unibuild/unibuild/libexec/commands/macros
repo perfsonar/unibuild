@@ -1,0 +1,22 @@
+#!/bin/sh -e
+#
+# osinfo - Dump the OS information for this system.
+#
+
+. "${UNIBUILD}/common"
+
+set \
+    | egrep -e '^OSINFO_[^=]{1,}=' \
+    | sed -e 's/^OSINFO_//g' \
+    | tr -d "'" \
+    | sort \
+    | (
+    while read LINE
+    do
+	printf "%-12s %s\n" \
+	       $(echo "${LINE}" | awk -F= '{ print $1 }') \
+	       $(echo "${LINE}" | awk -F= '{ print $2 }')
+    done
+    )
+
+exit 0
