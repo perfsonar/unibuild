@@ -123,6 +123,30 @@ ifelse(FAMILY/MAJOR,Debian/9,,
 ```
 
 
+### Unibuild Commands
+
+Unibuild is invoked by running `unibuild` on the command line with a
+command and optional arguments.  IIf no command is provided, the
+default command will be `build`.
+
+These are the available commands:
+
+
+| Command | Description |
+|---------|:-----------:|
+| `build` | Builds all packages (equivalent to `unibuild make clean build install`) and gathers the results into a repository (equivalent to `unibuild gather`). ||
+| `make` | Runs `make` against targets in each package directory. |
+| `gather` | Gathers the products of building each package into a repository. |
+| `macros` | Displays the macros available for use in `UNIBUILD-ORDER` files and their values on this system. |
+| `order` | Processes the `UNIBUILD-ORDER` file and displays the results. |
+
+
+The `--help` switch may be used with all commands for further
+information on invoking them.
+
+
+
+
 ### Preparing Individual Packages
 
 As noted above, each package to be built as part of a repository lives
