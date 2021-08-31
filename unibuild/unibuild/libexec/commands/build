@@ -3,4 +3,20 @@
 # build - Do the default build.
 #
 
+help()
+{
+    cat <<EOF
+Usage: ${WHOAMI}
+
+This command takes no additional arguments.
+EOF
+}
+
+if [ $# -ne 0 ]
+then
+    help
+    die
+fi
+
+
 exec $(dirname $0)/make clean build install

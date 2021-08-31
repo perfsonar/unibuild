@@ -1,21 +1,28 @@
-#!/bin/sh
+#!/bin/sh -e
 #
 # xyzzy - A do-nothing command.
+#
 
 . "${UNIBUILD}/common"
 
+MESSAGE=
+
 case "$1" in
     --help)
-	printf "\nNothing helpful happens.\n\n"
+	MESSAGE="Nothing helpful happens."
+	shift
 	;;
 
     --*)
-	printf "\nNothing optional happens.\n\n"
-	;;
-    
-    *)
-	printf "\nNothing happens.\n\n"
+	MESSAGE="Nothing optional happens."
+	shift
 	;;
 esac
+
+printf "\n${MESSAGE:=Nothing happens.}\n"
+
+[ $# -gt 0 ] && printf "Nothing argumentative happens, either.\n"
+
+echo
 
 exit 0

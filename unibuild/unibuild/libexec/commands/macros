@@ -5,6 +5,22 @@
 
 . "${UNIBUILD}/common"
 
+help()
+{
+    cat <<EOF
+Usage: ${WHOAMI}
+
+This command takes no additional arguments.
+EOF
+}
+
+if [ $# -ne 0 ]
+then
+    help
+    die
+fi
+
+
 set \
     | egrep -e '^OSINFO_[^=]{1,}=' \
     | sed -e 's/^OSINFO_//g' \
