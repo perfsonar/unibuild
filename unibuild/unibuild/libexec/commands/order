@@ -21,7 +21,7 @@ EOF
 BUNDLE=
 
 [ -t 0 ] \
-    && FILE=unibuild-order \
+    && FILE=UNIBUILD-ORDER \
     || FILE=""
 
 while [ "$1" ]
