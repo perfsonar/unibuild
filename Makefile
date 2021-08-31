@@ -7,7 +7,7 @@ UNIBUILD=./unibuild/unibuild/libexec/unibuild
 BUILD_LOG=unibuild-log
 TO_CLEAN += $(BUILD_LOG)
 
-REPO=REPO
+REPO=unibuild-repo
 TO_CLEAN += $(REPO)
 
 default: $(REPO)

@@ -40,7 +40,8 @@ builds, this access must require no human interaction.
 
 In the directory containing this file, run `make`.  Unibuild will
 install any dependencies, self-build and install.  A repository
-containing all packages will be placed in the `REPO` directory.
+containing all packages will be placed in the `unibuild-repo`
+directory.
 
 Short summary:
 
