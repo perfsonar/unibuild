@@ -4,8 +4,8 @@
 
 default: build
 
-REPO=REPO
-TO_CLEAN += REPO
+REPO=unibuild-repo
+TO_CLEAN += $(REPO)
 
 build:
 	unibuild
