@@ -83,14 +83,15 @@ process, Unibuild makes the following macros available:
 
 | Macro | Description | Example |
 |-------|-------------|---------|
-| `OS` | The operating system as reported by `uname(1)` | `Linux` |
-| `DISTRO` | The name of the operating system distribution | `CentOS` |
-| `FAMILY` | The family to which the operating system belongs.  For systems where this does not apply (e.g., `Darwin`), this will be empty. | RedHat |
-| `RELEASE` | The release of the operating system. | `7.9.2009` |
-| `MAJOR` | The major version of `RELEASE`. | `7` |
-| `MINOR` | The minor version of `RELEASE`. | `9` |
-| `PACKAGING` | The type of packaging used by this system.  Currently-provided values are `deb` and `rpm`. | `rpm` |
-| `OS` | The system architecture as reported by `uname(1)` | `x86_64` |
+| `OS` | Operating system as reported by `uname(1)` | `Linux` |
+| `DISTRO` | Operating system distribution, empty of not applicable | `CentOS` |
+| `FAMILY` | Operating system family, empty where not applicable | RedHat |
+| `RELEASE` | Operating system release | `7.9.2009` |
+| `MAJOR` | Major version of `RELEASE`, empty if not present | `7` |
+| `MINOR` | Minor version of `RELEASE`, empty if not present | `9` |
+| `PATCH` | Patch version of `RELEASE`, empty if not present | `2009` |
+| `PACKAGING` | Type of packaging used by this system (Currently `deb` or `rpm`) | `rpm` |
+| `ARCH` | Machine architecture as reported by `uname(1)` | `x86_64` |
 
 The list of provided macros and their values can be displayed by
 running `unibuild macros`.

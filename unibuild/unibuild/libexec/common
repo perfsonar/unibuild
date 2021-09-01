@@ -43,6 +43,7 @@ OSINFO_DISTRO=$(lsb_release --id --short)
 OSINFO_RELEASE=$(lsb_release --release --short)
 OSINFO_MAJOR=$(echo "${OSINFO_RELEASE}" | cut -d . -f 1)
 OSINFO_MINOR=$(echo "${OSINFO_RELEASE}" | cut -d . -f 2)
+OSINFO_PATCH=$(echo "${OSINFO_RELEASE}" | cut -d . -f 3)
 OSINFO_ARCH=$(uname -m)
 
 case "${OSINFO_FAMILY}" in
