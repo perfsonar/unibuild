@@ -3,13 +3,12 @@
 Unibuild is a kit for building repositories of software packaged in
 RPM or Debian format.  It consists of two parts:
 
- * Unibuild-Package, which automatically builds packaged software
-   based on suppled OS-specfic packaging information (RPM
-   specifications or Debian packaging data).
+ * A packager that can operate on OS-specific packaging information
+  (RPM specifications or Debian packaging data)
 
- * Unibuild, which oversees construction of multiple packages using
-   Unibuild-Package and combines the finished products into a
-   repository suitable for the system where it was invoked.
+ * A set of programs that oversee the construction of multiple
+   packages and their assembly into a completed repository suitable
+   for the system where they are invoked
 
 
 
@@ -60,12 +59,15 @@ where all of the sources live and a file the determines what packages
 get built and in what order.  For example:
 
 ```
-some-unibuild-project/
-    package1/
-    package2/
-    ...
-    packageN/
-    unibuild-order
+my-project/
+|
++--  unibuild-order       File that determines build order
+     |
+     |-- foo/             Directories containing packages
+     |-- bar/
+     |-- baz-o-matic/
+     |-- quux/
+     +-- xyzzy/
 ```
 
 ## The `unibuild-order` File
@@ -125,6 +127,11 @@ ifelse(DISTRO/MAJOR,Debian/9,,
 ```
 
 
+## Package Subdirectories
+
+Each package to be built as part of a repository 
+
+
 ## Unibuild Commands
 
 Unibuild is invoked by running `unibuild` on the command line with a
@@ -135,14 +142,13 @@ These are the available commands:
 
 
 | Command | Description |
-|---------|:-----------:|
-| `build` | Builds all packages (equivalent to `unibuild make clean build install`) and gathers the results into a repository (equivalent to `unibuild gather`) ||
-| `clean` | Removes all build by-products (equivalent to `unibuild make clean`) ||
+|---------|-------------|
+| `build` | Builds all packages (equivalent to `unibuild make clean build install`) and gathers the results into a repository (equivalent to `unibuild gather`) |
+| `clean` | Removes all build by-products (equivalent to `unibuild make clean`) |
 | `make` | Runs `make` against targets in each package directory |
 | `gather` | Gathers the products of building each package into a repository |
 | `macros` | Displays the macros available for use in `unibuild-order` files and their values on this system |
 | `order` | Processes the `unibuild-order` file and displays the results |
-
 
 The `--help` switch may be used with all commands for further
 information on invoking them.
@@ -152,11 +158,77 @@ required in normal use.
 
 
 
-
 ## Preparing Individual Packages
 
 As noted above, each package to be built as part of a repository lives
-in a directory.
+in its own directory.  Naming the directory to match the name of the
+package is a good convention, it is not required and exceptions should
+be made where prudent.  For example, a package called `python-foo`
+might end up producing an installable product called `python36-foo` on
+some RPM-based systems.
+
+
+### The `Makefile`
+
+Every package directory contains a `Makefile` that includes the
+Unibuild packaging template:
+
+```
+# This is optional depending on circumstances.  See below.
+# AUTO_TARBALL := 1
+
+include unibuild/unibuild.make
+```
+
+`AUTO_TARBALL` is required if the package is being built from a directory of
+
+
+### The `unibuild-packaging` Directory
+
+```
+unibuild-packaging/
+|
+|-- deb                       Debian Packaging
+|   |-- changelog
+|   |-- compat
+|   |-- control
+|   |-- copyright
+|   |-- gbp.conf
+|   |-- patches
+|   |   |-- series
+|   |   +-- debian-only-bugfix.patch
+|   |-- rules
+|   |--source
+|      +-- format
+|
+|-- rpm                       RPM Packaging
+|    |-- foomatic.spec
+|    +-- rpm-only-bugfix.patch
+|
+|-- common-bugfix-1.patch     Common patches
++-- common-bugfix-2.patch
+```
+
+### Raw Sources
+
+
+
+```
+foomatic/
+    Makefile
+    foomatic/
+        ...foomatic sources...
+        unibuild-packaging/
+            deb
+            rpm
+```
+Makefile:
+```
+AUTO_TARBALL := 1
+include unibuild/unibuild.make
+```
+
+
 
 ### Tarball
 
@@ -177,22 +249,6 @@ include unibuild/unibuild.make
 
 
 
-### Raw Sources
-
-```
-foomatic/
-    Makefile
-    foomatic/
-        ...foomatic sources...
-        unibuild-packaging/
-            deb
-            rpm
-```
-Makefile:
-```
-AUTO_TARBALL := 1
-include unibuild/unibuild.make
-```
 
 
 
