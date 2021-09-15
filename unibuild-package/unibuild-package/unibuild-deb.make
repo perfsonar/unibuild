@@ -180,7 +180,9 @@ endif
 	    printf "\nERROR: $(PRODUCTS_DEST) is not a directory.\n\n" ; \
 	    false ; \
 	fi
-	find "$(PRODUCTS_DIR)" -name '*.deb' -exec cp {} "$(PRODUCTS_DEST)" \;
+	find "$(PRODUCTS_DIR)" \( \
+		-name '*.deb' -o -name '*.changes' -o -name '*.buildinfo' \
+		\) -exec cp {} "$(PRODUCTS_DEST)" \;
 
 
 # TODO: This doesn't work.
