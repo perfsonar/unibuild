@@ -73,6 +73,13 @@ endif
 # Standard targets
 
 clean::
+	@for FILE in $(TO_CLEAN) ; \
+	do \
+		if [ -d "$${FILE}" ] ; \
+		then \
+			chmod -R +w "$${FILE}" ; \
+		fi \
+	done
 	rm -rf $(TO_CLEAN)
 	find . -name '*~' | xargs rm -rf
 
