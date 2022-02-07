@@ -77,16 +77,16 @@ $(BUILD_SUBS):
 
 LOCATED_PATCH_FILES := \
 	$(wildcard $(PATCH_FILES:%=$(RPM_DIR)/%)) \
-	$(wildcard $(PATCH_FILES:%=$(RPM_DIR)/../%))
+	$(wildcard $(PATCH_FILES:%=$(dir $(RPM_DIR))/%))
 
 LOCATED_PATCH_FILE_NAMES := $(notdir $(LOCATED_PATCH_FILES))
 
-INSTALLED_PATCH_FILES := $(PATCH_FILES:%=$(BUILD_SOURCES)/%)
+INSTALLED_PATCH_FILES := $(LOCATED_PATCH_FILE_NAMES:%=$(BUILD_SOURCES)/%)
 
 MISSING_PATCH_FILES := $(filter-out $(LOCATED_PATCH_FILE_NAMES),$(PATCH_FILES))
 
-$(INSTALLED_PATCH_FILES): $(BUILD_SOURCES)
-ifneq "$(MISSING_PATCH_FILES)" ""
+ifneq "$(words $(MISSING_PATCH_FILES))" "0"
+$(INSTALLED_PATCH_FILES):
 	@echo
 	@printf "ERROR: Unable to locate one or more of the following patch files:\n"
 	@printf " $(MISSING_PATCH_FILES:%=    %\n)"
@@ -97,6 +97,7 @@ ifneq "$(MISSING_PATCH_FILES)" ""
 	@false
 endif
 ifneq "$(words $(LOCATED_PATCH_FILES))" "0"
+$(INSTALLED_PATCH_FILES): $(BUILD_SOURCES)
 	cp $(LOCATED_PATCH_FILES) $(BUILD_SOURCES)
 endif
 
