@@ -3,6 +3,8 @@
 # build - Do the default build.
 #
 
+. "$(dirname $0)/../common"
+
 help()
 {
     cat <<EOF
