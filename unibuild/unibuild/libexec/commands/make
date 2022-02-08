@@ -94,7 +94,9 @@ cat ${FILE} \
     | ([ -n "${START}" ] && sed -n "/^${START}\$/,\$p" || cat) \
     | while read PACKAGE
 do
-    section BUILDING ${PACKAGE}
+    [ $# -eq 0 ] \
+	&& section BUILDING ${PACKAGE} \
+	|| section BUILDING ${PACKAGE}: make $@
     [ -d "${PACKAGE}" ] \
 	&& ${DRY} make -C "${PACKAGE}" "$@" \
 	|| die "\n${PACKAGE}: No such directory\n"
