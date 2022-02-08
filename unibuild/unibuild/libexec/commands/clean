@@ -1,0 +1,23 @@
+#!/bin/sh -e
+#
+# clean - Remove build by-products
+#
+
+. "$(dirname $0)/../common"
+
+help()
+{
+    cat <<EOF
+Usage: ${WHOAMI}
+
+This command takes no additional arguments.
+EOF
+}
+
+if [ $# -ne 0 ]
+then
+    help
+    die
+fi
+
+exec rm -rf ${UNIBUILD_REPO_DIR}

@@ -14,7 +14,6 @@ die()
 }
 
 
-
 export UNIBUILD_COMMANDS="${UNIBUILD}/commands"
 export UNIBUILD_LIB="${UNIBUILD}/lib"
 
@@ -22,6 +21,8 @@ export UNIBUILD_LIB="${UNIBUILD}/lib"
     && UNIBUILD_ORDER_FILE=unibuild-order \
     || UNIBUILD_ORDER_FILE=""
 
+
+UNIBUILD_REPO_DIR=unibuild-repo
 
 
 #
