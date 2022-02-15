@@ -10,8 +10,8 @@ override_dh_install:
 	make \
 	    BINDIR=$(CURDEB)/usr/bin \
 	    DOCDIR=$(CURDEB)/usr/share/unibuild \
-	    LIBEXECDIR=$(CURDEB)/usr/libexec \
-	    LIBEXECINSTALLEDDIR=/usr/libexec \
+	    LIBEXECDIR=$(CURDEB)/usr/libexec/unibuild \
+	    LIBEXECINSTALLEDDIR=/usr/libexec/unibuild \
 	    install
 
 override_dh_auto_install:

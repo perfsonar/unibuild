@@ -51,6 +51,7 @@ SOURCE_TARBALL := $(SOURCE)-$(VERSION).tar.gz
 BUILD_UNPACK_DIR := $(BUILD_DIR)/$(SOURCE)
 BUILD_DEBIAN_DIR := $(BUILD_UNPACK_DIR)/debian
 
+
 $(BUILD_UNPACK_DIR): $(BUILD_DIR)
 	rm -rf '$@'
 	mkdir -p '$@'
@@ -60,23 +61,25 @@ $(BUILD_UNPACK_DIR): $(BUILD_DIR)
 		(cd '$@' && tar xzf -) < '$(SOURCE_TARBALL)' ; \
 		mv '$@/$(SOURCE)-$(VERSION)'/* '$@' ; \
 		cp '$(SOURCE_TARBALL)' '$@' ; \
-		rm -rf '$(BUILD_DEBIAN_DIR)' ; \
-		cp -r '$(DEBIAN_DIR)' '$(BUILD_DEBIAN_DIR)' ; \
 		(cd '$@' && mk-origtargz '$(SOURCE_TARBALL)') ; \
 	elif [ -d "$(SOURCE)" ] ; \
 	then \
 		echo "Building from source directory $(SOURCE)." ; \
 		(cd '$(SOURCE)' && tar cf - .) | (cd '$@' && tar xpf -) ; \
-		rm -rf '$(BUILD_DEBIAN_DIR)' ; \
-		cp -r '$(DEBIAN_DIR)' '$(BUILD_DEBIAN_DIR)' ; \
 	elif [ "$(DEBIAN_DIR_PARENT)" != "$(dir $(BUILD_DIR))" ] ; \
 	then \
 		echo "Building from source directory $(DEBIAN_DIR_PARENT)." ; \
 		(cd '$(DEBIAN_DIR_PARENT)' && tar cf - .) | (cd '$@' && tar xpf -) ; \
 	else \
 		echo "No tarball or source directory." ; \
-		cp -r '$(DEBIAN_DIR)' '$(BUILD_DEBIAN_DIR)' ; \
 	fi
+TO_BUILD += $(BUILD_UNPACK_DIR)
+
+
+$(BUILD_DEBIAN_DIR): $(DEBIAN_DIR) $(BUILD_UNPACK_DIR)
+	rm -rf $@
+	cp -r $< $@
+TO_BUILD += $(BUILD_DEBIAN_DIR)
 
 
 
@@ -104,8 +107,8 @@ $(BUILD_PATCHES_DIR): FORCE
 	mkdir -p '$@'
 
 $(BUILD_PATCHES_SERIES): $(BUILD_PATCHES_DIR) $(DEBIAN_PATCHES_SERIES)
-	cp '$(DEBIAN_PATCHES_SERIES)' '$@'
 	@echo "Installing patches in $(BUILD_PATCHES_DIR):"
+	cp '$(DEBIAN_PATCHES_SERIES)' '$@'
 
 
 # This searches for patches first in Debian's patch directory and then
@@ -131,7 +134,7 @@ BUILD_DEPS_PACKAGE := $(SOURCE)-build-deps
 # TODO: --build flag should be removed after we can get an original
 # tarball for all build methods (tarball/source directory/none)
 
-build: $(BUILD_UNPACK_DIR) $(TO_BUILD) $(PRODUCTS_DIR)
+build: $(TO_BUILD) $(PRODUCTS_DIR)
 	@printf "\nInstall Dependencies\n\n"
 	cd $(BUILD_UNPACK_DIR) \
 		&& mk-build-deps --root-cmd=sudo --install --remove \

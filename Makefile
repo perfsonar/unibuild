@@ -27,7 +27,7 @@ build:
 $(REPO): build
 	(((( \
 		mkdir -p $@ ; \
-		unibuild gather $$(readlink -e '$@') ;\
+		$(UNIBUILD) gather $$(readlink -e '$@') ;\
 		echo $$? >&3 \
 	) \
 	| tee -a $(BUILD_LOG) >&4) 3>&1) \

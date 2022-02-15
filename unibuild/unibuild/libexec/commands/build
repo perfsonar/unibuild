@@ -8,20 +8,46 @@
 help()
 {
     cat <<EOF
-Usage: ${WHOAMI}
+Usage: ${WHOAMI} [ OPTIONS ]
 
-This command takes no additional arguments.
+OPTIONS:
+
+  --start P  Start with package P
+
 EOF
 }
 
-if [ $# -ne 0 ]
-then
-    help
-    die
-fi
+START=
+
+while [ "$1" ]
+do
+    case "$1" in
+
+	--start)
+	    START="--start $2"
+	    shift
+	    shift
+	    ;;
+
+	--help)
+	    help
+	    exit 0
+	    ;;
+
+	--*)
+	    die "Unknown option '$1'"
+	    ;;
+
+	*)
+	    break
+	    ;;
+    esac
+done
 
 
-$(dirname $0)/make clean build install
+
+# Don't quote START; it has multiple words.
+$(dirname $0)/make ${START} clean build install
 
 REPO=unibuild-repo
 mkdir -p "${REPO}"
