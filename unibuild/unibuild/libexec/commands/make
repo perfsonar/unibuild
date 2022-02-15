@@ -94,6 +94,13 @@ cat ${FILE} \
     | ([ -n "${START}" ] && sed -n "/^${START}\$/,\$p" || cat) \
     | while read PACKAGE
 do
+
+    if find "${PACKAGE}" -type d | egrep -qe "/unibuild-packaging/${OSINFO_PACKAGING}\$"
+    then
+	section SKIPPING ${PACKAGE}:  No ${OSINFO_PACKAGING} build
+	continue
+    fi
+
     [ $# -eq 0 ] \
 	&& section BUILDING ${PACKAGE} \
 	|| section BUILDING ${PACKAGE}: make $@
