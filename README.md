@@ -37,10 +37,10 @@ builds, this access must require no human interaction.
 
 # Build and Install
 
-In the directory containing this file, run `make`.  Unibuild will
-install any dependencies, self-build and install.  A repository
-containing all packages will be placed in the `unibuild-repo`
-directory.
+In the directory containing this file, run `make` as `root` or a user
+able to do passwordless `sudo`.  Unibuild will install any
+dependencies, self-build and install.  A repository containing all
+packages will be placed in the `unibuild-repo` directory.
 
 Short summary:
 
