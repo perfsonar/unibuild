@@ -51,35 +51,30 @@ SOURCE_TARBALL := $(SOURCE)-$(VERSION).tar.gz
 BUILD_UNPACK_DIR := $(BUILD_DIR)/$(SOURCE)
 BUILD_DEBIAN_DIR := $(BUILD_UNPACK_DIR)/debian
 
-
-$(BUILD_UNPACK_DIR): $(BUILD_DIR)
+$(BUILD_UNPACK_DIR):
 	rm -rf '$@'
 	mkdir -p '$@'
+	cp -r '$(DEBIAN_DIR)' '$(BUILD_DEBIAN_DIR)'
 	@set -e && if [ -e "$(SOURCE_TARBALL)" ] ; \
 	then \
-		echo "Building from tarball." ; \
+		printf "\nBuilding from tarball.\n\n" ; \
 		(cd '$@' && tar xzf -) < '$(SOURCE_TARBALL)' ; \
 		mv '$@/$(SOURCE)-$(VERSION)'/* '$@' ; \
 		cp '$(SOURCE_TARBALL)' '$@' ; \
 		(cd '$@' && mk-origtargz '$(SOURCE_TARBALL)') ; \
 	elif [ -d "$(SOURCE)" ] ; \
 	then \
-		echo "Building from source directory $(SOURCE)." ; \
+		printf "\nBuilding from source directory $(SOURCE).\n\n" ; \
 		(cd '$(SOURCE)' && tar cf - .) | (cd '$@' && tar xpf -) ; \
 	elif [ "$(DEBIAN_DIR_PARENT)" != "$(dir $(BUILD_DIR))" ] ; \
 	then \
-		echo "Building from source directory $(DEBIAN_DIR_PARENT)." ; \
+		printf "\nBuilding from source directory $(DEBIAN_DIR_PARENT).\n\n" ; \
 		(cd '$(DEBIAN_DIR_PARENT)' && tar cf - .) | (cd '$@' && tar xpf -) ; \
 	else \
-		echo "No tarball or source directory." ; \
+		printf "\nNo tarball or source directory.\n\n" ; \
 	fi
-TO_BUILD += $(BUILD_UNPACK_DIR)
+TO_BUILD := $(BUILD_UNPACK_DIR) $(TO_BUILD)
 
-
-$(BUILD_DEBIAN_DIR): $(DEBIAN_DIR) $(BUILD_UNPACK_DIR)
-	rm -rf $@
-	cp -r $< $@
-TO_BUILD += $(BUILD_DEBIAN_DIR)
 
 
 
