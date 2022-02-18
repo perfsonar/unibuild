@@ -19,6 +19,7 @@ OPTIONS:
   --file F   Get order from file F instead of unibuild-order
   --reverse  Operate in reverse order
   --start P  Start with package P
+  --stop P   Stop after package P
 
 EOF
 }
@@ -31,6 +32,7 @@ DRY=
     || FILE=""
 REVERSE=cat
 START=
+STOP=
 
 
 while [ "$1" ]
@@ -60,6 +62,12 @@ do
 	    shift
 	    ;;
 
+	--stop)
+	    STOP="$2"
+	    shift
+	    shift
+	    ;;
+
 	--reverse)
 	    REVERSE=reverse
 	    shift
@@ -81,15 +89,21 @@ do
 done
 
 
-# Make sure the START parameter refers to something in the build list.
+# Make sure the START and STOP parameters refer to something in the
+# build list.
 
-if [ -n "${START}" ]
-then
-    build_order "${BUNDLE}" < "${FILE}" \
-	| fgrep -x "${START}" \
-	|| die "${START}: No such package."
-fi
+validate_startstop()
+{
+    if [ -n "$1" ]
+    then
+	build_order "${BUNDLE}" < "${FILE}" \
+	    | fgrep -qx "$1" \
+	    || die "$1: No such package."
+    fi
+}
 
+validate_startstop "${START}"
+validate_startstop "${STOP}"
 
 
 # Reverse the order of lines in a file.  This emulates tac(1) in a
@@ -120,6 +134,9 @@ do
     [ -d "${PACKAGE}" ] || die "\n${PACKAGE}: No such directory\n"
 
     ${DRY} make -C "${PACKAGE}" "$@"
+
+    [ "${PACKAGE}" = "${STOP}" ] && break
+       
 
 done
 

@@ -13,11 +13,13 @@ Usage: ${WHOAMI} [ OPTIONS ]
 OPTIONS:
 
   --start P  Start with package P
+  --stop P   Stop after package P
 
 EOF
 }
 
 START=
+STOP=
 
 while [ "$1" ]
 do
@@ -25,6 +27,12 @@ do
 
 	--start)
 	    START="--start $2"
+	    shift
+	    shift
+	    ;;
+
+	--stop)
+	    STOP="--stop $2"
 	    shift
 	    shift
 	    ;;
@@ -47,7 +55,7 @@ done
 
 
 # Don't quote START; it has multiple words.
-$(dirname $0)/make ${START} clean build install
+$(dirname $0)/make ${START} ${STOP} clean build install
 
 REPO=unibuild-repo
 mkdir -p "${REPO}"

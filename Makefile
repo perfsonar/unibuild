@@ -5,7 +5,11 @@
 UNIBUILD=./unibuild/unibuild/libexec/unibuild
 
 ifdef START
-START_OPTS := --start $(START)
+UNIBUILD_OPTS += --start $(START)
+endif
+
+ifdef STOP
+UNIBUILD_OPTS += --stop $(STOP)
 endif
 
 
@@ -19,7 +23,7 @@ default: $(REPO)
 
 build:
 	(((( \
-		$(UNIBUILD) build $(START_OPTS) ; \
+		$(UNIBUILD) build $(UNIBUILD_OPTS) ; \
 		echo $$? >&3 \
 	) \
 	| tee $(BUILD_LOG) >&4) 3>&1) \
