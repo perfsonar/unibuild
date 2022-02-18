@@ -80,6 +80,7 @@ do
     esac
 done
 
+
 # Reverse the order of lines in a file.  This emulates tac(1) in a
 # POSIX-y way.  Source:
 # http://web.archive.org/web/20090204080114/http://student.northpark.edu/pemente/sed/sed1line.txt
@@ -104,9 +105,11 @@ do
     [ $# -eq 0 ] \
 	&& section BUILDING ${PACKAGE} \
 	|| section BUILDING ${PACKAGE}: make $@
-    [ -d "${PACKAGE}" ] \
-	&& ${DRY} make -C "${PACKAGE}" "$@" \
-	|| die "\n${PACKAGE}: No such directory\n"
+
+    [ -d "${PACKAGE}" ] || die "\n${PACKAGE}: No such directory\n"
+
+    ${DRY} make -C "${PACKAGE}" "$@"
+
 done
 
 exit 0
