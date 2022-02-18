@@ -81,6 +81,17 @@ do
 done
 
 
+# Make sure the START parameter refers to something in the build list.
+
+if [ -n "${START}" ]
+then
+    build_order "${BUNDLE}" < "${FILE}" \
+	| fgrep -x "${START}" \
+	|| die "${START}: No such package."
+fi
+
+
+
 # Reverse the order of lines in a file.  This emulates tac(1) in a
 # POSIX-y way.  Source:
 # http://web.archive.org/web/20090204080114/http://student.northpark.edu/pemente/sed/sed1line.txt
