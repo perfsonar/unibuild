@@ -10,6 +10,10 @@ ifndef UNIBUILD_PACKAGE_MAKE
 $(error Include unibuild-package.make, not an environment-specific template.)
 endif
 
+SUDO := sudo
+
+# Don't expect user interaction
+SUDO += DEBIAN_FRONTEND=noninteractive
 
 # Basic package information
 
@@ -160,12 +164,11 @@ _built:
 
 install: _built
 	@printf "\nInstall packages:\n"
-	@find '$(PRODUCTS_DIR)' -name '*.deb' | sed -e 's/^/  /'
+	@find '$(PRODUCTS_DIR)' -name '*.deb' | sed -e 's|^.*/||; s/^/  /'
 	@echo
 	@find '$(PRODUCTS_DIR)' -name '*.deb' \
-		| xargs sudo dpkg -i
-	@yes | sudo apt install -f
-
+		| sed -e 's|^|./|g' \
+		| $(SUDO) xargs -n 1 apt-get -y --reinstall install
 
 
 # Copy the products to a destination named by PRODUCTS_DEST
@@ -189,7 +192,7 @@ uninstall:
 	@awk '$$1 == "Package:" { print $$2 }' ./unibuild/unibuild-packaging/deb/control \
 	| ( while read PACKAGE ; do \
 	    echo "    $${PACKAGE}" ; \
-	    yes | sudo apt remove -f $$PACKAGE ; \
+	    yes | $(SUDO) apt remove -f $$PACKAGE ; \
 	    done )
 
 
