@@ -164,11 +164,14 @@ _built:
 
 install: _built
 	@printf "\nInstall packages:\n"
-	@find '$(PRODUCTS_DIR)' -name '*.deb' | sed -e 's|^.*/||; s/^/  /'
+	@find '$(PRODUCTS_DIR)' -name '*.deb' \
+		| fgrep -v '-build-deps' \
+		| sed -e 's|^.*/||; s/^/  /'
 	@echo
 	@find '$(PRODUCTS_DIR)' -name '*.deb' \
+		| fgrep -v '-build-deps' \
 		| sed -e 's|^|./|g' \
-		| $(SUDO) xargs -n 1 apt-get -y --reinstall install
+		| $(SUDO) xargs apt-get -y --reinstall install
 
 
 # Copy the products to a destination named by PRODUCTS_DEST
