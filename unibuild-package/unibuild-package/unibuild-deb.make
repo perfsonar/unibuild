@@ -165,11 +165,11 @@ _built:
 install: _built
 	@printf "\nInstall packages:\n"
 	@find '$(PRODUCTS_DIR)' -name '*.deb' \
-		| fgrep -v '-build-deps' \
+		| fgrep -- -v '-build-deps' \
 		| sed -e 's|^.*/||; s/^/  /'
 	@echo
 	@find '$(PRODUCTS_DIR)' -name '*.deb' \
-		| fgrep -v '-build-deps' \
+		| fgrep -v -- '-build-deps' \
 		| sed -e 's|^|./|g' \
 		| $(SUDO) xargs apt-get -y --reinstall install
 
