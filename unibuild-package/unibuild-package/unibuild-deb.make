@@ -25,7 +25,7 @@ endif
 ifneq "$(words $(DEBIAN_DIR))" "1"
 $(error Found more than one Debian (deb) directory.  There can be only one.)
 endif
-DEBIAN_DIR_PARENT := $(dir $(DEBIAN_DIR))
+DEBIAN_DIR_PARENT := $(DEBIAN_DIR)/../..
 
 
 CONTROL := $(DEBIAN_DIR)/control
@@ -165,7 +165,7 @@ _built:
 install: _built
 	@printf "\nInstall packages:\n"
 	@find '$(PRODUCTS_DIR)' -name '*.deb' \
-		| fgrep -- -v '-build-deps' \
+		| fgrep -v -- '-build-deps' \
 		| sed -e 's|^.*/||; s/^/  /'
 	@echo
 	@find '$(PRODUCTS_DIR)' -name '*.deb' \
