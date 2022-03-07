@@ -40,8 +40,9 @@ CHANGELOG := $(DEBIAN_DIR)/changelog
 VERSION := $(shell egrep -e '^[^[:space:]]+[[:space:]]+' '$(CHANGELOG)' \
 	| awk 'NR == 1 { print $$2 }' \
 	| tr -d '()' \
-	| sed -e 's/-.*$$//' \
+	| sed -e 's/[-+].*$$//' \
 	)
+
 ifeq "$(VERSION)" ""
 $(error Unable to find version in $(CHANGELOG).)
 endif
@@ -58,25 +59,26 @@ BUILD_DEBIAN_DIR := $(BUILD_UNPACK_DIR)/debian
 $(BUILD_UNPACK_DIR):
 	rm -rf '$@'
 	mkdir -p '$@'
+	echo ST $(SOURCE_TARBALL) / $(wildcard $(SOURCE_TARBALL))
+ifeq ($(words $(wildcard $(SOURCE_TARBALL))),1)
+	@printf "\nUnpacking tarball $(SOURCE_TARBALL).\n\n"
+	(cd '$@' && tar xzf -) < '$(SOURCE_TARBALL)'
+	ls -a '$@/$(SOURCE)-$(VERSION)' \
+		| egrep -vxe '[.]{1,2}' \
+		| xargs -I % mv '$@/$(SOURCE)-$(VERSION)'/% '$@'
+	rmdir '$@/$(SOURCE)-$(VERSION)'
+else ifeq ($(words $(wildcard $@/$(SOURCE))),1)
+	@printf "\nBuilding from source directory $(SOURCE).\n\n"
+	(cd '$(SOURCE)' && tar cf - .) | (cd '$@' && tar xpf -)
+else ifneq ($(DEBIAN_DIR_PARENT),$(dir $(BUILD_DIR)))
+	@printf "\nBuilding from source directory $(DEBIAN_DIR_PARENT).\n\n"
+	(cd '$(DEBIAN_DIR_PARENT)' && tar cf - .) | (cd '$@' && tar xpf -)
+else
+	@printf "\nNo tarball or source directory.\n\n"
+endif
+	@echo Installing Debian build into $(BUILD_DEBIAN_DIR):
+	rm -rf '$(BUILD_DEBIAN_DIR)'
 	cp -r '$(DEBIAN_DIR)' '$(BUILD_DEBIAN_DIR)'
-	@set -e && if [ -e "$(SOURCE_TARBALL)" ] ; \
-	then \
-		printf "\nBuilding from tarball.\n\n" ; \
-		(cd '$@' && tar xzf -) < '$(SOURCE_TARBALL)' ; \
-		mv '$@/$(SOURCE)-$(VERSION)'/* '$@' ; \
-		cp '$(SOURCE_TARBALL)' '$@' ; \
-		(cd '$@' && mk-origtargz '$(SOURCE_TARBALL)') ; \
-	elif [ -d "$(SOURCE)" ] ; \
-	then \
-		printf "\nBuilding from source directory $(SOURCE).\n\n" ; \
-		(cd '$(SOURCE)' && tar cf - .) | (cd '$@' && tar xpf -) ; \
-	elif [ "$(DEBIAN_DIR_PARENT)" != "$(dir $(BUILD_DIR))" ] ; \
-	then \
-		printf "\nBuilding from source directory $(DEBIAN_DIR_PARENT).\n\n" ; \
-		(cd '$(DEBIAN_DIR_PARENT)' && tar cf - .) | (cd '$@' && tar xpf -) ; \
-	else \
-		printf "\nNo tarball or source directory.\n\n" ; \
-	fi
 TO_BUILD := $(BUILD_UNPACK_DIR) $(TO_BUILD)
 
 

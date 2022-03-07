@@ -39,14 +39,12 @@ BUILD_DIR := $(UNIBUILD_DIR)/build
 $(BUILD_DIR)::
 	mkdir -p $@
 TO_BUILD += $(BUILD_DIR)
-TO_CLEAN += $(BUILD_DIR)
 
 # Where the finished products go
 PRODUCTS_DIR := $(UNIBUILD_DIR)/products
 $(PRODUCTS_DIR):
 	mkdir -p $@
 TO_BUILD += $(PRODUCTS_DIR)
-TO_CLEAN += $(PRODUCTS_DIR)
 
 # Build log
 BUILD_LOG := unibuild-log
@@ -56,7 +54,6 @@ TO_CLEAN += $(BUILD_LOG)
 TMP_DIR := $(UNIBUILD_DIR)/tmp
 $(TMP_DIR):
 	mkdir -p $@
-TO_CLEAN += $(TMP_DIR)
 
 
 
