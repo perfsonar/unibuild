@@ -40,7 +40,7 @@ CHANGELOG := $(DEBIAN_DIR)/changelog
 VERSION := $(shell egrep -e '^[^[:space:]]+[[:space:]]+' '$(CHANGELOG)' \
 	| awk 'NR == 1 { print $$2 }' \
 	| tr -d '()' \
-	| sed -e 's/[-+].*$$//' \
+	| sed -e 's/[-+~].*$$//' \
 	)
 
 ifeq "$(VERSION)" ""
