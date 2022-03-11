@@ -51,7 +51,12 @@ source or a directory containing the source code.
 
 A tarball containing the sources for the package should be placed in
 the package directory and named using the customary
-_PACKAGE_-_VERSION_.tar.gz format (e.g., `foomatic-2.9.38.tar.gz`) .
+_PACKAGE_-_VERSION_.tar.gz format (e.g., `foomatic-2.9.38.tar.gz`) or
+one with no version (e.g., `foomatic.tar.gz`).
+
+
+**TODO:** This is no longer correct, use the `unibuild-packaging`
+  arrangement that was actually implemented.
 
 Place the RPM spec and `debian` directory in the package directory
 alongside the tarball.

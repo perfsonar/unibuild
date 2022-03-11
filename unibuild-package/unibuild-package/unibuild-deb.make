@@ -50,22 +50,40 @@ endif
 
 # Build Directory and its Contents
 
-# This is speculative; not all packages have a source tarball.
-SOURCE_TARBALL := $(SOURCE)-$(VERSION).tar.gz
+# This is speculative; not all packages have a source tarball.  If
+# there is one, accept one with or without a version number.
+
+TARBALL_SUFFIX := .tar.gz
+
+SOURCE_TARBALLS := $(wildcard $(SOURCE)-$(VERSION)$(TARBALL_SUFFIX) $(SOURCE)$(TARBALL_SUFFIX))
+ifeq ($(words $(SOURCE_TARBALLS)),0)
+SOURCE_TARBALL :=
+else ifeq  ($(words $(SOURCE_TARBALLS)),1)
+  SOURCE_TARBALL := $(SOURCE_TARBALLS)
+  ifeq ($(SOURCE_TARBALL),$(SOURCE)$(TARBALL_SUFFIX))
+    SOURCE_DIR := $(SOURCE)
+  else
+    SOURCE_DIR := $(SOURCE)-$(VERSION)
+  endif
+else
+$(error "Found more than one potential source tarball.")
+endif
 
 BUILD_UNPACK_DIR := $(BUILD_DIR)/$(SOURCE)
 BUILD_DEBIAN_DIR := $(BUILD_UNPACK_DIR)/debian
+TAR_UNPACK_DIR := $(SOURCE_DIR)-unpack
 
 $(BUILD_UNPACK_DIR):
 	rm -rf '$@'
 	mkdir -p '$@'
-ifeq ($(words $(wildcard $(SOURCE_TARBALL))),1)
+ifneq ($(SOURCE_TARBALL),)
 	@printf "\nUnpacking tarball $(SOURCE_TARBALL).\n\n"
 	(cd '$@' && tar xzf -) < '$(SOURCE_TARBALL)'
-	ls -a '$@/$(SOURCE)-$(VERSION)' \
+	mv '$@/$(SOURCE_DIR)' '$@/$(TAR_UNPACK_DIR)'
+	ls -a '$@/$(TAR_UNPACK_DIR)' \
 		| egrep -vxe '[.]{1,2}' \
-		| xargs -I % mv '$@/$(SOURCE)-$(VERSION)'/% '$@'
-	rmdir '$@/$(SOURCE)-$(VERSION)'
+		| xargs -I % mv '$@/$(TAR_UNPACK_DIR)'/% '$@'
+	rmdir '$@/$(TAR_UNPACK_DIR)'
 else ifeq ($(words $(wildcard $@/$(SOURCE))),1)
 	@printf "\nBuilding from source directory $(SOURCE).\n\n"
 	(cd '$(SOURCE)' && tar cf - .) | (cd '$@' && tar xpf -)
