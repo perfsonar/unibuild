@@ -13,7 +13,7 @@ Usage: ${WHOAMI} [ OPTIONS ]
 OPTIONS:
 
   --buildable  Include only packages that will build on this platform
-  --bundle B   Include only bundle B in the output
+  --bundle B   Include only bundle B, 'none' for packages in no bundle
   --file F     Take input from file F
 
 EOF
