@@ -12,6 +12,7 @@ Usage: ${WHOAMI} [ OPTIONS ]
 
 OPTIONS:
 
+  --buildable  Include only packages that will build on this platform
   --bundle B   Include only bundle B in the output
   --file F     Take input from file F
 
@@ -19,7 +20,7 @@ EOF
 }
 
 BUNDLE=
-
+BUILDABLE_FILTER=cat
 [ -t 0 ] \
     && FILE=unibuild-order \
     || FILE=""
@@ -40,6 +41,11 @@ do
 	    shift
 	    ;;
 
+	--buildable)
+	    BUILDABLE_FILTER=buildable_filter
+	    shift
+	    ;;
+
 	--help)
 	    help
 	    exit 0
@@ -55,6 +61,20 @@ do
     esac
 done
 
-cat ${FILE} | build_order "${BUNDLE}"
+buildable_filter()
+{
+    DIR=$(dirname "${FILE}")
+    while read LINE
+    do
+	if find "${DIR}/${LINE}" -type d \
+		| fgrep -v '/unibuild-work/' \
+		| egrep -q -e "/unibuild-packaging/${OSINFO_PACKAGING}\$"
+	then
+	    echo "${LINE}"
+	fi
+    done
+}
+
+cat ${FILE} | build_order "${BUNDLE}" | $BUILDABLE_FILTER
 
 exit 0
