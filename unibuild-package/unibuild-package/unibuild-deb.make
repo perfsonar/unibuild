@@ -59,7 +59,6 @@ BUILD_DEBIAN_DIR := $(BUILD_UNPACK_DIR)/debian
 $(BUILD_UNPACK_DIR):
 	rm -rf '$@'
 	mkdir -p '$@'
-	echo ST $(SOURCE_TARBALL) / $(wildcard $(SOURCE_TARBALL))
 ifeq ($(words $(wildcard $(SOURCE_TARBALL))),1)
 	@printf "\nUnpacking tarball $(SOURCE_TARBALL).\n\n"
 	(cd '$@' && tar xzf -) < '$(SOURCE_TARBALL)'
