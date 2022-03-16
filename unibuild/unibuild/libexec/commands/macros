@@ -8,23 +8,44 @@
 help()
 {
     cat <<EOF
-Usage: ${WHOAMI}
-
-This command takes no additional arguments.
+Usage: ${WHOAMI} [ MACRO-NAME ]
 EOF
 }
 
-if [ $# -ne 0 ]
-then
-    help
-    die
-fi
+
+MACRO=
+case $# in
+    0)
+	true
+	;;
+    1)
+	MACRO=$(echo "$1" | tr 'a-z' 'A-Z')
+	;;
+    *)
+	help
+	die
+	;;
+esac
 
 
-set \
+macros()
+{
+    set \
     | egrep -e '^OSINFO_[^=]{1,}=' \
     | sed -e 's/^OSINFO_//g' \
-    | tr -d "'" \
+    | tr -d "'"
+}
+
+
+# Easy case: One macro.
+if [ "${MACRO}" ]
+then
+    macros | awk -F= -v MACRO=${MACRO} '$1 == MACRO { print $2; exit 0 } END { exit 1 }'
+    exit $?
+fi
+
+# Print all macros, formatted nicely for humans.
+macros \
     | sort \
     | (
     while read LINE
