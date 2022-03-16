@@ -152,7 +152,7 @@ BUILD_DEPS_PACKAGE := $(SOURCE)-build-deps
 # TODO: --build flag should be removed after we can get an original
 # tarball for all build methods (tarball/source directory/none)
 
-build: $(TO_BUILD) $(PRODUCTS_DIR)
+build:: $(TO_BUILD) $(PRODUCTS_DIR)
 	@printf "\nInstall Dependencies\n\n"
 	cd $(BUILD_UNPACK_DIR) \
 		&& mk-build-deps --root-cmd=sudo --install --remove \
@@ -181,7 +181,7 @@ _built:
 		false ; \
 	fi
 
-install: _built
+install:: _built
 	@printf "\nInstall packages:\n"
 	@find '$(PRODUCTS_DIR)' -name '*.deb' \
 		| fgrep -v -- '-build-deps' \
@@ -209,7 +209,7 @@ endif
 
 
 # TODO: This doesn't work.
-uninstall:
+uninstall::
 	@printf "\nUninstall packages:\n"
 	@awk '$$1 == "Package:" { print $$2 }' ./unibuild/unibuild-packaging/deb/control \
 	| ( while read PACKAGE ; do \
@@ -218,7 +218,7 @@ uninstall:
 	    done )
 
 
-dump: _built
+dump:: _built
 	@find '$(PRODUCTS_DIR)' -name "*.deb" \
 	| ( \
 	    while read DEB ; \
