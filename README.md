@@ -89,6 +89,7 @@ process, Unibuild makes the following macros available:
 | `DISTRO` | Operating system distribution, empty of not applicable | `CentOS` |
 | `FAMILY` | Operating system family, empty where not applicable | `RedHat` |
 | `RELEASE` | Operating system release | `7.9.2009` |
+| `CODENAME` | Codename of operating system release | `Core` |
 | `MAJOR` | Major version of `RELEASE`, empty if not present | `7` |
 | `MINOR` | Minor version of `RELEASE`, empty if not present | `9` |
 | `PATCH` | Patch version of `RELEASE`, empty if not present | `2009` |

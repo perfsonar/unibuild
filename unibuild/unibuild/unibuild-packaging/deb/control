@@ -3,7 +3,7 @@ Section: net
 Priority: optional
 Maintainer: perfSONAR developers <debian@perfsonar.net>
 Uploaders: Mark Feit <mfeit@internet2.edu>
-Build-Depends: debhelper (>= 9)
+Build-Depends: debhelper (>= 10), lsb-release
 Standards-Version: 3.9.8
 Homepage: https://github.com/perfsonar/unibuild
 Vcs-Git: git://github.com/perfsonar/unibuild
@@ -11,5 +11,5 @@ Vcs-Browser: https://github.com/perfsonar/unibuild
 
 Package: unibuild
 Architecture: all
-Depends: ${misc:Depends}, make, unibuild-package
+Depends: ${misc:Depends}, make, unibuild-package, lsb-release
 Description: Generic repository builder

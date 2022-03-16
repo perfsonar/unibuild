@@ -42,6 +42,7 @@ fi
 
 OSINFO_DISTRO=$(lsb_release --id --short)
 OSINFO_RELEASE=$(lsb_release --release --short)
+OSINFO_CODENAME=$(lsb_release --codename --short)
 OSINFO_MAJOR=$(echo "${OSINFO_RELEASE}" | cut -d . -f 1)
 OSINFO_MINOR=$(echo "${OSINFO_RELEASE}" | cut -d . -f 2)
 OSINFO_PATCH=$(echo "${OSINFO_RELEASE}" | cut -d . -f 3)
