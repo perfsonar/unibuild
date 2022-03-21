@@ -135,8 +135,10 @@ do
 
     ${DRY} make -C "${PACKAGE}" "$@"
 
-    [ "${PACKAGE}" = "${STOP}" ] && break
-       
+    if [ "${PACKAGE}" = "${STOP}" ]
+    then
+	break
+    fi
 
 done
 
