@@ -27,9 +27,7 @@ EOF
 
 BUNDLE=
 DRY=
-[ -t 0 ] \
-    && FILE=unibuild-order \
-    || FILE=""
+FILE=unibuild-order
 REVERSE=cat
 START=
 STOP=
