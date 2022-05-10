@@ -36,7 +36,7 @@ ifneq "$(words $(SPEC))" "1"
   $(error $(RPM_DIR) contains more than one spec file)
 endif
 
-VERSION := $(shell rpm -q --queryformat="%{version}\n" --specfile '$(SPEC)')
+VERSION := $(shell rpm -q --queryformat="%{version}\n" --specfile '$(SPEC)' | head -n1)
 SOURCE_FILES := $(shell spectool -S $(SPEC) | awk '{ print $$2 }')
 PATCH_FILES := $(shell spectool -P $(SPEC) | awk '{ print $$2 }')
 
