@@ -6,4 +6,4 @@ services:
         context: ../
         dockerfile: ./docker-envs/Dockerfile-alma8
     volumes:
-      -  ../../:/app
+      -  .:/app
