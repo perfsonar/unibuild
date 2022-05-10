@@ -1,0 +1,19 @@
+FROM debian:10
+
+#Install pre-requisites
+#Install utils like tree useful for debugging
+#Enable powertools since contains common dependencies
+RUN apt update -y && \
+    apt install -y sudo git make m4 pylint rsync dpkg-dev devscripts lsb-release tree screen wget man-db man htop emacs-nox
+
+#Copy unibuild source
+COPY . /usr/share/unibuild/
+
+#Install unibuild
+WORKDIR /usr/share/unibuild
+RUN make
+
+
+#Shared volume for code to build
+VOLUME /app
+WORKDIR /app

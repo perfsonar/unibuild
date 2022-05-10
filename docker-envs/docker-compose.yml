@@ -7,3 +7,10 @@ services:
         dockerfile: ./docker-envs/Dockerfile-alma8
     volumes:
       -  .:/app
+  debian10:
+    image: perfsonar/unibuild-debian10:latest
+    build:
+        context: ../
+        dockerfile: ./docker-envs/Dockerfile-debian10
+    volumes:
+      -  .:/app
