@@ -1,0 +1,19 @@
+FROM centos:7
+
+#Install pre-requisites
+#Install utils like tree useful for debugging
+#Enable powertools since contains common dependencies
+RUN yum update -y && \
+    yum install -y rpm-build m4 make redhat-lsb-core sudo epel-release tree
+
+#Copy unibuild source
+COPY . /usr/share/unibuild/
+
+#Install unibuild
+WORKDIR /usr/share/unibuild
+RUN make
+
+
+#Shared volume for code to build
+VOLUME /app
+WORKDIR /app
