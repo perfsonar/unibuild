@@ -19,20 +19,24 @@ EOF
 }
 
 START=
+START_PACKAGE=
 STOP=
+STOP_PACKAGE=
 
 while [ "$1" ]
 do
     case "$1" in
 
 	--start)
-	    START="--start $2"
+	    START=$2
+	    START_OPTION="--start $2"
 	    shift
 	    shift
 	    ;;
 
 	--stop)
-	    STOP="--stop $2"
+	    STOP=$2
+	    STOP_OPTION="--stop $2"
 	    shift
 	    shift
 	    ;;
@@ -55,8 +59,8 @@ done
 
 
 # Don't quote START; it has multiple words.
-$(dirname $0)/make ${START} ${STOP} clean build install
+$(dirname $0)/make ${START_OPTION} ${STOP_OPTION} clean build install
 
 REPO=unibuild-repo
 mkdir -p "${REPO}"
-exec $(dirname $0)/gather "${REPO}"
+exec $(dirname $0)/gather --start "${START}" --stop "${STOP}" "${REPO}"

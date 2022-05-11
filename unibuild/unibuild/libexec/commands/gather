@@ -17,11 +17,15 @@ OPTIONS:
 
   --bundle B   Include only bundle B in the output
   --file F     Take input from file F
+  --start P    Start with package P
+  --stop P     Stop after package P
 
 EOF
 }
 
 BUNDLE=
+START=
+STOP=
 
 [ -t 0 ] \
     && FILE=unibuild-order \
@@ -39,6 +43,18 @@ do
 
 	--file)
 	    FILE="$2"
+	    shift
+	    shift
+	    ;;
+
+	--start)
+	    START="$2"
+	    shift
+	    shift
+	    ;;
+
+	--stop)
+	    STOP="$2"
 	    shift
 	    shift
 	    ;;
@@ -64,6 +80,9 @@ then
     die
 fi
 
+validate_startstop "${START}" "${BUNDLE}" "${FILE}"
+validate_startstop "${STOP}" "${BUNDLE}" "${FILE}"
+
 REPO=$1
 [ -d "${REPO}" ] || die "${REPO}: Not a directory"
 
@@ -86,8 +105,28 @@ esac
 DEST=$(readlink -e "${DEST}")
 
 BUILD_LIST="${TMPBASE}.list"
+rm -f "${BUILD_LIST}"
 
-cat ${FILE} | build_order "${BUNDLE}" > "${BUILD_LIST}"
+cat ${FILE} \
+    | build_order "${BUNDLE}" \
+    | ([ -n "${START}" ] && sed -n "/^${START}\$/,\$p" || cat) \
+    | while read PACKAGE
+do
+
+    if ! (find "${PACKAGE}" -type d | egrep -qe "/unibuild-packaging/${OSINFO_PACKAGING}\$")
+    then
+	section SKIPPING ${PACKAGE}:  No ${OSINFO_PACKAGING} build
+	continue
+    fi
+
+    echo "${PACKAGE}" >> "${BUILD_LIST}"
+
+    if [ "${PACKAGE}" = "${STOP}" ]
+    then
+	break
+    fi
+
+done
 
 # Make sure all products were produced
 

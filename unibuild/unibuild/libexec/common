@@ -106,6 +106,25 @@ build_order()
 }
 
 
+
+# Make sure the START and STOP parameters refer to something in the
+# build list for a bundle
+# Args:
+#  1 - Package Name
+#  2 - Bundle
+#  3 - Build order file
+validate_startstop()
+{
+    if [ -n "$1" ]
+    then
+	build_order "$2" < "$3" \
+	    | fgrep -qx "$1" \
+	    || die "$1: No such package."
+    fi
+}
+
+
+
 #
 # TEMPORARY FILES
 #
