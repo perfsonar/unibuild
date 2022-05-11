@@ -181,10 +181,16 @@ Unibuild packaging template:
 include unibuild/unibuild.make
 ```
 
-`AUTO_TARBALL` is required if the package is being built from a directory of
+Packages may be built from a tarball for cases where the software is
+acquired elsewhere or a directory of sources for cases where it is
+locally-maintained.  Defining `AUTO_TARBALL` instructs Unibuild's Make
+template to produce a tarball from the sources before proceeding to
+build the package.
 
 
 ### The `unibuild-packaging` Directory
+
+
 
 ```
 unibuild-packaging/
@@ -252,8 +258,6 @@ include unibuild/unibuild.make
 
 
 
-
-
 ## Building Repositories with Unibuild
 
 ```
@@ -271,4 +275,10 @@ TOP
 
 TODO: See ...Unibuild... for details
 TODO: See ...Unibuild-Package... for details
-TODO: Hello world example
+
+## Hello World
+
+Packaged with this distribution is a subdirectory called `hello-world`
+that builds three packages: `hello` on all systems, `hello-rpm` on
+RPM-based systems and `hello-deb` on Debian-based systems.  Each
+package installs a command in `/usr/bin` named after itself.

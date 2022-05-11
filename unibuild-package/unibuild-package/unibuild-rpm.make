@@ -79,9 +79,14 @@ $(BUILD_SUBS):
 # Enable this to force an error.
 #PATCH_FILES += INTENTIONALLY-BAD.patch
 
-LOCATED_PATCH_FILES := \
+
+# Find the patch files and weed out duplicates.
+LOCATED_PATCH_FILES := $(shell echo \
 	$(wildcard $(PATCH_FILES:%=$(RPM_DIR)/%)) \
-	$(wildcard $(PATCH_FILES:%=$(dir $(RPM_DIR))/%))
+	$(wildcard $(PATCH_FILES:%=$(dir $(RPM_DIR))/%)) \
+	| sed -e 's/\s\+/\n/g' \
+	| sort \
+	| uniq)
 
 LOCATED_PATCH_FILE_NAMES := $(notdir $(LOCATED_PATCH_FILES))
 
