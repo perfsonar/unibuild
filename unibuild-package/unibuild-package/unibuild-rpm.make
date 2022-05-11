@@ -36,7 +36,11 @@ ifneq "$(words $(SPEC))" "1"
   $(error $(RPM_DIR) contains more than one spec file)
 endif
 
-VERSION := $(shell rpm -q --queryformat="%{version}\n" --specfile '$(SPEC)')
+VERSION := $(shell rpm -q --queryformat="%{version}\n" --specfile '$(SPEC)' | sort | uniq)
+ifneq ($(words $(VERSION)),1)
+  $(error Found more than one package version in spec file: $(VERSION))
+endif
+
 SOURCE_FILES := $(shell spectool -S $(SPEC) | awk '{ print $$2 }')
 PATCH_FILES := $(shell spectool -P $(SPEC) | awk '{ print $$2 }')
 
