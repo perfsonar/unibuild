@@ -52,7 +52,9 @@ fi
 # treating uninstallable packages as being a problem, so the RPM that
 # follows will have to die for its sins.
 
-< $TMPBASE.missing xargs -r sudo yum -y --color=never install 
+[ $(id -u) = 0 ] && RUN_AS_ROOT= || RUN_AS_ROOT=sudo
+
+< $TMPBASE.missing xargs -r ${RUN_AS_ROOT} yum -y --color=never install 
 
 # Do this manually because exec doesn't count as an exit.
 cleanup

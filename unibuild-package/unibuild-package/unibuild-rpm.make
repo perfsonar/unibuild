@@ -227,16 +227,16 @@ install:: $(TMP_DIR)
 	    echo "$${PACKAGE}" >> "$${LIST_OUT}" ; \
 	done
 	@if [ -s "$(INSTALL_INSTALLED)" ]  ; then \
-		xargs sudo $(YUM) -y reinstall < "$(INSTALL_INSTALLED)" ; \
+		xargs $(RUN_AS_ROOT) $(YUM) -y reinstall < "$(INSTALL_INSTALLED)" ; \
 	fi
 	@if [ -s "$(INSTALL_NOT_INSTALLED)" ] ; then \
-		xargs sudo $(YUM) -y install < "$(INSTALL_NOT_INSTALLED)" ; \
+		xargs $(RUN_AS_ROOT)) $(YUM) -y install < "$(INSTALL_NOT_INSTALLED)" ; \
 	fi
 
 
 
 uninstall::
-	rpm -q --specfile "$(SPEC)" | xargs sudo yum -y erase
+	rpm -q --specfile "$(SPEC)" | xargs $(RUN_AS_ROOT) yum -y erase
 
 
 # Copy the products to a destination named by PRODUCTS_DEST

@@ -8,6 +8,15 @@
 default: build
 
 
+# Figure out what needs to be run to get root.
+
+ifeq ($(shell id -u),0)
+  RUN_AS_ROOT :=
+else
+  RUN_AS_ROOT := sudo
+endif
+
+
 # Figure out what kind of packages are used by this system.  This is
 # verbatim from unibuild-package.make
 
@@ -34,9 +43,10 @@ endif
 ifeq "$(PACKAGE_FORMAT)" "rpm"
 
 # TODO: Make sure this still works on CentOS.
+# TODO: This should be abstracted out into a packaging-specific script
 prep:
-	which spectool > /dev/null 2>&1 || sudo yum -y install spectool
-	which rpmbuild > /dev/null 2>&1 || sudo yum -y install rpm-build
+	which spectool > /dev/null 2>&1 || $(RUN_AS_ROOT) yum -y install spectool
+	which rpmbuild > /dev/null 2>&1 || $(RUN_AS_ROOT) yum -y install rpm-build
 
 else
 
