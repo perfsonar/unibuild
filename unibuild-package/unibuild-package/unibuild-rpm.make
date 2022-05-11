@@ -230,7 +230,7 @@ install:: $(TMP_DIR)
 		xargs $(RUN_AS_ROOT) $(YUM) -y reinstall < "$(INSTALL_INSTALLED)" ; \
 	fi
 	@if [ -s "$(INSTALL_NOT_INSTALLED)" ] ; then \
-		xargs $(RUN_AS_ROOT)) $(YUM) -y install < "$(INSTALL_NOT_INSTALLED)" ; \
+		xargs $(RUN_AS_ROOT) $(YUM) -y install < "$(INSTALL_NOT_INSTALLED)" ; \
 	fi
 
 
