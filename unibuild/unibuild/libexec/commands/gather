@@ -139,6 +139,8 @@ done
 
 section BUILDING REPOSITORY
 
+# TODO: This should be extracted on a per-packaging-system basis.
+
 case "${OSINFO_PACKAGING}" in
 
     rpm)
@@ -156,6 +158,11 @@ case "${OSINFO_PACKAGING}" in
 	die "Unable to build a repository for ${OSINFO_FAMILY}"
 	;;
 esac
+
+
+REPO_UNIBUILD="${REPO}/unibuild"
+mkdir -p ${REPO_UNIBUILD}
+cp -f "${BUILD_LIST}" "${REPO_UNIBUILD}/build-order"
 
 
 exit 0
