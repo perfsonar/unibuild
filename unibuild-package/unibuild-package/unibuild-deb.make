@@ -158,7 +158,7 @@ build:: $(TO_BUILD) $(PRODUCTS_DIR)
 			'debian/control'
 	@printf "\nBuild Package $(SOURCE) $(VERSION)\n\n"
 	(((( \
-		cd $(BUILD_UNPACK_DIR) && dpkg-buildpackage --build=any,all \
+		cd $(BUILD_UNPACK_DIR) && dpkg-buildpackage -sa \
 			--root-command=fakeroot --no-sign 2>&1 ; \
 		echo $$? >&3 \
 	) \
@@ -166,9 +166,9 @@ build:: $(TO_BUILD) $(PRODUCTS_DIR)
 	| (read XS; exit $$XS) \
 	) 4>&1
 
-	find '$(BUILD_DIR)' \
-		'(' -name "*.deb" -o -name "*.changes" -o -name "*.buildinfo" ')' \
-		-exec cp {} '$(PRODUCTS_DIR)' ';'
+	find '$(BUILD_DIR)' \( \
+		-name "*.deb" -o -name "*.dsc" -o -name "*.changes" -o -name "*.buildinfo" -o -name "*.build" -o -name "*.tar.*" \
+		\) -exec cp {} '$(PRODUCTS_DIR)' ';'
 
 
 # This target is for internal use only.
@@ -202,7 +202,7 @@ endif
 	    false ; \
 	fi
 	find "$(PRODUCTS_DIR)" \( \
-		-name '*.deb' -o -name '*.changes' -o -name '*.buildinfo' \
+		-name "*.deb" -o -name "*.dsc" -o -name "*.changes" -o -name "*.buildinfo" -o -name "*.build" -o -name "*.tar.*" \
 		\) -exec cp {} "$(PRODUCTS_DEST)" \;
 
 
