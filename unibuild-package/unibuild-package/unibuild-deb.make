@@ -68,10 +68,21 @@ $(error "Found more than one potential source tarball.")
 endif
 
 BUILD_UNPACK_DIR := $(BUILD_DIR)/$(SOURCE)
+
 BUILD_DEBIAN_DIR := $(BUILD_UNPACK_DIR)/debian
 TAR_UNPACK_DIR := $(SOURCE_DIR)-unpack
 
-$(BUILD_UNPACK_DIR):
+
+ORIG_TARBALL := $(SOURCE)_$(VERSION).orig$(TARBALL_SUFFIX)
+SOURCE_VERSION := $(SOURCE)-$(VERSION)
+BUILD_ORIG_DIR := $(BUILD_DIR)/orig
+BUILD_ORIG_PACKAGE_DIR := $(BUILD_ORIG_DIR)/$(SOURCE_VERSION)
+
+$(BUILD_ORIG_DIR): $(PRODUCTS_DIR)
+	rm -rf '$@'
+	mkdir -p '$@'
+
+$(BUILD_UNPACK_DIR): $(PRODUCTS_DIR) $(BUILD_ORIG_DIR)
 	rm -rf '$@'
 	mkdir -p '$@'
 ifneq ($(SOURCE_TARBALL),)
@@ -91,7 +102,13 @@ else ifneq ($(DEBIAN_DIR_PARENT),$(dir $(BUILD_DIR)))
 else
 	@printf "\nNo tarball or source directory.\n\n"
 endif
-	@echo Installing Debian build into $(BUILD_DEBIAN_DIR):
+	@printf "\nBuilding 'orig' tarball $(ORIG_TARBALL).\n\n"
+	mkdir -p $(BUILD_ORIG_PACKAGE_DIR)
+	(cd '$@' && tar cf - .) | (cd $(BUILD_ORIG_PACKAGE_DIR) && tar xpf -)
+	ls -alh $(BUILD_ORIG_PACKAGE_DIR)/..
+	(cd $(BUILD_ORIG_DIR) && tar czf - $(SOURCE_VERSION)) > $(PRODUCTS_DIR)/$(ORIG_TARBALL)
+	cp $(PRODUCTS_DIR)/$(ORIG_TARBALL) $(BUILD_UNPACK_DIR)/..
+	@printf "\nInstalling Debian build into $(BUILD_DEBIAN_DIR)..\n\n"
 	rm -rf '$(BUILD_DEBIAN_DIR)'
 	cp -r '$(DEBIAN_DIR)' '$(BUILD_DEBIAN_DIR)'
 TO_BUILD := $(BUILD_UNPACK_DIR) $(TO_BUILD)
