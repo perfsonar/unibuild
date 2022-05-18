@@ -33,16 +33,27 @@ ifeq "$(SOURCE)" ""
 $(error Unable to find source name in $(CONTROL).)
 endif
 
+SRCFORMAT := $(shell grep -Eo '([a-z]+)' '$(DEBIAN_DIR)/source/format')
 
 CHANGELOG := $(DEBIAN_DIR)/changelog
-VERSION := $(shell egrep -e '^[^[:space:]]+[[:space:]]+' '$(CHANGELOG)' \
-	| awk 'NR == 1 { print $$2 }' \
-	| tr -d '()' \
-	| sed -e 's/[-+~].*$$//' \
-	)
+VERSION := $(shell dpkg-parsechangelog -l '$(CHANGELOG)' \
+    | sed -n 's|Version: \([^-]*\)\(-[0-9.]*\)*$$|\1|p' \
+    )
+REVISION := $(shell dpkg-parsechangelog -l '$(CHANGELOG)' \
+    | sed -n 's|Version: \([^-]*\)\(-[0-9.]*\)*$$|\2|p' \
+    )
 
 ifeq "$(VERSION)" ""
 $(error Unable to find version in $(CHANGELOG).)
+endif
+
+ifdef TIMESTAMP
+    VERSION := $(VERSION)~$(TIMESTAMP)
+    ifeq "$(SRCFORMAT)" "native"
+        DEBVERSION := $(VERSION)
+    else
+        DEBVERSION := $(VERSION)-1
+    endif
 endif
 
 
@@ -168,6 +179,13 @@ BUILD_DEPS_PACKAGE := $(SOURCE)-build-deps
 # tarball for all build methods (tarball/source directory/none)
 
 build:: $(TO_BUILD) $(PRODUCTS_DIR)
+ifdef TIMESTAMP
+	@printf "\nUpdate changelog for SNAPSHOT build\n\n"
+	( cd $(BUILD_UNPACK_DIR) \
+        && dch -c debian/changelog -Mb --distribution=UNRELEASED --newversion=$(DEBVERSION) \
+        -- 'SNAPSHOT build for '$(VERSION)' via Unibuild' \
+	)
+endif
 	@printf "\nInstall Dependencies\n\n"
 	cd $(BUILD_UNPACK_DIR) \
 		&& mk-build-deps --root-cmd=sudo --install --remove \
