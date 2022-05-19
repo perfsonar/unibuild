@@ -37,10 +37,10 @@ SRCFORMAT := $(shell grep -Eo '([a-z]+)' '$(DEBIAN_DIR)/source/format')
 
 CHANGELOG := $(DEBIAN_DIR)/changelog
 VERSION := $(shell dpkg-parsechangelog -l '$(CHANGELOG)' \
-    | sed -n 's|Version: \([^-]*\)\(-[0-9.]*\)*$$|\1|p' \
+    | sed -n 's|Version: \([^-]*\)\(-.*\)*$$|\1|p' \
     )
 REVISION := $(shell dpkg-parsechangelog -l '$(CHANGELOG)' \
-    | sed -n 's|Version: \([^-]*\)\(-[0-9.]*\)*$$|\2|p' \
+    | sed -n 's|Version: \([^-]*\)\(-.*\)*$$|\2|p' \
     )
 
 ifeq "$(VERSION)" ""
