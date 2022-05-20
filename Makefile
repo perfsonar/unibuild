@@ -35,6 +35,10 @@ build:
 	$(UNIBUILD)
 
 
+release:
+	RELEASE=1 $(MAKE)
+
+
 
 $(REPO): build
 	(((( \
