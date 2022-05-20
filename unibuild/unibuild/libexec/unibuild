@@ -11,6 +11,10 @@ export UNIBUILD=$(dirname "${UNIBUILD_CANONICAL}")
 
 . "${UNIBUILD}/common"
 
+# Set the timestamp only if something else hasn't set it first.
+[ -z "${UNIBUILD_TIMESTAMP}" ] \
+    && export UNIBUILD_TIMESTAMP=$(date +%Y%m%d%H%M%S)
+
 
 help()
 {

@@ -23,7 +23,6 @@ START=
 START_PACKAGE=
 STOP=
 STOP_PACKAGE=
-export UNIBUILD_TIMESTAMP=$(date +%Y%m%d%H%M%S)
 
 while [ "$1" ]
 do
