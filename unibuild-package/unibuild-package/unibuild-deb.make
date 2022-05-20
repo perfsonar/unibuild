@@ -47,8 +47,8 @@ ifeq "$(VERSION)" ""
 $(error Unable to find version in $(CHANGELOG).)
 endif
 
-ifdef TIMESTAMP
-    VERSION := $(VERSION)~$(TIMESTAMP)
+ifdef UNIBUILD_TIMESTAMP
+    VERSION := $(VERSION)~$(UNIBUILD_TIMESTAMP)
     ifeq "$(SRCFORMAT)" "native"
         DEBVERSION := $(VERSION)
     else
@@ -179,7 +179,7 @@ BUILD_DEPS_PACKAGE := $(SOURCE)-build-deps
 # tarball for all build methods (tarball/source directory/none)
 
 build:: $(TO_BUILD) $(PRODUCTS_DIR)
-ifdef TIMESTAMP
+ifdef UNIBUILD_TIMESTAMP
 	@printf "\nUpdate changelog for SNAPSHOT build\n\n"
 	( cd $(BUILD_UNPACK_DIR) \
         && dch -c debian/changelog -Mb --distribution=UNRELEASED --newversion=$(DEBVERSION) \

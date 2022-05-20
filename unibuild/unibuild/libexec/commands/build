@@ -23,14 +23,14 @@ START=
 START_PACKAGE=
 STOP=
 STOP_PACKAGE=
-export TIMESTAMP=$(date +%Y%m%d%H%M%S)
+export UNIBUILD_TIMESTAMP=$(date +%Y%m%d%H%M%S)
 
 while [ "$1" ]
 do
     case "$1" in
 
 	--release)
-	    unset TIMESTAMP
+	    unset UNIBUILD_TIMESTAMP
 	    shift
 	    ;;
 
