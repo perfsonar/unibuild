@@ -47,13 +47,15 @@ ifeq "$(VERSION)" ""
 $(error Unable to find version in $(CHANGELOG).)
 endif
 
+# If we have a UNIBUILD_TIMESTAMP, we are building a snapshot release
+NOSNAP_VERSION := $(VERSION)
 ifdef UNIBUILD_TIMESTAMP
-    VERSION := $(VERSION)~$(UNIBUILD_TIMESTAMP)
-    ifeq "$(SRCFORMAT)" "native"
-        DEBVERSION := $(VERSION)
-    else
-        DEBVERSION := $(VERSION)-1
-    endif
+VERSION := $(VERSION)~$(UNIBUILD_TIMESTAMP)
+ifeq "$(SRCFORMAT)" "native"
+  NEW_DEB_VERSION := $(VERSION)
+else
+  NEW_DEB_VERSION := $(VERSION)-1
+endif
 endif
 
 
@@ -64,7 +66,7 @@ endif
 
 TARBALL_SUFFIX := .tar.gz
 
-SOURCE_TARBALLS := $(wildcard $(SOURCE)-$(VERSION)$(TARBALL_SUFFIX) $(SOURCE)$(TARBALL_SUFFIX))
+SOURCE_TARBALLS := $(wildcard $(SOURCE)-$(NOSNAP_VERSION)$(TARBALL_SUFFIX) $(SOURCE)$(TARBALL_SUFFIX))
 ifeq ($(words $(SOURCE_TARBALLS)),0)
 SOURCE_TARBALL :=
 else ifeq  ($(words $(SOURCE_TARBALLS)),1)
@@ -95,10 +97,10 @@ $(BUILD_ORIG_DIR): $(PRODUCTS_DIR)
 
 $(BUILD_UNPACK_DIR): $(PRODUCTS_DIR) $(BUILD_ORIG_DIR)
 	rm -rf '$@'
-	mkdir -p '$@'
+	mkdir -p '$@/$(SOURCE_DIR)'
 ifneq ($(SOURCE_TARBALL),)
 	@printf "\nUnpacking tarball $(SOURCE_TARBALL).\n\n"
-	(cd '$@' && tar xzf -) < '$(SOURCE_TARBALL)'
+	(cd '$@/$(SOURCE_DIR)' && tar xzf - --strip-components=1) < '$(SOURCE_TARBALL)'
 	mv '$@/$(SOURCE_DIR)' '$@/$(TAR_UNPACK_DIR)'
 	ls -a '$@/$(TAR_UNPACK_DIR)' \
 		| egrep -vxe '[.]{1,2}' \
@@ -182,7 +184,7 @@ build:: $(TO_BUILD) $(PRODUCTS_DIR)
 ifdef UNIBUILD_TIMESTAMP
 	@printf "\nUpdate changelog for SNAPSHOT build\n\n"
 	( cd $(BUILD_UNPACK_DIR) \
-        && dch -c debian/changelog -Mb --distribution=UNRELEASED --newversion=$(DEBVERSION) \
+        && dch -c debian/changelog -Mb --distribution=UNRELEASED --newversion=$(NEW_DEB_VERSION) \
         -- 'SNAPSHOT build for '$(VERSION)' via Unibuild' \
 	)
 endif
