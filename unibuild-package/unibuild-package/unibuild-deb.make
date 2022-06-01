@@ -36,8 +36,13 @@ endif
 SRCFORMAT := $(shell grep -Eo '([a-z]+)' '$(DEBIAN_DIR)/source/format')
 
 CHANGELOG := $(DEBIAN_DIR)/changelog
+# Break down VERSION and REVISION
 VERSION := $(shell dpkg-parsechangelog -l '$(CHANGELOG)' \
     | sed -n 's|Version: \([^-]*\)\(-.*\)*$$|\1|p' \
+    )
+# And leaving out any +dfsg.x suffix when looking for TARBALL
+NODFSG_VERSION := $(shell dpkg-parsechangelog -l '$(CHANGELOG)' \
+        | sed -n 's|Version: \([^-+]*\)\(+dfsg[.0-9]*\)\?\(-.*\)*$$|\1|p' \
     )
 REVISION := $(shell dpkg-parsechangelog -l '$(CHANGELOG)' \
     | sed -n 's|Version: \([^-]*\)\(-.*\)*$$|\2|p' \
@@ -48,7 +53,6 @@ $(error Unable to find version in $(CHANGELOG).)
 endif
 
 # If we have a UNIBUILD_TIMESTAMP, we are building a snapshot release
-NOSNAP_VERSION := $(VERSION)
 ifdef UNIBUILD_TIMESTAMP
 VERSION := $(VERSION)~$(UNIBUILD_TIMESTAMP)
 ifeq "$(SRCFORMAT)" "native"
@@ -66,7 +70,7 @@ endif
 
 TARBALL_SUFFIX := .tar.gz
 
-SOURCE_TARBALLS := $(wildcard $(SOURCE)-$(NOSNAP_VERSION)$(TARBALL_SUFFIX) $(SOURCE)$(TARBALL_SUFFIX))
+SOURCE_TARBALLS := $(wildcard $(SOURCE)-$(NODFSG_VERSION)$(TARBALL_SUFFIX) $(SOURCE)$(TARBALL_SUFFIX))
 ifeq ($(words $(SOURCE_TARBALLS)),0)
 SOURCE_TARBALL :=
 else ifeq  ($(words $(SOURCE_TARBALLS)),1)
