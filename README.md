@@ -152,8 +152,8 @@ THAT                 bar
 THIS                 foo
 ```
 
-Note that `--define` of the macros listed above (e.g., `OS` or `ARCH`)
-will override the Unibuild-provided definition.
+Note that `--define` can be used to override the definition of
+unibuild-provided macros (e.g., `OS` or `ARCH`).
 
 
 ## Package Subdirectories
