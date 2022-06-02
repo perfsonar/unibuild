@@ -36,7 +36,11 @@ ifneq "$(words $(SPEC))" "1"
   $(error $(RPM_DIR) contains more than one spec file)
 endif
 
-VERSION := $(shell rpm -q --queryformat="%{version}\n" --specfile '$(SPEC)' | head -n1)
+VERSION := $(shell rpm -q --queryformat="%{version}\n" --specfile '$(SPEC)' | sort | uniq)
+ifneq ($(words $(VERSION)),1)
+  $(error Found more than one package version in spec file: $(VERSION))
+endif
+
 SOURCE_FILES := $(shell spectool -S $(SPEC) | awk '{ print $$2 }')
 PATCH_FILES := $(shell spectool -P $(SPEC) | awk '{ print $$2 }')
 
@@ -75,9 +79,14 @@ $(BUILD_SUBS):
 # Enable this to force an error.
 #PATCH_FILES += INTENTIONALLY-BAD.patch
 
-LOCATED_PATCH_FILES := \
+
+# Find the patch files and weed out duplicates.
+LOCATED_PATCH_FILES := $(shell echo \
 	$(wildcard $(PATCH_FILES:%=$(RPM_DIR)/%)) \
-	$(wildcard $(PATCH_FILES:%=$(dir $(RPM_DIR))/%))
+	$(wildcard $(PATCH_FILES:%=$(dir $(RPM_DIR))/%)) \
+	| sed -e 's/\s\+/\n/g' \
+	| sort \
+	| uniq)
 
 LOCATED_PATCH_FILE_NAMES := $(notdir $(LOCATED_PATCH_FILES))
 
@@ -223,16 +232,16 @@ install:: $(TMP_DIR)
 	    echo "$${PACKAGE}" >> "$${LIST_OUT}" ; \
 	done
 	@if [ -s "$(INSTALL_INSTALLED)" ]  ; then \
-		xargs sudo $(YUM) -y reinstall < "$(INSTALL_INSTALLED)" ; \
+		xargs $(RUN_AS_ROOT) $(YUM) -y reinstall < "$(INSTALL_INSTALLED)" ; \
 	fi
 	@if [ -s "$(INSTALL_NOT_INSTALLED)" ] ; then \
-		xargs sudo $(YUM) -y install < "$(INSTALL_NOT_INSTALLED)" ; \
+		xargs $(RUN_AS_ROOT) $(YUM) -y install < "$(INSTALL_NOT_INSTALLED)" ; \
 	fi
 
 
 
 uninstall::
-	rpm -q --specfile "$(SPEC)" | xargs sudo yum -y erase
+	rpm -q --specfile "$(SPEC)" | xargs $(RUN_AS_ROOT) yum -y erase
 
 
 # Copy the products to a destination named by PRODUCTS_DEST

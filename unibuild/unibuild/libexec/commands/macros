@@ -28,15 +28,6 @@ case $# in
 esac
 
 
-macros()
-{
-    set \
-    | egrep -e '^OSINFO_[^=]{1,}=' \
-    | sed -e 's/^OSINFO_//g' \
-    | tr -d "'"
-}
-
-
 # Easy case: One macro.
 if [ "${MACRO}" ]
 then
@@ -46,14 +37,6 @@ fi
 
 # Print all macros, formatted nicely for humans.
 macros \
-    | sort \
-    | (
-    while read LINE
-    do
-	printf "%-12s %s\n" \
-	       $(echo "${LINE}" | awk -F= '{ print $1 }') \
-	       $(echo "${LINE}" | awk -F= '{ print $2 }')
-    done
-    )
+    | awk -F= '{ printf "%-20s %s\n", $1, $2 }'
 
 exit 0

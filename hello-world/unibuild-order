@@ -9,17 +9,14 @@ changecom()dnl
 #
 
 
-# This has packaging for RPM and Debian and is built on both:
-
+# This has packaging for RPM and Debian and is built on both.
 hello
 
 
-# This only has packaging for Debian, so it's only built there:
-
-ifelse(PACKAGING,deb,hello-deb)
+# This only has packaging for Debian, so it's only built there.
+hello-deb
 
 
 # This has packaging for RPM and Debian.  For some arbitrary reason,
-# we only want it built for RPM-based systems:
-
+# we force it to be built only for RPM-based systems.
 ifelse(PACKAGING,rpm,hello-rpm)

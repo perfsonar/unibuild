@@ -164,11 +164,12 @@ useful targets available:
 | | `cbdc` | Clean, build, dump and forced re-clean. |
 
 
-**NOTE:** The `build` and `install` targets will use `sudo(8)` to
-acquire superuser privileges required to install any build or runtime
-dependencies.  It is recommended that this be enabled in a
-frictionless mode (i.e., without having to interactively provide a
-password) for maximum build throughput.
+**NOTE:** If the effective UID of the process is not `0`, the `build`
+and `install` targets will use `sudo(8)` to acquire superuser
+privileges required to install any build or runtime dependencies.  It
+is recommended that this be enabled in a frictionless mode (i.e.,
+without having to interactively provide a password) for maximum build
+throughput.
 
 **NOTE:** The `r` (RPM dump), `cbr` (clean, build, RPM dump) and
 `cbrc` (claen, build, RPM dump, clean) targets that were present in

@@ -25,6 +25,46 @@ export UNIBUILD_LIB="${UNIBUILD}/lib"
 UNIBUILD_REPO_DIR=unibuild-repo
 
 
+
+
+#
+# MACROS
+#
+
+# Set an OSINFO macro
+set_osinfo_macro()
+{
+    eval export "OSINFO_$1=$2"
+}
+
+# Set a user-defined macro
+set_user_macro()
+{
+    echo "$1" | egrep -q -e '^[A-Za-z0-9_]+=.*$' \
+	|| die "Invalid macro definition '$1'"
+	
+    MACRO=$(echo "$1" | sed -e 's/=.*$//')
+    VALUE=$(echo "$1" | sed -e 's/^[^=]*=//')
+
+    eval export "UNIBUILD_USERDEF_$MACRO=$VALUE"
+}
+
+# Dump a sorted list of the macros.  Note that this takes advantage of
+# the sort order between OSINFO and UNIBUILD_USERDEF to make sure the
+# latter overrides the former.
+macros()
+{
+    set \
+    | sort \
+    | egrep -e '^(OSINFO|UNIBUILD_USERDEF)_[^=]{1,}=' \
+    | sed -e 's/^OSINFO_//g; s/^UNIBUILD_USERDEF_//g' \
+    | awk -F= '{ macros[$1] = $2 } END { for (macro in macros) { printf "%s=%s\n", macro, macros[macro] } }' \
+    | sort
+}
+
+
+
+
 #
 # INFORMATION ABOUT THE OPERATING SYSTEM
 #
@@ -40,20 +80,20 @@ elif [ -e '/etc/debian_version' ]; then
     OSINFO_FAMILY=Debian
 fi
 
-OSINFO_DISTRO=$(lsb_release --id --short)
-OSINFO_RELEASE=$(lsb_release --release --short)
-OSINFO_CODENAME=$(lsb_release --codename --short)
-OSINFO_MAJOR=$(echo "${OSINFO_RELEASE}" | cut -d . -f 1)
-OSINFO_MINOR=$(echo "${OSINFO_RELEASE}" | cut -d . -f 2)
-OSINFO_PATCH=$(echo "${OSINFO_RELEASE}" | cut -d . -f 3)
-OSINFO_ARCH=$(uname -m)
+set_osinfo_macro DISTRO $(lsb_release --id --short)
+set_osinfo_macro RELEASE $(lsb_release --release --short)
+set_osinfo_macro CODENAME $(lsb_release --codename --short)
+set_osinfo_macro MAJOR $(echo "${OSINFO_RELEASE}" | cut -d . -f 1)
+set_osinfo_macro MINOR $(echo "${OSINFO_RELEASE}" | cut -d . -f 2)
+set_osinfo_macro PATCH $(echo "${OSINFO_RELEASE}" | cut -d . -f 3)
+set_osinfo_macro ARCH $(uname -m)
 
 case "${OSINFO_FAMILY}" in
     RedHat)
-        OSINFO_PACKAGING=rpm
+	set_osinfo_macro PACKAGING rpm
         ;;
     Debian)
-        OSINFO_PACKAGING=deb
+	set_osinfo_macro PACKAGING deb
         ;;
     *)
         die "Unsupported OS family '${OSINFO_FAMILY}'"
@@ -85,12 +125,10 @@ build_order()
 {
     BUNDLE="$1"
 
-    # Make arguments for M4, which is every set variable that begins with
-    # OSINFO_.
-    DEFINES=$(set \
-	| sed -e '/^OSINFO_/!d; s/^OSINFO_\([^=]\+\)=\(.*\)$/-D '\''\1=\2'\''/' \
+    # Make macro definition arguments for M4.
+    DEFINES=$(macros \
+	| sed -e 's/^\([^=]\+\)=\(.*\)$/-D '\''\1=\2'\''/' \
 	| tr '\n' ' ')
-
 
     # Process file file:
     #  - Strip comments
@@ -104,6 +142,25 @@ build_order()
 	| bundle_filter "${BUNDLE}" \
 	| awk '{ print $1 }'
 }
+
+
+
+# Make sure the START and STOP parameters refer to something in the
+# build list for a bundle
+# Args:
+#  1 - Package Name
+#  2 - Bundle
+#  3 - Build order file
+validate_startstop()
+{
+    if [ -n "$1" ]
+    then
+	build_order "$2" < "$3" \
+	    | fgrep -qx "$1" \
+	    || die "$1: No such package."
+    fi
+}
+
 
 
 #

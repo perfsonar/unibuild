@@ -80,8 +80,12 @@ directory (e.g., the package `foo` would be located in the directory
 
 To allow intelligent decision making about what packages to build on
 what platforms, `unibuild-order` is processed with the [GNU M4 Macro
-Processor](https://www.gnu.org/software/m4).  To assist in this
-process, Unibuild makes the following macros available:
+Processor](https://www.gnu.org/software/m4).
+
+### Unibuild-Provided Macros
+
+Unibuild makes the following macros available to M4 based on
+information gathered from the system running it:
 
 | Macro | Description | Example |
 |-------|-------------|---------|
@@ -126,6 +130,30 @@ ifelse(DISTRO/MAJOR,Debian/9,,
        FAMILY/ARCH,Debian/ppc64el,,
        xyzzy)
 ```
+
+
+### User-Defined Macros
+
+Additional macros can be defined by invoking `unibuild` with the `--define` switch, e.g.:
+
+```
+$ unibuild --define THIS=foo --define THAT=bar macros
+ARCH                 x86_64
+CODENAME             Core
+DISTRO               CentOS
+FAMILY               RedHat
+MAJOR                7
+MINOR                9
+OS                   Linux
+PACKAGING            rpm
+PATCH                2009
+RELEASE              7.9.2009
+THAT                 bar
+THIS                 foo
+```
+
+Note that `--define` can be used to override the definition of
+unibuild-provided macros (e.g., `OS` or `ARCH`).
 
 
 ## Package Subdirectories
@@ -181,10 +209,16 @@ Unibuild packaging template:
 include unibuild/unibuild.make
 ```
 
-`AUTO_TARBALL` is required if the package is being built from a directory of
+Packages may be built from a tarball for cases where the software is
+acquired elsewhere or a directory of sources for cases where it is
+locally-maintained.  Defining `AUTO_TARBALL` instructs Unibuild's Make
+template to produce a tarball from the sources before proceeding to
+build the package.
 
 
 ### The `unibuild-packaging` Directory
+
+
 
 ```
 unibuild-packaging/
@@ -252,8 +286,6 @@ include unibuild/unibuild.make
 
 
 
-
-
 ## Building Repositories with Unibuild
 
 ```
@@ -271,4 +303,10 @@ TOP
 
 TODO: See ...Unibuild... for details
 TODO: See ...Unibuild-Package... for details
-TODO: Hello world example
+
+## Hello World
+
+Packaged with this distribution is a subdirectory called `hello-world`
+that builds three packages: `hello` on all systems, `hello-rpm` on
+RPM-based systems and `hello-deb` on Debian-based systems.  Each
+package installs a command in `/usr/bin` named after itself.

@@ -13,6 +13,14 @@ VERSION=$(shell fgrep Version: $(SPEC_FILE) | awk '{ print $$2 }')
 RPMDIR=$(shell pwd)/BUILD
 BUILDROOT=$(RPMDIR)/BUILDROOT
 
+# Figure out what needs to be run to get root.
+ifeq ($(shell id -u),0)
+  RUN_AS_ROOT :=
+else
+  RUN_AS_ROOT := sudo
+endif
+
+
 
 default: build
 
@@ -63,11 +71,11 @@ TO_CLEAN += *.src.rpm
 
 
 install: build
-	find $(RPMDIR)/RPMS -name "*.rpm" | xargs sudo rpm -Uvh --force
+	find $(RPMDIR)/RPMS -name "*.rpm" | xargs $(RUN_AS_ROOT) rpm -Uvh --force
 
 
 uninstall:
-	sudo yum -y remove $(NAME) || true
+	$(RUN_AS_ROOT) yum -y remove $(NAME) || true
 
 
 clean:

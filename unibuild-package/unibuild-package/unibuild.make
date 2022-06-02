@@ -13,6 +13,16 @@ default: build
 UNIBUILD_PACKAGE_MAKE=1
 
 
+# Figure out what needs to be run to get root.
+
+ifeq ($(shell id -u),0)
+  RUN_AS_ROOT :=
+else
+  RUN_AS_ROOT := sudo
+endif
+
+
+
 # Figure out what kind of packaging this system uses.  This uses the
 # same method as Unibuild.
 

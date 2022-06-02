@@ -10,10 +10,8 @@ ifndef UNIBUILD_PACKAGE_MAKE
 $(error Include unibuild-package.make, not an environment-specific template.)
 endif
 
-SUDO := sudo
-
 # Don't expect user interaction
-SUDO += DEBIAN_FRONTEND=noninteractive
+RUN_AS_ROOT += DEBIAN_FRONTEND=noninteractive
 
 # Basic package information
 
@@ -70,10 +68,21 @@ $(error "Found more than one potential source tarball.")
 endif
 
 BUILD_UNPACK_DIR := $(BUILD_DIR)/$(SOURCE)
+
 BUILD_DEBIAN_DIR := $(BUILD_UNPACK_DIR)/debian
 TAR_UNPACK_DIR := $(SOURCE_DIR)-unpack
 
-$(BUILD_UNPACK_DIR):
+
+ORIG_TARBALL := $(SOURCE)_$(VERSION).orig$(TARBALL_SUFFIX)
+SOURCE_VERSION := $(SOURCE)-$(VERSION)
+BUILD_ORIG_DIR := $(BUILD_DIR)/orig
+BUILD_ORIG_PACKAGE_DIR := $(BUILD_ORIG_DIR)/$(SOURCE_VERSION)
+
+$(BUILD_ORIG_DIR): $(PRODUCTS_DIR)
+	rm -rf '$@'
+	mkdir -p '$@'
+
+$(BUILD_UNPACK_DIR): $(PRODUCTS_DIR) $(BUILD_ORIG_DIR)
 	rm -rf '$@'
 	mkdir -p '$@'
 ifneq ($(SOURCE_TARBALL),)
@@ -93,7 +102,13 @@ else ifneq ($(DEBIAN_DIR_PARENT),$(dir $(BUILD_DIR)))
 else
 	@printf "\nNo tarball or source directory.\n\n"
 endif
-	@echo Installing Debian build into $(BUILD_DEBIAN_DIR):
+	@printf "\nBuilding 'orig' tarball $(ORIG_TARBALL).\n\n"
+	mkdir -p $(BUILD_ORIG_PACKAGE_DIR)
+	(cd '$@' && tar cf - .) | (cd $(BUILD_ORIG_PACKAGE_DIR) && tar xpf -)
+	ls -alh $(BUILD_ORIG_PACKAGE_DIR)/..
+	(cd $(BUILD_ORIG_DIR) && tar czf - $(SOURCE_VERSION)) > $(PRODUCTS_DIR)/$(ORIG_TARBALL)
+	cp $(PRODUCTS_DIR)/$(ORIG_TARBALL) $(BUILD_UNPACK_DIR)/..
+	@printf "\nInstalling Debian build into $(BUILD_DEBIAN_DIR)..\n\n"
 	rm -rf '$(BUILD_DEBIAN_DIR)'
 	cp -r '$(DEBIAN_DIR)' '$(BUILD_DEBIAN_DIR)'
 TO_BUILD := $(BUILD_UNPACK_DIR) $(TO_BUILD)
@@ -160,7 +175,7 @@ build:: $(TO_BUILD) $(PRODUCTS_DIR)
 			'debian/control'
 	@printf "\nBuild Package $(SOURCE) $(VERSION)\n\n"
 	(((( \
-		cd $(BUILD_UNPACK_DIR) && dpkg-buildpackage --build=any,all \
+		cd $(BUILD_UNPACK_DIR) && dpkg-buildpackage -sa \
 			--root-command=fakeroot --no-sign 2>&1 ; \
 		echo $$? >&3 \
 	) \
@@ -168,9 +183,9 @@ build:: $(TO_BUILD) $(PRODUCTS_DIR)
 	| (read XS; exit $$XS) \
 	) 4>&1
 
-	find '$(BUILD_DIR)' \
-		'(' -name "*.deb" -o -name "*.changes" -o -name "*.buildinfo" ')' \
-		-exec cp {} '$(PRODUCTS_DIR)' ';'
+	find '$(BUILD_DIR)' \( \
+		-name "*.deb" -o -name "*.dsc" -o -name "*.changes" -o -name "*.buildinfo" -o -name "*.build" -o -name "*.tar.*" \
+		\) -exec cp {} '$(PRODUCTS_DIR)' ';'
 
 
 # This target is for internal use only.
@@ -190,7 +205,7 @@ install:: _built
 	@find '$(PRODUCTS_DIR)' -name '*.deb' \
 		| fgrep -v -- '-build-deps' \
 		| sed -e 's|^|./|g' \
-		| $(SUDO) xargs apt-get -y --reinstall install
+		| $(RUN_AS_ROOT) xargs apt-get -y --reinstall install
 
 
 # Copy the products to a destination named by PRODUCTS_DEST
@@ -204,7 +219,7 @@ endif
 	    false ; \
 	fi
 	find "$(PRODUCTS_DIR)" \( \
-		-name '*.deb' -o -name '*.changes' -o -name '*.buildinfo' \
+		-name "*.deb" -o -name "*.dsc" -o -name "*.changes" -o -name "*.buildinfo" -o -name "*.build" -o -name "*.tar.*" \
 		\) -exec cp {} "$(PRODUCTS_DEST)" \;
 
 
@@ -214,7 +229,7 @@ uninstall::
 	@awk '$$1 == "Package:" { print $$2 }' ./unibuild/unibuild-packaging/deb/control \
 	| ( while read PACKAGE ; do \
 	    echo "    $${PACKAGE}" ; \
-	    yes | $(SUDO) apt remove -f $$PACKAGE ; \
+	    yes | $(RUN_AS_ROOT) apt remove -f $$PACKAGE ; \
 	    done )
 
 

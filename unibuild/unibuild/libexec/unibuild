@@ -26,6 +26,30 @@ help()
 }
 
 
+# Handle options
+
+while echo "$1" | egrep -q -e '^--'
+do
+    OPTION=$1
+    shift
+
+    case "${OPTION}" in
+	--define|-d)
+	    set_user_macro $1
+	    shift
+	    ;;
+    
+	--help|-h|help)
+	    help
+	    exit 0
+	    ;;
+
+	--*)
+	    die "Unknown option ${OPTION}.  Use --help for help."
+	    ;;
+    esac
+done
+
 if [ $# -lt 1 ]
 then
     COMMAND=build
@@ -35,27 +59,9 @@ else
 fi
 
 
-case "${COMMAND}" in
-    
-    --help|-h|help)
-	help
-	exit 0
-	;;
+RUN="${UNIBUILD_COMMANDS}/${COMMAND}"
 
-    --*)
-	die "Unknown option ${COMMAND}.  Use --help for help."
-	exit 1
-	;;
+[ -x "${RUN}" ] \
+    || die "${COMMAND}: Unknown command.  Use --help for help."
 
-    *)
-	RUN="${UNIBUILD_COMMANDS}/${COMMAND}"
-
-	[ -x "${RUN}" ] \
-	    || die "${COMMAND}: Unknown command.  Use --help for help."
-
-	exec "${RUN}" "$@"
-	;;
-
-esac
-
-die "Internal error:  this should not be reached."
+exec "${RUN}" "$@"

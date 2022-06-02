@@ -86,22 +86,8 @@ do
     esac
 done
 
-
-# Make sure the START and STOP parameters refer to something in the
-# build list.
-
-validate_startstop()
-{
-    if [ -n "$1" ]
-    then
-	build_order "${BUNDLE}" < "${FILE}" \
-	    | fgrep -qx "$1" \
-	    || die "$1: No such package."
-    fi
-}
-
-validate_startstop "${START}"
-validate_startstop "${STOP}"
+validate_startstop "${START}" "${BUNDLE}" "${FILE}"
+validate_startstop "${STOP}" "${BUNDLE}" "${FILE}"
 
 
 # Reverse the order of lines in a file.  This emulates tac(1) in a
