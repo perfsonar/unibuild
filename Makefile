@@ -12,6 +12,9 @@ ifdef STOP
 UNIBUILD_OPTS += --stop $(STOP)
 endif
 
+ifdef RELEASE
+UNIBUILD_OPTS += --release 
+endif
 
 BUILD_LOG=unibuild-log
 TO_CLEAN += $(BUILD_LOG)
@@ -30,6 +33,10 @@ build:
 	| (read XS; exit $$XS) \
 	) 4>&1
 	$(UNIBUILD)
+
+
+release:
+	RELEASE=1 $(MAKE)
 
 
 
