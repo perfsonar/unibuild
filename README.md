@@ -80,8 +80,12 @@ directory (e.g., the package `foo` would be located in the directory
 
 To allow intelligent decision making about what packages to build on
 what platforms, `unibuild-order` is processed with the [GNU M4 Macro
-Processor](https://www.gnu.org/software/m4).  To assist in this
-process, Unibuild makes the following macros available:
+Processor](https://www.gnu.org/software/m4).
+
+### Unibuild-Provided Macros
+
+Unibuild makes the following macros available to M4 based on
+information gathered from the system running it:
 
 | Macro | Description | Example |
 |-------|-------------|---------|
@@ -126,6 +130,30 @@ ifelse(DISTRO/MAJOR,Debian/9,,
        FAMILY/ARCH,Debian/ppc64el,,
        xyzzy)
 ```
+
+
+### User-Defined Macros
+
+Additional macros can be defined by invoking `unibuild` with the `--define` switch, e.g.:
+
+```
+$ unibuild --define THIS=foo --define THAT=bar macros
+ARCH                 x86_64
+CODENAME             Core
+DISTRO               CentOS
+FAMILY               RedHat
+MAJOR                7
+MINOR                9
+OS                   Linux
+PACKAGING            rpm
+PATCH                2009
+RELEASE              7.9.2009
+THAT                 bar
+THIS                 foo
+```
+
+Note that `--define` of the macros listed above (e.g., `OS` or `ARCH`)
+will override the Unibuild-provided definition.
 
 
 ## Package Subdirectories
