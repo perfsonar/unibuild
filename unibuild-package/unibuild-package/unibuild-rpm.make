@@ -111,8 +111,17 @@ $(INSTALLED_PATCH_FILES): $(BUILD_SOURCES)
 endif
 
 
-$(BUILD_DIR):: $(SPEC) $(BUILD_SPECS) $(INSTALLED_SOURCE_FILES) $(INSTALLED_PATCH_FILES)
-	cp $(SPEC) $(BUILD_SPECS)
+# Spec file in the build directory
+
+BUILD_SPEC_FILE := $(BUILD_SPECS)/$(SPEC_BASE)
+$(BUILD_SPEC_FILE): $(SPEC)
+	mkdir -p $(dir $@)
+	cp '$<' '$@'
+ifdef UNIBUILD_TIMESTAMP
+	sed -i -e 's/^\(Release:\s\+\).*$$/\10.$(UNIBUILD_TIMESTAMP)%{?dist}/' $@
+endif
+
+$(BUILD_DIR):: $(SPEC) $(BUILD_SPECS) $(BUILD_SPEC_FILE) $(INSTALLED_SOURCE_FILES) $(INSTALLED_PATCH_FILES)
 
 
 #
@@ -157,12 +166,6 @@ TO_BUILD += $(BUILD_SOURCE_TARBALL)
 endif
 
 
-# Spec file in the build directory
-
-BUILD_SPEC_FILE := $(BUILD_SPECS)/$(SPEC_BASE)
-$(BUILD_SPEC_FILE): $(SPEC)
-	cp '$<' '$@'
-TO_BUILD += $(BUILD_SPEC_FILE)
 
 
 
@@ -178,7 +181,7 @@ else
   RPMBUILD=rpmbuild-with-deps
 endif
 
-build:: $(TO_BUILD) $(PRODUCTS_DIR)
+build:: $(BUILD_SPEC_FILE) $(TO_BUILD) $(PRODUCTS_DIR)
 	(((( \
 		$(RPMBUILD) -ba \
 			--define '_topdir $(shell cd $(BUILD_DIR) && pwd)' \

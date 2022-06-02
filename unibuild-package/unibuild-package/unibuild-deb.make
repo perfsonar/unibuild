@@ -33,16 +33,33 @@ ifeq "$(SOURCE)" ""
 $(error Unable to find source name in $(CONTROL).)
 endif
 
+SRCFORMAT := $(shell grep -Eo '([a-z]+)' '$(DEBIAN_DIR)/source/format')
 
 CHANGELOG := $(DEBIAN_DIR)/changelog
-VERSION := $(shell egrep -e '^[^[:space:]]+[[:space:]]+' '$(CHANGELOG)' \
-	| awk 'NR == 1 { print $$2 }' \
-	| tr -d '()' \
-	| sed -e 's/[-+~].*$$//' \
-	)
+# Break down VERSION and REVISION
+VERSION := $(shell dpkg-parsechangelog -l '$(CHANGELOG)' \
+    | sed -n 's|Version: \([^-]*\)\(-.*\)*$$|\1|p' \
+    )
+# And leaving out any +dfsg.x suffix when looking for TARBALL
+NODFSG_VERSION := $(shell dpkg-parsechangelog -l '$(CHANGELOG)' \
+        | sed -n 's|Version: \([^-+]*\)\(+dfsg[.0-9]*\)\?\(-.*\)*$$|\1|p' \
+    )
+REVISION := $(shell dpkg-parsechangelog -l '$(CHANGELOG)' \
+    | sed -n 's|Version: \([^-]*\)\(-.*\)*$$|\2|p' \
+    )
 
 ifeq "$(VERSION)" ""
 $(error Unable to find version in $(CHANGELOG).)
+endif
+
+# If we have a UNIBUILD_TIMESTAMP, we are building a snapshot release
+ifdef UNIBUILD_TIMESTAMP
+VERSION := $(VERSION)~$(UNIBUILD_TIMESTAMP)
+ifeq "$(SRCFORMAT)" "native"
+  NEW_DEB_VERSION := $(VERSION)
+else
+  NEW_DEB_VERSION := $(VERSION)-1
+endif
 endif
 
 
@@ -53,7 +70,7 @@ endif
 
 TARBALL_SUFFIX := .tar.gz
 
-SOURCE_TARBALLS := $(wildcard $(SOURCE)-$(VERSION)$(TARBALL_SUFFIX) $(SOURCE)$(TARBALL_SUFFIX))
+SOURCE_TARBALLS := $(wildcard $(SOURCE)-$(NODFSG_VERSION)$(TARBALL_SUFFIX) $(SOURCE)$(TARBALL_SUFFIX))
 ifeq ($(words $(SOURCE_TARBALLS)),0)
 SOURCE_TARBALL :=
 else ifeq  ($(words $(SOURCE_TARBALLS)),1)
@@ -84,10 +101,10 @@ $(BUILD_ORIG_DIR): $(PRODUCTS_DIR)
 
 $(BUILD_UNPACK_DIR): $(PRODUCTS_DIR) $(BUILD_ORIG_DIR)
 	rm -rf '$@'
-	mkdir -p '$@'
+	mkdir -p '$@/$(SOURCE_DIR)'
 ifneq ($(SOURCE_TARBALL),)
 	@printf "\nUnpacking tarball $(SOURCE_TARBALL).\n\n"
-	(cd '$@' && tar xzf -) < '$(SOURCE_TARBALL)'
+	(cd '$@/$(SOURCE_DIR)' && tar xzf - --strip-components=1) < '$(SOURCE_TARBALL)'
 	mv '$@/$(SOURCE_DIR)' '$@/$(TAR_UNPACK_DIR)'
 	ls -a '$@/$(TAR_UNPACK_DIR)' \
 		| egrep -vxe '[.]{1,2}' \
@@ -168,6 +185,13 @@ BUILD_DEPS_PACKAGE := $(SOURCE)-build-deps
 # tarball for all build methods (tarball/source directory/none)
 
 build:: $(TO_BUILD) $(PRODUCTS_DIR)
+ifdef UNIBUILD_TIMESTAMP
+	@printf "\nUpdate changelog for SNAPSHOT build\n\n"
+	( cd $(BUILD_UNPACK_DIR) \
+        && dch -c debian/changelog -Mb --distribution=UNRELEASED --newversion=$(NEW_DEB_VERSION) \
+        -- 'SNAPSHOT build for '$(VERSION)' via Unibuild' \
+	)
+endif
 	@printf "\nInstall Dependencies\n\n"
 	cd $(BUILD_UNPACK_DIR) \
 		&& mk-build-deps --root-cmd=sudo --install --remove \
