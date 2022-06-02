@@ -1,0 +1,25 @@
+version: '3.8'
+services:
+  alma8:
+    image: ghcr.io/perfsonar/unibuild/alma8:latest
+    build:
+      context: ../
+      dockerfile: ./docker-envs/Dockerfile-alma8
+    volumes:
+      -  .:/app
+  centos7:
+    image: ghcr.io/perfsonar/unibuild/centos7:latest
+    build:
+      context: ../
+      dockerfile: ./docker-envs/Dockerfile-centos7
+      network: host
+    network_mode: "host"
+    volumes:
+      - .:/app
+  debian10:
+    image: ghcr.io/perfsonar/unibuild/debian10:latest
+    build:
+      context: ../
+      dockerfile: ./docker-envs/Dockerfile-debian10
+    volumes:
+      -  .:/app

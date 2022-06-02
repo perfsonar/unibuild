@@ -1,0 +1,20 @@
+FROM almalinux:latest
+
+#Install pre-requisites
+#Install utils like tree useful for debugging
+#Enable powertools since contains common dependencies
+RUN dnf update -y && \
+    dnf install -y rpm-build m4 make redhat-lsb-core sudo dnf-plugins-core epel-release tree && \
+    dnf config-manager --set-enabled powertools
+
+#Copy unibuild source
+COPY . /usr/share/unibuild/
+
+#Install unibuild
+WORKDIR /usr/share/unibuild
+RUN make
+
+
+#Shared volume for code to build
+VOLUME /app
+WORKDIR /app
