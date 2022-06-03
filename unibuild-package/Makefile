@@ -18,26 +18,15 @@ endif
 
 
 # Figure out what kind of packages are used by this system.  This is
-# verbatim from unibuild-package.make
+# verbatim from unibuild-package's unibuild.make.
 
-DISTRO_FAMILY := $(shell lsb_release --id --short)
-
-ifeq "$(DISTRO_FAMILY)" ""
-$(error Unable to determine Linux distribution.  (Is lsb_releases installed?))
+ifneq ($(wildcard /etc/redhat-release),)
+  PACKAGE_FORMAT := rpm
+else ifneq ($(wildcard /etc/debian_version),)
+  PACKAGE_FORMAT := deb
+else
+  $(error Unable to determine the package format on this system.)
 endif
-
-ifneq "$(filter AlmaLinux CentOS Fedora Rocky,$(DISTRO_FAMILY))" ""
-PACKAGE_FORMAT := rpm
-endif
-
-ifneq "$(filter Debian Ubuntu,$(DISTRO_FAMILY))" ""
-PACKAGE_FORMAT := deb
-endif
-
-ifeq "$(PACKAGE_FORMAT)" ""
-$(error No support for packaging on $(DISTRO_FAMILY))
-endif
-
 
 
 ifeq "$(PACKAGE_FORMAT)" "rpm"
