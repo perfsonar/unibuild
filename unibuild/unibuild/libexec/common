@@ -82,7 +82,7 @@ if [ -e '/etc/redhat-release' ]; then
     # Lsb_release vanished in EL9.  Do this stuff the hard way.
     set_osinfo_macro DISTRO $(source /etc/os-release && echo $ID)
     set_osinfo_macro RELEASE $(sed -e 's/^.*release\s\+//i; s/\s.*$//' /etc/redhat-release)
-    set_osinfo_macro CODENAME $(sed -e 's/^.*[(]\(.*\)[)].*$/\1/' /etc/redhat-release)
+    set_osinfo_macro CODENAME $(sed -e 's/^.*[(]\([^)]\+\)[)].*$/\1/' /etc/redhat-release)
 
 elif [ -e '/etc/debian_version' ]; then
 

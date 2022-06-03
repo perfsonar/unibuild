@@ -26,6 +26,7 @@ RPM or Debian format.  It consists of two parts:
    * RPM (From `rpm`)
    * RPMBuild (From `rpm-build`)
    * Spectool (From `rpmdevtools`, with no hyphen)
+   * Which (From `which`)
  * On Debian-based Systems:
    * Apt
    * DPkg
