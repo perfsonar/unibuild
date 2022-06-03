@@ -25,7 +25,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [ 'alma8', 'centos7', 'debian10']
+        os: [ 'alma8', 'alma9', 'centos7', 'debian10']
 
     runs-on: ubuntu-latest
     permissions:

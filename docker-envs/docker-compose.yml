@@ -7,6 +7,13 @@ services:
       dockerfile: ./docker-envs/Dockerfile-alma8
     volumes:
       -  .:/app
+  alma9:
+    image: ghcr.io/perfsonar/unibuild/alma9:latest
+    build:
+      context: ../
+      dockerfile: ./docker-envs/Dockerfile-alma9
+    volumes:
+      -  .:/app
   centos7:
     image: ghcr.io/perfsonar/unibuild/centos7:latest
     build:
