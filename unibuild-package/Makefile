@@ -29,28 +29,12 @@ else
 endif
 
 
-ifeq "$(PACKAGE_FORMAT)" "rpm"
-
-# TODO: Make sure this still works on CentOS.
-# TODO: This should be abstracted out into a packaging-specific script
-prep:
-	which spectool > /dev/null 2>&1 || $(RUN_AS_ROOT) yum -y install spectool
-	which rpmbuild > /dev/null 2>&1 || $(RUN_AS_ROOT) yum -y install rpm-build
-
-else
-
-prep:
-	@true
-
-endif
-
-
 
 ifndef STAGE2
 
 # Stage 1: Do prep and launch the real thing.
 
-%: prep
+%:
 	$(MAKE) STAGE2=1 $@
 
 else

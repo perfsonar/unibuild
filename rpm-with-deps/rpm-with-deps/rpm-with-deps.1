@@ -25,7 +25,8 @@ rpm-with-deps \- Run RPM, installing any dependent packages on failure
 front-ends
 .IR rpm (8)
 and intercepts errors caused by missing dependencies.  The errors are
-used to install the missing packages using YUM, after which the run of
+used to install the missing packages using DNF or YUM, after which the
+run of
 .IR rpm (8)
 is attempted again.
 

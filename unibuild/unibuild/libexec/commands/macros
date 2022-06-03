@@ -31,7 +31,7 @@ esac
 # Easy case: One macro.
 if [ "${MACRO}" ]
 then
-    macros | awk -F= -v MACRO=${MACRO} '$1 == MACRO { print $2; exit 0 } END { exit 1 }'
+    macros | awk -F= -v "MACRO=${MACRO}" '$1 == MACRO { print $2; exit 0 } END { exit 1 }'
     exit $?
 fi
 

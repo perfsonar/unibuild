@@ -39,7 +39,7 @@ do
 
     case "${OPTION}" in
 	--define|-d)
-	    set_user_macro $1
+	    set_user_macro "$1"
 	    shift
 	    ;;
     

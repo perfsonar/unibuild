@@ -20,12 +20,10 @@ Provides:	%{name} = %{version}-%{release}
 
 BuildRequires:	unibuild-package
 BuildRequires:	make
-BuildRequires:	redhat-lsb-core
 
 Requires:       createrepo
 Requires:	unibuild-package
 Requires:	make
-Requires:	redhat-lsb-core
 
 
 

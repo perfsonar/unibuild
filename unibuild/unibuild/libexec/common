@@ -34,7 +34,7 @@ UNIBUILD_REPO_DIR=unibuild-repo
 # Set an OSINFO macro
 set_osinfo_macro()
 {
-    eval export "OSINFO_$1=$2"
+    eval export "OSINFO_$1=\"$2\""
 }
 
 # Set a user-defined macro
@@ -46,7 +46,7 @@ set_user_macro()
     MACRO=$(echo "$1" | sed -e 's/=.*$//')
     VALUE=$(echo "$1" | sed -e 's/^[^=]*=//')
 
-    eval export "UNIBUILD_USERDEF_$MACRO=$VALUE"
+    eval export "UNIBUILD_USERDEF_$MACRO=\"$VALUE\""
 }
 
 # Dump a sorted list of the macros.  Note that this takes advantage of
@@ -57,7 +57,7 @@ macros()
     set \
     | sort \
     | egrep -e '^(OSINFO|UNIBUILD_USERDEF)_[^=]{1,}=' \
-    | sed -e 's/^OSINFO_//g; s/^UNIBUILD_USERDEF_//g' \
+    | sed -e "s/^OSINFO_//g; s/^UNIBUILD_USERDEF_//g; s/='/=/; s/'\$//" \
     | awk -F= '{ macros[$1] = $2 } END { for (macro in macros) { printf "%s=%s\n", macro, macros[macro] } }' \
     | sort
 }
@@ -80,17 +80,17 @@ if [ -e '/etc/redhat-release' ]; then
     set_osinfo_macro FAMILY RedHat
     set_osinfo_macro PACKAGING rpm
     # Lsb_release vanished in EL9.  Do this stuff the hard way.
-    set_osinfo_macro DISTRO $(source /etc/os-release && echo $ID)
-    set_osinfo_macro RELEASE $(sed -e 's/^.*release\s\+//i; s/\s.*$//' /etc/redhat-release)
-    set_osinfo_macro CODENAME $(sed -e 's/^.*[(]\(.*\)[)].*$/\1/' /etc/redhat-release)
+    set_osinfo_macro DISTRO "$(source /etc/os-release && echo $ID)"
+    set_osinfo_macro RELEASE "$(sed -e 's/^.*release\s\+//i; s/\s.*$//' /etc/redhat-release)"
+    set_osinfo_macro CODENAME "$(sed -e 's/^.*[(]\([^)]\+\)[)].*$/\1/' /etc/redhat-release)"
 
 elif [ -e '/etc/debian_version' ]; then
 
     set_osinfo_macro FAMILY Debian
     set_osinfo_macro PACKAGING deb
-    set_osinfo_macro DISTRO $(lsb_release --id --short)
-    set_osinfo_macro RELEASE $(lsb_release --release --short)
-    set_osinfo_macro CODENAME $(lsb_release --codename --short)
+    set_osinfo_macro DISTRO "$(lsb_release --id --short)"
+    set_osinfo_macro RELEASE "$(lsb_release --release --short)"
+    set_osinfo_macro CODENAME "$(lsb_release --codename --short)"
 
 else
 
@@ -98,10 +98,10 @@ else
 
 fi
 
-set_osinfo_macro MAJOR $(echo "${OSINFO_RELEASE}" | cut -d . -f 1)
-set_osinfo_macro MINOR $(echo "${OSINFO_RELEASE}" | cut -d . -f 2)
-set_osinfo_macro PATCH $(echo "${OSINFO_RELEASE}" | cut -d . -f 3)
-set_osinfo_macro ARCH $(uname -m)
+set_osinfo_macro MAJOR "$(echo "${OSINFO_RELEASE}" | cut -d . -f 1)"
+set_osinfo_macro MINOR "$(echo "${OSINFO_RELEASE}" | cut -d . -f 2)"
+set_osinfo_macro PATCH "$(echo "${OSINFO_RELEASE}" | cut -d . -f 3)"
+set_osinfo_macro ARCH "$(uname -m)"
 
 
 #
