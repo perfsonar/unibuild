@@ -27,9 +27,7 @@ BUNDLE=
 START=
 STOP=
 
-[ -t 0 ] \
-    && FILE=unibuild-order \
-    || FILE=""
+FILE=unibuild-order
 
 while [ "$1" ]
 do
