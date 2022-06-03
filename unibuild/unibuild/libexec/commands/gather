@@ -107,6 +107,9 @@ DEST=$(readlink -e "${DEST}")
 BUILD_LIST="${TMPBASE}.list"
 rm -f "${BUILD_LIST}"
 
+[ "${FILE}" != '-' -a ! -r "${FILE}" ] \
+    && die "No ${FILE} file.  Not doing anything."
+
 cat ${FILE} \
     | build_order "${BUNDLE}" \
     | ([ -n "${START}" ] && sed -n "/^${START}\$/,\$p" || cat) \

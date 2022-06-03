@@ -98,12 +98,17 @@ reverse()
     sed '1!G;h;$!d'
 }
 
+[ "${FILE}" != '-' -a ! -r "${FILE}" ] \
+    && die "No ${FILE} file.  Not doing anything."
+
 cat ${FILE} \
     | build_order "${BUNDLE}" \
     | ${REVERSE} \
     | ([ -n "${START}" ] && sed -n "/^${START}\$/,\$p" || cat) \
     | while read PACKAGE
 do
+
+    [ -d "${PACKAGE}" ] || die "No directory for package '${PACKAGE}'."
 
     if ! (find "${PACKAGE}" -type d | egrep -qe "/unibuild-packaging/${OSINFO_PACKAGING}\$")
     then

@@ -75,6 +75,9 @@ buildable_filter()
     done
 }
 
+[ "${FILE}" != '-' -a ! -r "${FILE}" ] \
+    && die "No ${FILE} file.  Not doing anything."
+
 cat ${FILE} | build_order "${BUNDLE}" | $BUILDABLE_FILTER
 
 exit 0
