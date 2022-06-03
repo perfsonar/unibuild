@@ -1,4 +1,4 @@
-FROM almalinux9:latest
+FROM almalinux9-minimal:latest
 
 #Install pre-requisites
 #Install utils like tree useful for debugging
