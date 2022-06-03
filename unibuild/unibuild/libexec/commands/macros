@@ -12,6 +12,13 @@ Usage: ${WHOAMI} [ MACRO-NAME ]
 EOF
 }
 
+if [ "$1" = "--help" ]
+then
+    cat <<EOF
+Usage: $(basename $0) [ MACRO-NAME ]
+EOF
+fi
+
 
 MACRO=
 case $# in
