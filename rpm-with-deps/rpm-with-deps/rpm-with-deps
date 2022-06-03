@@ -48,13 +48,29 @@ then
     exit $STATUS
 fi
 
-# Install anything that was missing.  YUM has a nasty habit of not
-# treating uninstallable packages as being a problem, so the RPM that
-# follows will have to die for its sins.
+# Install anything that was missing.  DNF and YUM have a nasty habit
+# of not treating uninstallable packages as being a problem, so the
+# RPM that follows will have to die for its sins.
 
 [ $(id -u) = 0 ] && RUN_AS_ROOT= || RUN_AS_ROOT=sudo
 
-< $TMPBASE.missing xargs -r ${RUN_AS_ROOT} yum -y --color=never install 
+# Find whichever installer is available
+for INSTALLER in dnf yum
+do
+    if which ${INSTALLER} > /dev/null 2>&1
+    then
+	INSTALL_PACKAGE=${INSTALLER}
+	break
+    fi
+done
+
+if [ -z "${INSTALL_PACKAGE}" ]
+then
+    echo "Can't find a package installer." 1>&2
+    exit 1
+fi
+
+< $TMPBASE.missing xargs -r ${RUN_AS_ROOT} ${INSTALL_PACKAGE} -y --color=never install 
 
 # Do this manually because exec doesn't count as an exit.
 cleanup

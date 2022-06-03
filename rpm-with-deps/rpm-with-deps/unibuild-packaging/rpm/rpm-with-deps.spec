@@ -19,6 +19,11 @@ Source0:	%{name}-%{version}.tar.gz
 Provides:	%{name} = %{version}-%{release}
 
 Requires:	bash
+%if 0%{?el7}
+Requires:	yum
+%else
+Requires:	dnf
+%endif
 
 %description
 

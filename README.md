@@ -23,8 +23,9 @@ RPM or Debian format.  It consists of two parts:
  * Sudo
  * On RPM-based Systems:
    * The Bourne Again Shell (BASH)
-   * RPM
-   * RPMBuild
+   * RPM (From `rpm`)
+   * RPMBuild (From `rpm-build`)
+   * Spectool (From `rpmdevtools`, with no hyphen)
  * On Debian-based Systems:
    * Apt
    * DPkg

@@ -4,7 +4,7 @@ FROM almalinux:latest
 #Install utils like tree useful for debugging
 #Enable powertools since contains common dependencies
 RUN dnf update -y && \
-    dnf install -y rpm-build m4 make redhat-lsb-core sudo dnf-plugins-core epel-release tree && \
+    dnf install -y rpm rpm-build rpmdevtools m4 make redhat-lsb-core sudo dnf-plugins-core epel-release tree && \
     dnf config-manager --set-enabled powertools
 
 #Copy unibuild source
