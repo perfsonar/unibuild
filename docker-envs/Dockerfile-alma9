@@ -5,8 +5,8 @@ FROM almalinux:9-minimal
 #Enable powertools since contains common dependencies
 RUN microdnf install -y dnf \
     && dnf update -y \
-    && dnf config-manager --enable crb \
-    && dnf install -y rpm rpm-build rpmdevtools m4 make sudo dnf-plugins-core epel-release tree 
+    && dnf install -y rpm rpm-build rpmdevtools m4 make sudo dnf-plugins-core epel-release tree \
+    && dnf config-manager --enable crb
 
 #Copy unibuild source
 COPY . /usr/share/unibuild/
