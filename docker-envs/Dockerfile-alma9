@@ -13,7 +13,7 @@ COPY . /usr/share/unibuild/
 
 #Install unibuild
 WORKDIR /usr/share/unibuild
-RUN make
+RUN make RELEASE=1
 
 #Shared volume for code to build
 VOLUME /app
