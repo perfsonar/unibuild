@@ -2,18 +2,18 @@
 # Makefile for Unibuild
 #
 
-UNIBUILD=./unibuild/unibuild/libexec/unibuild
+ifdef RELEASE
+UNIBUILD_OPTS += --release
+endif
+
+UNIBUILD=./unibuild/unibuild/libexec/unibuild $(UNIBUILD_OPTS)
 
 ifdef START
-UNIBUILD_OPTS += --start $(START)
+UNIBUILD_BUILD_OPTS += --start $(START)
 endif
 
 ifdef STOP
-UNIBUILD_OPTS += --stop $(STOP)
-endif
-
-ifdef RELEASE
-UNIBUILD_OPTS += --release 
+UNIBUILD_BUILD_OPTS += --stop $(STOP)
 endif
 
 BUILD_LOG=unibuild-log
@@ -26,7 +26,7 @@ default: $(REPO)
 
 build:
 	(((( \
-		$(UNIBUILD) build $(UNIBUILD_OPTS) ; \
+		$(UNIBUILD) build $(UNIBUILD_BUILD_OPTS) ; \
 		echo $$? >&3 \
 	) \
 	| tee $(BUILD_LOG) >&4) 3>&1) \

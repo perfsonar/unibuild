@@ -158,6 +158,17 @@ Note that `--define` can be used to override the definition of
 unibuild-provided macros (e.g., `OS` or `ARCH`).
 
 
+### Timestamps
+
+Unibuild adds a timestemp to all packages it produces that reflects
+the time Unibuild was invoked.  This is a common practice to allow
+versions of a package produced during repeated development builds to
+be considered later by package managers.
+
+To disable this behavior for released versions of packages, add the
+`--release` flag to the `unibuild` invocation (e.g., `unibuild --release`).
+
+
 ## Package Subdirectories
 
 Each package to be built as part of a repository 

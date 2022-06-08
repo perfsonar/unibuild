@@ -14,7 +14,6 @@ OPTIONS:
 
   --start P  Start with package P
   --stop P   Stop after package P
-  --release  Do a release build, without timestamp
 
 EOF
 }
@@ -27,11 +26,6 @@ STOP_PACKAGE=
 while [ "$1" ]
 do
     case "$1" in
-
-	--release)
-	    unset UNIBUILD_TIMESTAMP
-	    shift
-	    ;;
 
 	--start)
 	    START=$2

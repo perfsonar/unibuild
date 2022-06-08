@@ -18,10 +18,15 @@ export UNIBUILD=$(dirname "${UNIBUILD_CANONICAL}")
 
 help()
 {
-    echo "Usage: ${WHOAMI} COMMAND [ ARGUMENTS ]"
-    echo
-    echo "Commands:  (Use 'COMMAND --help' for further help.)"
-    echo
+    cat <<EOF
+Usage: ${WHOAMI} [ OPTIONS ] COMMAND [ ARGUMENTS ]"
+
+    --define NAME=VALUE    Define Unibuild macro 'NAME' to 'VALUE'
+    --release              Don't timestamp products produced
+
+Commands:  (Use 'COMMAND --help' for further help.)"
+
+EOF
     ls "${UNIBUILD_COMMANDS}" \
         | fgrep -x -v -e xyzzy \
 	| pr -4 -T -t \
@@ -41,6 +46,10 @@ do
 	--define|-d)
 	    set_user_macro "$1"
 	    shift
+	    ;;
+
+	--release)
+	    unset UNIBUILD_TIMESTAMP
 	    ;;
     
 	--help|-h|help)

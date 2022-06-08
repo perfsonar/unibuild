@@ -7,9 +7,14 @@
 WHOAMI=$(basename $0)
 WHEREAMI=$(dirname $0)
 
-die()
+warn()
 {
     [ "$@" ] && echo "$@" 1>&2
+}
+
+die()
+{
+    warn "$@"
     exit 1
 }
 
