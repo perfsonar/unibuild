@@ -4,7 +4,7 @@ FROM centos:7
 #Install utils like tree useful for debugging
 #Enable powertools since contains common dependencies
 RUN yum update -y && \
-    yum install -y rpm rpm-build rpmdevtools m4 make redhat-lsb-core sudo epel-release tree
+    yum install -y rpm rpm-build rpmdevtools m4 make redhat-lsb-core sudo epel-release tree which
 
 #Copy unibuild source
 COPY . /usr/share/unibuild/
