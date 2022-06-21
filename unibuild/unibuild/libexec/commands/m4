@@ -1,0 +1,22 @@
+#!/bin/sh
+#
+# m4 - Process a file using m4 with Unibuild's macros available.
+#
+
+. "${UNIBUILD}/common"
+
+help()
+{
+    cat <<EOF
+Usage: ${WHOAMI} [ M4-ARGUMENTS ]
+
+EOF
+}
+
+if [ "$1" = "--help" ]
+then
+    help
+    exit 0
+fi
+
+unibuild_m4 "$@"
