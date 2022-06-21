@@ -8,15 +8,38 @@
 help()
 {
     cat <<EOF
-Usage: ${WHOAMI} [ M4-ARGUMENTS ]
+Usage: ${WHOAMI} [ OPTIONS ] [ M4-ARGUMENTS ]
 
+Options:
+    --prefix p    Prefix all macros with p
 EOF
 }
 
-if [ "$1" = "--help" ]
-then
-    help
-    exit 0
-fi
+PREFIX=""
 
-unibuild_m4 "$@"
+while echo "$1" | egrep -q -e '^--'
+do
+    OPTION=$1
+    shift
+
+    case "${OPTION}" in
+
+	--help|-h)
+	    help
+	    exit 0
+	    ;;
+
+	--prefix)
+	    PREFIX="$1"
+	    shift
+	    ;;
+
+	--*)
+	    die "Unknown option ${OPTION}.  Use --help for help."
+	    ;;
+    esac
+done
+
+
+echo unibuild_m4 --prefix "${PREFIX}" "$@"
+unibuild_m4 --prefix "${PREFIX}" "$@"

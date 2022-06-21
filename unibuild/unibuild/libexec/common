@@ -129,10 +129,19 @@ bundle_filter()
 # Run stdin through M4 with all of unibuild's macros in place.
 unibuild_m4()
 {
+    if [ "$1" == "--prefix" ]
+    then
+	PREFIX="$2"
+	shift
+	shift
+    else
+	PREFIX=""
+    fi
+    
     # Make macro definition arguments for M4.
     DEFINES=$(macros \
-	| sed -e 's/^\([^=]\+\)=\(.*\)$/-D '\''\1=\2'\''/' \
-	| tr '\n' ' ')
+		  | sed -e 's/^\([^=]\+\)=\(.*\)$/-D '\'"${PREFIX}"'\1=\2'\''/' \
+		  | tr '\n' ' ')
 
     sh -c "m4 ${DEFINES}"
 }
