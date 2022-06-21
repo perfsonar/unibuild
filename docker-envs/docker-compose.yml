@@ -1,32 +1,34 @@
 version: '3.8'
 services:
-  alma8:
-    image: ghcr.io/perfsonar/unibuild/alma8:latest
+
+  el7:
+    image: ghcr.io/perfsonar/unibuild/el7:latest
     build:
       context: ../
-      dockerfile: ./docker-envs/Dockerfile-alma8
-    volumes:
-      -  .:/app
-  alma9:
-    image: ghcr.io/perfsonar/unibuild/alma9:latest
-    build:
-      context: ../
-      dockerfile: ./docker-envs/Dockerfile-alma9
-    volumes:
-      -  .:/app
-  centos7:
-    image: ghcr.io/perfsonar/unibuild/centos7:latest
-    build:
-      context: ../
-      dockerfile: ./docker-envs/Dockerfile-centos7
+      dockerfile: ./docker-envs/Dockerfile-el7
       network: host
     network_mode: "host"
     volumes:
       - .:/app
-  debian10:
-    image: ghcr.io/perfsonar/unibuild/debian10:latest
+  el8:
+    image: ghcr.io/perfsonar/unibuild/el8:latest
     build:
       context: ../
-      dockerfile: ./docker-envs/Dockerfile-debian10
+      dockerfile: ./docker-envs/Dockerfile-el8
+    volumes:
+      -  .:/app
+  el9:
+    image: ghcr.io/perfsonar/unibuild/el9:latest
+    build:
+      context: ../
+      dockerfile: ./docker-envs/Dockerfile-el9
+    volumes:
+      -  .:/app
+
+  d10:
+    image: ghcr.io/perfsonar/unibuild/d10:latest
+    build:
+      context: ../
+      dockerfile: ./docker-envs/Dockerfile-d10
     volumes:
       -  .:/app
