@@ -1,6 +1,5 @@
 version: '3.8'
 services:
-
   el7:
     image: ghcr.io/perfsonar/unibuild/el7:latest
     build:
@@ -24,7 +23,6 @@ services:
       dockerfile: ./docker-envs/Dockerfile-el9
     volumes:
       -  .:/app
-
   d10:
     image: ghcr.io/perfsonar/unibuild/d10:latest
     build:
