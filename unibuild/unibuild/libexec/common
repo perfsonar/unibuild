@@ -90,9 +90,11 @@ elif [ -e '/etc/debian_version' ]; then
 
     set_osinfo_macro FAMILY Debian
     set_osinfo_macro PACKAGING deb
-    set_osinfo_macro DISTRO "$(lsb_release --id --short)"
-    set_osinfo_macro RELEASE "$(lsb_release --release --short)"
-    set_osinfo_macro CODENAME "$(lsb_release --codename --short)"
+    set_osinfo_macro DISTRO "$(awk -F= '$1 == "NAME" { print $2 }' /etc/os-release | tr -d '"' | sed -e 's/\s.*$//' )"
+    set_osinfo_macro RELEASE "$(awk -F= '$1 == "VERSION_ID" { print $2 }' /etc/os-release \
+                       | tr -d '"')"
+    set_osinfo_macro CODENAME "$(awk -F= '$1 == "VERSION" { print $2 }' /etc/os-release \
+                        | sed -e 's/^.*[(]\(.*\)[)].*$/\1/')"
 
 else
 
