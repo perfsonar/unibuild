@@ -130,7 +130,7 @@ bundle_filter()
 # Run stdin through M4 with all of unibuild's macros in place.
 unibuild_m4()
 {
-    if [ "$1" == "--prefix" ]
+    if [ "$1" = "--prefix" ]
     then
 	PREFIX="$2"
 	shift
