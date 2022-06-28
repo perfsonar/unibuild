@@ -232,7 +232,12 @@ install:: _built
 		| $(RUN_AS_ROOT) xargs apt-get -y --reinstall install
 
 
-# Copy the products to a destination named by PRODUCTS_DEST
+# Copy the products to a destination named by PRODUCTS_DEST and add
+# additional info to the repo.
+
+REPO_UNIBUILD := $(PRODUCTS_DEST)/unibuild
+DEBIAN_PACKAGE_ORDER := $(REPO_UNIBUILD)/debian-package-order
+
 install-products: $(PRODUCTS_DIR)
 ifndef PRODUCTS_DEST
 	@printf "\nERROR: No PRODUCTS_DEST defined for $@.\n\n"
@@ -245,6 +250,10 @@ endif
 	find "$(PRODUCTS_DIR)" \( \
 		-name "*.deb" -o -name "*.dsc" -o -name "*.changes" -o -name "*.buildinfo" -o -name "*.build" -o -name "*.tar.*" \
 		\) -exec cp {} "$(PRODUCTS_DEST)" \;
+	mkdir -p "$(REPO_UNIBUILD)"
+	sed -e ':a;/\\\s*$$/{N;s/\\\s*\n//;ba}' "$(CONTROL)" \
+		| awk '$$1 == "Source:" { print $$2; exit }' \
+		>> "$(DEBIAN_PACKAGE_ORDER)"
 
 
 # TODO: This doesn't work.
