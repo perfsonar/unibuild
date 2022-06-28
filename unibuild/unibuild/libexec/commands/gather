@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 #
 # gather - Gather all products into a single directory
 #

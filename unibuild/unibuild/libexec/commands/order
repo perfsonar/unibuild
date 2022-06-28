@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 #
 # order - Dump the build order, optionally for a bundle.
 #
