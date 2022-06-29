@@ -120,6 +120,7 @@ else
 	@printf "\nNo tarball or source directory.\n\n"
 endif
 	@printf "\nBuilding 'orig' tarball $(ORIG_TARBALL).\n\n"
+	# TODO: the orig tarball shouldn't include the unibuild-packaging dir
 	mkdir -p $(BUILD_ORIG_PACKAGE_DIR)
 	(cd '$@' && tar cf - .) | (cd $(BUILD_ORIG_PACKAGE_DIR) && tar xpf -)
 	ls -alh $(BUILD_ORIG_PACKAGE_DIR)/..
