@@ -184,6 +184,17 @@ BUILD_DEPS_PACKAGE := $(SOURCE)-build-deps
 # TODO: --build flag should be removed after we can get an original
 # tarball for all build methods (tarball/source directory/none)
 
+
+ifeq ($(shell id -u),0)
+  ROOT_CMD :=
+else
+  ROOT_CMD := --root-cmd=sudo
+endif
+
+
+
+
+
 build:: $(TO_BUILD) $(PRODUCTS_DIR)
 ifdef UNIBUILD_TIMESTAMP
 	@printf "\nUpdate changelog for SNAPSHOT build\n\n"
@@ -194,7 +205,7 @@ ifdef UNIBUILD_TIMESTAMP
 endif
 	@printf "\nInstall Dependencies\n\n"
 	cd $(BUILD_UNPACK_DIR) \
-		&& mk-build-deps --root-cmd=sudo --install --remove \
+		&& mk-build-deps $(ROOT_CMD) --install --remove \
 			--tool='apt-get -o Debug::pkgProblemResolver=yes --no-install-recommends --yes' \
 			'debian/control'
 	@printf "\nBuild Package $(SOURCE) $(VERSION)\n\n"
