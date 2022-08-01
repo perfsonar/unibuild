@@ -30,3 +30,31 @@ services:
       dockerfile: ./docker-envs/Dockerfile-d10
     volumes:
       -  .:/app
+  d11:
+    image: ghcr.io/perfsonar/unibuild/d11:latest
+    build:
+      context: ../
+      dockerfile: ./docker-envs/Dockerfile-d11
+    volumes:
+      -  .:/app
+  u18:
+    image: ghcr.io/perfsonar/unibuild/u18:latest
+    build:
+      context: ../
+      dockerfile: ./docker-envs/Dockerfile-u18
+    volumes:
+      -  .:/app
+  u20:
+    image: ghcr.io/perfsonar/unibuild/u20:latest
+    build:
+      context: ../
+      dockerfile: ./docker-envs/Dockerfile-u20
+    volumes:
+      -  .:/app
+  u22:
+    image: ghcr.io/perfsonar/unibuild/u22:latest
+    build:
+      context: ../
+      dockerfile: ./docker-envs/Dockerfile-u22
+    volumes:
+      -  .:/app
