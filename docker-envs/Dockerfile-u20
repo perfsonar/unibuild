@@ -4,8 +4,8 @@ FROM ubuntu:20.04
 #Install pre-requisites
 #Install utils like tree useful for debugging
 #Enable powertools since contains common dependencies
-RUN apt update -y && \
-    apt install -y sudo rsync pylint devscripts tree screen wget htop emacs-nox vim
+RUN DEBIAN_FRONTEND=noninteractive apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y sudo rsync pylint devscripts equivs tree screen wget htop emacs-nox vim m4
 
 #Copy unibuild source
 COPY . /usr/share/unibuild/

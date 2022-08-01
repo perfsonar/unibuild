@@ -44,10 +44,3 @@ services:
       dockerfile: ./docker-envs/Dockerfile-u20
     volumes:
       -  .:/app
-  u22:
-    image: ghcr.io/perfsonar/unibuild/u22:latest
-    build:
-      context: ../
-      dockerfile: ./docker-envs/Dockerfile-u22
-    volumes:
-      -  .:/app
