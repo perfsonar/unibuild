@@ -74,6 +74,20 @@ install: build
 	find $(RPMDIR)/RPMS -name "*.rpm" | xargs $(RUN_AS_ROOT) rpm -Uvh --force
 
 
+# Copy the products to a destination named by PRODUCTS_DEST
+install-products:
+ifndef PRODUCTS_DEST
+	@printf "\nERROR: No PRODUCTS_DEST defined for $@.\n\n"
+	@false
+endif
+	@if [ ! -d "$(PRODUCTS_DEST)" ] ; then \
+	    printf "\nERROR: $(PRODUCTS_DEST) is not a directory.\n\n" ; \
+	    false ; \
+	fi
+	find "$(RPMDIR)" -name '*.rpm' -exec cp {} "$(PRODUCTS_DEST)" \;
+
+
+
 uninstall:
 	$(RUN_AS_ROOT) yum -y remove $(NAME) || true
 

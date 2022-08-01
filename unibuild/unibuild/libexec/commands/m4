@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/sh -e
 #
 # m4 - Process a file using m4 with Unibuild's macros available.
 #
