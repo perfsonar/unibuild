@@ -52,6 +52,21 @@ $ cd unibuild
 $ make
 ```
 
+This process builds and installs the following packages:
+
+ * `unibuild` - The unibuild program and supporting files
+ * `unibuild-package` - A set of `Makefile` templates used to build
+   individual packages.
+ * `rpm-with-deps` - A utility used by the RPM packager built only on
+   RPM-based systems.
+
+
+Note that the process of building and installing Unibuild is done
+almost entirely with Unibuild itself.  Failures to build successfully
+unrelated to the prerequisites likely indicates a problem with
+Unibuild.  Please report those as bugs.
+
+
 
 
 # Using Unibuild
@@ -72,17 +87,27 @@ my-project/
      +-- xyzzy/
 ```
 
+Each package to be built as part of a repository lives in its own
+directory.  Naming the directory to match the package is a good
+convention but is not required.  Exceptions should be made where
+prudent.  For example, a package called `python-foo` might end up
+producing an installable product called `python3-foo` on some systems.
+
+
 ## The `unibuild-order` File
 
 The order in which the packages are built is determined by the
 contents of `unibuild-order`.  This is a flat file containing a list
-of package names to be built.  Each package is found in a same-named
-directory (e.g., the package `foo` would be located in the directory
-`./foo`).
+of package names to be built separated by newlines.  Comments in the
+file begin with a pound sign (`#`) and empty lines are ignored.
+
+Each package is found in a same-named directory (e.g., the package
+`foo` would be located in the directory `./foo`).
 
 To allow intelligent decision making about what packages to build on
 what platforms, `unibuild-order` is processed with the [GNU M4 Macro
 Processor](https://www.gnu.org/software/m4).
+
 
 ### Unibuild-Provided Macros
 
@@ -154,8 +179,26 @@ THAT                 bar
 THIS                 foo
 ```
 
-Note that `--define` can be used to override the definition of
-unibuild-provided macros (e.g., `OS` or `ARCH`).
+Note that `--define` can be used to override the definitions of macros
+provided by Unibuild (e.g., `OS` or `ARCH`).
+
+
+### Bundles
+
+Some projects separate packages into bundles that are built as
+separate packages containing only dependencies on those packages.
+Unibuild allows a package to be marked for a bundle by adding a
+`--bundle` switch` to the line naming the package, e.g.,:
+
+```
+foo --bundle bar
+```
+
+The list of packages marked for a bundle may be retrived using the
+command `unibuild order --bundle BUNDLE-NAME`.
+
+Packages where no `--bundle` option is specified are automatically
+included in a bundle named `none`.
 
 
 ### Timestamps
@@ -167,11 +210,6 @@ be considered later by package managers.
 
 To disable this behavior for released versions of packages, add the
 `--release` flag to the `unibuild` invocation (e.g., `unibuild --release`).
-
-
-## Package Subdirectories
-
-Each package to be built as part of a repository 
 
 
 ## Unibuild Commands
@@ -188,7 +226,7 @@ These are the available commands:
 | `build` | Builds all packages (equivalent to `unibuild make clean build install`) and gathers the results into a repository (equivalent to `unibuild gather`) |
 | `clean` | Removes all build by-products (equivalent to `unibuild make clean`) |
 | `make` | Runs `make` against targets in each package directory |
-| `gather` | Gathers the products of building each package into a repository |
+| `gather` | Gathers the products of building each package into a repository and places it in the `unibuild-repo` directory |
 | `macros` | Displays the macros available for use in `unibuild-order` files and their values on this system |
 | `order` | Processes the `unibuild-order` file and displays the results |
 
@@ -200,20 +238,16 @@ required in normal use.
 
 
 
-## Preparing Individual Packages
+# Preparing Individual Packages
 
-As noted above, each package to be built as part of a repository lives
-in its own directory.  Naming the directory to match the name of the
-package is a good convention, it is not required and exceptions should
-be made where prudent.  For example, a package called `python-foo`
-might end up producing an installable product called `python36-foo` on
-some RPM-based systems.
+Each package in a repository is built using a `Makefile` template
+provided by the `unibuild-package` package.
 
 
-### The `Makefile`
+## The `Makefile`
 
-Every package directory contains a `Makefile` that includes the
-Unibuild packaging template:
+Every package directory contains a `Makefile` that used `include` to
+incorporate the Unibuild packaging template:
 
 ```
 # This is optional depending on circumstances.  See below.
@@ -228,10 +262,54 @@ locally-maintained.  Defining `AUTO_TARBALL` instructs Unibuild's Make
 template to produce a tarball from the sources before proceeding to
 build the package.
 
+### Targets
 
-### The `unibuild-packaging` Directory
+The template includes four targets:
+
+| Target | Shorthand | Description |
+|--------|-----------|-------------|
+| `build` | `b` | Builds the package(s).  This is the default target. |
+| `install` | `i` | Installs the built package(s). |
+| `dump` | `d` | Produces a list of the built packages and their contents. |
+| `clean` | `c` | Removes all by-products of the `build` target. |
+
+In addition to the shorthands, the template provides several
+additional abbreviations for groups of targets: `cb`, `cbd`, `cbi`,
+`cbic` and `cdbc`.
 
 
+
+## The `unibuild-packaging` Directory
+
+How packages are constructed is determined by the contents of the
+`unibuild-packaging` directory.  This directory may be located in the
+top-level package directory in cases where the product is being built
+from a tarball:
+
+```
+foomatic/
+|
+|-- foomatic-1.23.tar.gz
+|-- Makefile
++-- unibuild-packaging/
+```
+
+or when building directly from a source tree:
+
+```
+foomatic/
+|
+|-- foomatic/
+|   |-- unibuild-packaging/
+|   |-- Makefile
+|   +-- foomatic.c
++-- Makefile
+```
+
+The directory itself contains subdirectories for each type of package
+that need to be built and, optionally, patches that are applied to all
+types of packaging.  (See _Patches_, below.)  The currently-supported
+methods of packaging are `rpm` and `deb`.
 
 ```
 unibuild-packaging/
@@ -243,83 +321,39 @@ unibuild-packaging/
 |   |-- copyright
 |   |-- gbp.conf
 |   |-- patches
-|   |   |-- series
+|   |   |-- series            Includes common-bugfix-{1,2}
 |   |   +-- debian-only-bugfix.patch
 |   |-- rules
 |   |--source
 |      +-- format
 |
 |-- rpm                       RPM Packaging
-|    |-- foomatic.spec
+|    |-- foomatic.spec        Includes common-bugfix-{1,2}
 |    +-- rpm-only-bugfix.patch
 |
 |-- common-bugfix-1.patch     Common patches
 +-- common-bugfix-2.patch
 ```
 
-### Raw Sources
-
-
-
-```
-foomatic/
-    Makefile
-    foomatic/
-        ...foomatic sources...
-        unibuild-packaging/
-            deb
-            rpm
-```
-Makefile:
-```
-AUTO_TARBALL := 1
-include unibuild/unibuild.make
-```
-
-
-
-### Tarball
-
-```
-foomatic/
-    Makefile
-    foomatic-1.23.tar.gz
-    unibuild-packaging/
-        deb
-        rpm
-```
-
-The Makefile
-
-```
-include unibuild/unibuild.make
-```
+Unibuild will automatically gather up all of the patches required and
+place them in the right location for the operating system's package
+builder to find and use them.  Note that if the package builder
+requires the patches be listed in packaging files, that must be done
+manually.
 
 
 
 
-
-## Building Repositories with Unibuild
-
-```
-TOP
- |
- +-- unibuild-order
- |
- +-- package1
- +-- package2
- +-- ...
- +-- packageN
-```
-
-
-
-TODO: See ...Unibuild... for details
-TODO: See ...Unibuild-Package... for details
-
-## Hello World
+# Hello World
 
 Packaged with this distribution is a subdirectory called `hello-world`
-that builds three packages: `hello` on all systems, `hello-rpm` on
-RPM-based systems and `hello-deb` on Debian-based systems.  Each
-package installs a command in `/usr/bin` named after itself.
+containing a small, fully-functional example of multiple packages
+built, installed and gathered into a repository.
+
+There are three packages:
+
+ * `hello` - Built on all systems
+ * `hello-rpm` - Built only on RPM-based systems
+ * `hello-deb` - Built only on Debian-based systems
+
+Each package installs a program in `/usr/bin` named after itself.
