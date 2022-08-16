@@ -229,6 +229,7 @@ These are the available commands:
 | `gather` | Gathers the products of building each package into a repository and places it in the `unibuild-repo` directory |
 | `macros` | Displays the macros available for use in `unibuild-order` files and their values on this system |
 | `order` | Processes the `unibuild-order` file and displays the results |
+| `version` | Displays the version of unibuild | 
 
 The `--help` switch may be used with all commands for further
 information on invoking them.
