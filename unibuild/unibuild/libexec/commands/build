@@ -3,6 +3,20 @@
 # build - Do the default build.
 #
 
+COMMON="$(dirname $0)/../common"
+if [ -e "${COMMON}" ]
+then
+    . "${COMMON}"
+    VERSION="$(unibuild_version)"
+elif [ -e "${COMMON}.raw" ]
+then
+    # This is a special case for an original build
+    . "${COMMON}.raw"
+else
+    echo "Unable to find ${COMMON}" 1>&2
+    exit 2
+fi
+
 
 help()
 {
@@ -56,6 +70,10 @@ do
 done
 
 
+if [ -n "${VERSION}" ]
+then
+    echo "Unibuild ${VERSION}"
+fi
 
 # Don't quote START; it has multiple words.
 $(dirname $0)/make ${START_OPTION} ${STOP_OPTION} clean build install
