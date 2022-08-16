@@ -45,6 +45,7 @@ make \
     LIBEXECDIR=$RPM_BUILD_ROOT/%{_libexecdir}/%{name} \
     LIBEXECINSTALLEDDIR=%{_libexecdir}/%{name} \
     DOCDIR=$RPM_BUILD_ROOT/%{docdir} \
+    VERSION=%{version} \
     install
 
 %files

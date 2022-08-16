@@ -2,20 +2,28 @@
 # Makefile for unibuild
 #
 
-default: build
-
-build:
+default:
 	@echo Nothing to do here.
 
 
+COMMON := ./libexec/common
+$(COMMON): $(COMMON).raw
+ifndef VERSION
+	@echo No VERSION defined.
+	false
+endif
+	sed -e 's/__VERSION__/$(VERSION)/g' $< > $@
+TO_CLEAN += $(COMMON)
 
-install:
+
+install: $(COMMON)
 ifndef LIBEXECDIR
 	@echo No LIBEXECDIR defined.
 	false
 endif
 	mkdir -p $(LIBEXECDIR)
 	cp -r libexec/* $(LIBEXECDIR)
+	rm -f $(LIBEXECDIR)/*.raw
 ifndef LIBEXECINSTALLEDDIR
 	@echo No LIBEXECINSTALLEDDIR defined.
 	false
@@ -35,4 +43,4 @@ endif
 
 
 clean:
-	rm -f *~
+	rm -rf $(TO_CLEAN) *~

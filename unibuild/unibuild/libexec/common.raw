@@ -216,3 +216,8 @@ section()
     printf "#\n\n"
 }
 
+
+unibuild_version()
+{
+    echo '__VERSION__'
+}

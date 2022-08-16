@@ -1,0 +1,10 @@
+#!/bin/sh -e
+#
+# version - Display the version
+#
+
+. "${UNIBUILD}/common"
+
+unibuild_version
+
+exit 0

@@ -6,12 +6,19 @@
 
 CURDEB := $(CURDIR)/debian/unibuild
 
+
+PACKAGE_VERSION := $(shell dpkg-parsechangelog \
+	| egrep -e '^Version:' \
+	| cut -d ' ' -f 2 \
+	| cut -d '-' -f 1)
+
 override_dh_install:
 	make \
 	    BINDIR=$(CURDEB)/usr/bin \
 	    DOCDIR=$(CURDEB)/usr/share/unibuild \
 	    LIBEXECDIR=$(CURDEB)/usr/libexec/unibuild \
 	    LIBEXECINSTALLEDDIR=/usr/libexec/unibuild \
+	    VERSION=$(PACKAGE_VERSION) \
 	    install
 
 override_dh_auto_install:

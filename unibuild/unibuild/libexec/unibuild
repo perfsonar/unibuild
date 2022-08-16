@@ -9,7 +9,20 @@ WHEREAMI=$(dirname $0)
 UNIBUILD_CANONICAL=$(readlink -e "$0")
 export UNIBUILD=$(dirname "${UNIBUILD_CANONICAL}")
 
-. "${UNIBUILD}/common"
+COMMON="${UNIBUILD}/common"
+if [ -e "${COMMON}" ]
+then
+    . "${COMMON}"
+elif [ -e "${COMMON}.raw" ]
+then
+    # This is a special case for an original build
+    . "${COMMON}.raw"
+else
+    echo "Unable to find ${COMMON}" 1>&2
+    exit 2
+fi
+
+
 
 # Set the timestamp only if something else hasn't set it first.
 [ -z "${UNIBUILD_TIMESTAMP}" ] \
