@@ -158,7 +158,7 @@ $(BUILD_PATCHES_DIR): FORCE
 	mkdir -p '$@'
 
 $(BUILD_PATCHES_SERIES): $(BUILD_PATCHES_DIR) $(DEBIAN_PATCHES_SERIES)
-	@echo "Installing patches in $(BUILD_PATCHES_DIR):"
+	@printf "\nInstalling patches in $(BUILD_PATCHES_DIR):"
 	cp '$(DEBIAN_PATCHES_SERIES)' '$@'
 
 

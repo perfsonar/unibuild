@@ -1,19 +1,17 @@
 # Ubuntu 20
 FROM ubuntu:20.04
 
-#Install pre-requisites
-#Install utils like tree useful for debugging
-#Enable powertools since contains common dependencies
+# Install pre-requisites for building packages
 RUN DEBIAN_FRONTEND=noninteractive apt-get update -y && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y sudo rsync pylint devscripts equivs tree screen wget htop emacs-nox vim m4
+    DEBIAN_FRONTEND=noninteractive apt-get install -y sudo apt-utils curl devscripts emacs-nox gnupg htop pylint rsync screen tree vim
 
-#Copy unibuild source
+# Copy unibuild source
 COPY . /usr/share/unibuild/
 
-#Install unibuild
+# Install unibuild
 WORKDIR /usr/share/unibuild
 RUN make RELEASE=1
 
-#Shared volume for code to build
+# Shared volume for code to build
 VOLUME /app
 WORKDIR /app

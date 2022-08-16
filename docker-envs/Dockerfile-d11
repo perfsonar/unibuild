@@ -1,18 +1,16 @@
 FROM debian:11
 
-#Install pre-requisites
-#Install utils like tree useful for debugging
-#Enable powertools since contains common dependencies
-RUN apt update -y && \
-    apt install -y sudo rsync pylint devscripts tree screen wget htop emacs-nox vim
+# Install pre-requisites for building packages
+RUN apt-get update -y && \
+    apt-get install -y sudo apt-utils curl devscripts emacs-nox gnupg htop pylint rsync screen tree vim
 
-#Copy unibuild source
+# Copy unibuild source
 COPY . /usr/share/unibuild/
 
-#Install unibuild
+# Install unibuild
 WORKDIR /usr/share/unibuild
 RUN make RELEASE=1
 
-#Shared volume for code to build
+# Shared volume for code to build
 VOLUME /app
 WORKDIR /app
