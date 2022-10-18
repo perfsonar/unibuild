@@ -1,4 +1,15 @@
-version: '3.8'
+version: '3.9'
+
+###
+# Some repeated defaults:
+###
+x-volumes:
+  &default-volumes
+  - .:/app
+
+###
+# Services
+###
 services:
   el7:
     image: ghcr.io/perfsonar/unibuild/el7:latest
@@ -7,40 +18,40 @@ services:
       dockerfile: ./docker-envs/Dockerfile-el7
       network: host
     network_mode: "host"
-    volumes:
-      - .:/app
+    volumes: *default-volumes
   el8:
     image: ghcr.io/perfsonar/unibuild/el8:latest
     build:
       context: ../
       dockerfile: ./docker-envs/Dockerfile-el8
-    volumes:
-      -  .:/app
+    volumes: *default-volumes
   el9:
     image: ghcr.io/perfsonar/unibuild/el9:latest
     build:
       context: ../
       dockerfile: ./docker-envs/Dockerfile-el9
-    volumes:
-      -  .:/app
-  d10:
-    image: ghcr.io/perfsonar/unibuild/d10:latest
-    build:
-      context: ../
-      dockerfile: ./docker-envs/Dockerfile-d10
-    volumes:
-      -  .:/app
-  u18:
-    image: ghcr.io/perfsonar/unibuild/u18:latest
-    build:
-      context: ../
-      dockerfile: ./docker-envs/Dockerfile-u18
-    volumes:
-      -  .:/app
-  u20:
-    image: ghcr.io/perfsonar/unibuild/u20:latest
-    build:
-      context: ../
-      dockerfile: ./docker-envs/Dockerfile-u20
-    volumes:
-      -  .:/app
+    volumes: *default-volumes
+  d10_amd64:
+    platform: "linux/amd64"
+    image: docker.io/ntw0n/unibuild.d10:latest
+    volumes: *default-volumes
+  d10_arm64:
+    platform: "linux/arm64"
+    image: docker.io/ntw0n/unibuild.d10:latest
+    volumes: *default-volumes
+  u18_amd64:
+    platform: "linux/amd64"
+    image: docker.io/ntw0n/unibuild.u18:latest
+    volumes: *default-volumes
+  u18_arm64:
+    platform: "linux/arm64"
+    image: docker.io/ntw0n/unibuild.u18:latest
+    volumes: *default-volumes
+  u20_amd64:
+    platform: "linux/amd64"
+    image: docker.io/ntw0n/unibuild.u20:latest
+    volumes: *default-volumes
+  u20_arm64:
+    platform: "linux/arm64"
+    image: docker.io/ntw0n/unibuild.u20:latest
+    volumes: *default-volumes

@@ -1,4 +1,4 @@
-FROM debian:11
+FROM debian:11 AS unibuild-image
 
 # Install pre-requisites for building packages
 RUN apt-get update -y && \

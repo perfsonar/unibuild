@@ -1,4 +1,4 @@
-FROM almalinux:latest
+FROM almalinux:latest AS unibuild-image
 
 #Install pre-requisites
 #Install utils like tree useful for debugging
