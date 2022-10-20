@@ -3,11 +3,13 @@
 # Usage info
 show_help() {
     cat << EOF
-    Usage: ${0##*/} -chv [build_type]
-    This script build all Docker images containing Unibuild.
+    Usage: ${0##*/} -chv [-r REGISTRY] [build_type]
+    This script build all Docker images containing Unibuild on the different distros declared.
 
     Note:
     This is a developer only script, official images are built using GitHub Actions.
+    The script will place images in your local registry and push it to the registry
+    given as argument in case of multiple architectures images.
 
     Requirements:
         - Functionnal docker buildx setup
@@ -17,23 +19,28 @@ show_help() {
     Options:
         -c clear all Docker caches
         -h show this help
+        -r=REGISTRY push the resulting images to the given registry
+            (you'll need to login or grant access to the registry first)
         -v verbose mode
+
+    Examples:
+        ./docker-envs/build-images -r docker.io/ntw0n full_build
 
 EOF
 }
-
-# TODO: Make the Registry configurable so developer can publish their own instances on their own registry
 
 # Defaults
 docker_dir=docker-envs
 clear_cache=false
 verbose=false
 build_type=
+registry=
 declare -a OSimages=("d10" "u18" "u20")
 
-while getopts "chv" OPT; do
+while getopts "chr:v" OPT; do
     case $OPT in
         c) clear_cache=true ;;
+        r) registry=$OPTARG ;;
         v) verbose=true ;;
         h)
             show_help >&2
@@ -45,9 +52,15 @@ shift $((OPTIND-1))
 # Check what type of build we want
 if [ $# -gt 0 ]; then
     build_type=$@
-fi
-if [ -n "$build_type" ]; then
     echo -e "\033[1mWe'll use docker bake target: \033[1;32m$build_type\033[0m"
+    if [[ $build_type =~ (dual|full)_build && -z "$registry" ]]; then
+        echo "But pushing to a remote registry will fail because no registry is given."
+        echo "You'll not be able to use the multi-architecture images from your local Docker registry."
+        exit 1
+    else
+        [[ -n "$registry" ]] && echo -e "and push the resulting images to \033[32m$registry\033[0m"
+    fi
+    echo
 fi
 cd $docker_dir
 
@@ -102,7 +115,7 @@ if $verbose; then
 fi
 
 ### Build the new images on the different platforms
-export OSimage
+export OSimage registry
 # Loop on all OS we want to have images
 for OSimage in ${OSimages[@]}; do
     echo -e "\033[1mNow let's build Docker images for \033[1;32m$OSimage \033[0m"
@@ -116,4 +129,5 @@ if $verbose; then
     docker images
     echo
 fi
+# TODO: check that indeed everything went fine before concluding!
 echo -e "\033[1mAll images built and pushed!\033[0m"

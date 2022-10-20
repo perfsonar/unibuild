@@ -7,7 +7,13 @@
 // https://github.com/zclconf/go-cty/tree/main/cty/function/stdlib
 
 variable "OSimage" {
-    default = "Debian-10"
+    default = "d10"
+}
+variable "registry" {
+    default = ""
+}
+variable "imagebase" {
+    default = "unibuild"
 }
 
 // Defaults
@@ -19,6 +25,8 @@ group "default" {
 target "root_build" {
     args = {
         OSimage = OSimage
+        registry = registry
+        imagebase = imagebase
     }
     target = "unibuild-image"
     context = "../"
@@ -28,18 +36,18 @@ target "root_build" {
 target "single_build" {
     inherits = ["root_build"]
     output = ["type=docker"]
-    tags = ["unibuild/${OSimage}:latest"]
+    tags = ["${imagebase}/${OSimage}:latest"]
 }
 target "dual_build" {
     inherits = ["root_build"]
     platforms = ["linux/amd64", "linux/arm64"]
     output = ["type=registry"]
-    tags = ["docker.io/ntw0n/unibuild.${OSimage}:latest"]
+    tags = ["${registry}/${imagebase}.${OSimage}:latest"]
 }
 target "full_build" {
     inherits = ["root_build"]
     platforms = ["linux/amd64", "linux/arm64", "linux/arm/v7", "linux/ppc64le"]
     output = ["type=registry"]
-    tags = ["docker.io/ntw0n/unibuild.${OSimage}:latest"]
+    tags = ["${registry}/${imagebase}.${OSimage}:latest"]
 }
 

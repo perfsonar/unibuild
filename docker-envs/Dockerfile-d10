@@ -1,7 +1,9 @@
-FROM debian:10 AS unibuild-image
+# debian:10.11 is the last one tu support ppc64el as platform
+FROM debian:10.11 AS unibuild-image
 
 # Install pre-requisites for building packages
 RUN apt-get update -y && \
+    apt-get upgrade -y && \
     apt-get install -y sudo apt-utils curl devscripts emacs-nox gnupg htop m4 pylint rsync screen tree vim
 
 # Copy unibuild source
