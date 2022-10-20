@@ -71,7 +71,7 @@ jobs:
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
-      - name: Build and push Docker image
+      - name: Build and push Docker images
         id: build-and-push
         if: ${{ matrix.os == 'el7' || matrix.os == 'el8' || matrix.os == 'el9' }}
         uses: docker/build-push-action@v3
@@ -84,7 +84,7 @@ jobs:
 
       # Build and push Docker image with Buildx (don't push on PR)
       # https://github.com/docker/build-push-action
-      - name: Build and push Docker image
+      - name: Build and push Docker multiarch images
         id: build-and-push-multiarch
         if: ${{ matrix.os == 'd10' || matrix.os == 'u18' || matrix.os == 'u20' }}
         uses: docker/build-push-action@v3

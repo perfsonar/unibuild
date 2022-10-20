@@ -33,25 +33,49 @@ services:
     volumes: *default-volumes
   d10_amd64:
     platform: "linux/amd64"
-    image: docker.io/ntw0n/unibuild.d10:latest
+    image: ghcr.io/perfsonar/unibuild/d10@sha256:
     volumes: *default-volumes
   d10_arm64:
     platform: "linux/arm64"
-    image: docker.io/ntw0n/unibuild.d10:latest
+    image: ghcr.io/perfsonar/unibuild/d10@sha256:
+    volumes: *default-volumes
+  d10_armv7:
+    platform: "linux/arm/v7"
+    image: ghcr.io/perfsonar/unibuild/d10@sha256:
+    volumes: *default-volumes
+  d10_ppc64le:
+    platform: "linux/ppc64le"
+    image: ghcr.io/perfsonar/unibuild/d10@sha256:
     volumes: *default-volumes
   u18_amd64:
     platform: "linux/amd64"
-    image: docker.io/ntw0n/unibuild.u18:latest
+    image: ghcr.io/perfsonar/unibuild/u18@sha256:
     volumes: *default-volumes
   u18_arm64:
     platform: "linux/arm64"
-    image: docker.io/ntw0n/unibuild.u18:latest
+    image: ghcr.io/perfsonar/unibuild/u18@sha256:
+    volumes: *default-volumes
+  u18_armv7:
+    platform: "linux/arm/v7"
+    image: ghcr.io/perfsonar/unibuild/u18@sha256:
+    volumes: *default-volumes
+  u18_ppc64le:
+    platform: "linux/ppc64le"
+    image: ghcr.io/perfsonar/unibuild/u18@sha256:
     volumes: *default-volumes
   u20_amd64:
     platform: "linux/amd64"
-    image: docker.io/ntw0n/unibuild.u20:latest
+    image: ghcr.io/perfsonar/unibuild/u20@sha256:
     volumes: *default-volumes
   u20_arm64:
     platform: "linux/arm64"
-    image: docker.io/ntw0n/unibuild.u20:latest
+    image: ghcr.io/perfsonar/unibuild/u20@sha256:
+    volumes: *default-volumes
+  u20_armv7:
+    platform: "linux/arm/v7"
+    image: ghcr.io/perfsonar/unibuild/u20@sha256:
+    volumes: *default-volumes
+  u20_ppc64le:
+    platform: "linux/ppc64le"
+    image: ghcr.io/perfsonar/unibuild/u20@sha256:
     volumes: *default-volumes
