@@ -1,0 +1,8 @@
+docker-envs/
+unibuild-log
+*/unibuild-log
+unibuild-repo
+unibuild-work
+*/unibuild-work
+*~
+*.swp

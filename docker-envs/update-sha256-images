@@ -1,0 +1,53 @@
+#!/usr/bin/env perl
+#
+# This script can be used to update SHA256 references in a docker-compose.yml
+# file.  Changes will then need to be pushed to the git repo to be effective.
+#
+# Note: this script only updates SHA256 hashes for some specific architectures:
+#   amd64, arm64, arm/v7 and ppc64le
+
+my $filename = 'docker-compose.yml';
+my $registry_path = 'ghcr.io/perfsonar/unibuild/';
+my $registry_path_esc = $registry_path =~ s/\//\\\//gr;
+my @OSimages = ('d10:multiarch', 'u18:multiarch', 'u20:multiarch');
+my $file, $newsha, $count=0;
+
+# Announce what we'll do
+print "I'll update SHA256 hashes in $filename with new hashes coming from ${registry_path}${OSimage}\n";
+
+{ # Read the file in whole
+    open(my $fh, '<', $filename)
+        or die "Can't open \"$filename\": $!\n";
+    local $/;
+    $file = <$fh>;
+}
+
+# Loop on all OSimages
+foreach my $OSimage (@OSimages) {
+    # Get new SHA256 from registry
+    open(DOCKER_OUT, "docker buildx imagetools inspect ${registry_path}${OSimage}|")
+        or die "Can't read new SHA256 from registry: ${registry_path}${OSimage}";
+
+    while (<DOCKER_OUT>) {
+        $newsha=$1 if /$OSimage\@sha256:([a-z0-9]*)/;
+        if (/Platform:.*(linux\/(amd64|arm64|arm\/v7|ppc64le))/) {
+            # Replace for the platforms we support
+            my $platform = $1;
+            $count++;
+            $file =~ s/(^\s+platform:\s+"${platform}"\n\s+image:\s+${registry_path_esc}${OSimage}\@sha256:)[^\s]*$/$1${newsha}/gm;
+        }
+    }
+
+    close(DOCKER_OUT);
+}
+
+{ # Save the changes
+    open(my $fh, '>', $filename)
+        or die "Can't create \"$filename\": $!\n";
+    print($fh $file);
+}
+
+# Finish
+print "Done, with $count new hashes.\n";
+print "Verify the changes and commit to your repo if it's useful.\n";
+

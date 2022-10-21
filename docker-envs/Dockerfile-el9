@@ -1,4 +1,4 @@
-FROM almalinux:9-minimal
+FROM almalinux:9-minimal AS unibuild-image
 
 #Install pre-requisites
 #Install utils like tree useful for debugging
