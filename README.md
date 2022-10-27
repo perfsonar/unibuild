@@ -201,17 +201,6 @@ Packages where no `--bundle` option is specified are automatically
 included in a bundle named `none`.
 
 
-### Timestamps
-
-Unibuild adds a timestemp to all packages it produces that reflects
-the time Unibuild was invoked.  This is a common practice to allow
-versions of a package produced during repeated development builds to
-be considered later by package managers.
-
-To disable this behavior for released versions of packages, add the
-`--release` flag to the `unibuild` invocation (e.g., `unibuild --release`).
-
-
 ## Unibuild Commands
 
 Unibuild is invoked by running `unibuild` on the command line with a
@@ -236,6 +225,16 @@ information on invoking them.
 
 Generally, the `build` and `clean` commands are all that should be
 required in normal use.
+
+### Timestamps
+
+Unibuild adds a timestemp to all packages it produces that reflects
+the time Unibuild was invoked.  This is a common practice to allow
+versions of a package produced during repeated development builds to
+be considered later by package managers.
+
+To disable this behavior for released versions of packages, add the
+`--release` flag to the `unibuild` invocation (e.g., `unibuild --release`).
 
 
 
@@ -372,3 +371,5 @@ Containers containing a minimal OS installation and Unibuild pre-installed are a
 | Debian | Debian | 10 | `ghcr.io/perfsonar/unibuild/d10:latest` |
 | Debian | Ubuntu | 18 | `ghcr.io/perfsonar/unibuild/u18:latest` |
 | Debian | Ubuntu | 20 | `ghcr.io/perfsonar/unibuild/u20:latest` |
+
+Debian family containers are provided for different CPU architectures.
