@@ -12,7 +12,7 @@ COPY . /usr/share/unibuild/
 #Install unibuild
 WORKDIR /usr/share/unibuild
 RUN make RELEASE=1
-
+RUN /usr/share/unibuild/libexec/prep/prep
 
 #Shared volume for code to build
 VOLUME /app

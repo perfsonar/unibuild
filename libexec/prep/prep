@@ -1,0 +1,26 @@
+#!/bin/sh -e
+
+WHEREAMI=$(dirname $0)
+
+. "${WHEREAMI}/common"
+
+update_package_manager
+
+# Required for ddb_m4 to work
+install_pkg m4
+
+cd "${WHEREAMI}"
+
+for PREP in prep-steps prep-steps-user
+do
+    M4FILE="${PREP}.m4"
+    if ! [ -r "${M4FILE}" ]
+    then
+	continue
+    fi
+    
+    ./ddb_m4 < "${M4FILE}" > "${PREP}"
+    chmod +x "${PREP}"
+    printf "\nExecuting ${PREP}\n\n"
+    "./${PREP}"
+done
