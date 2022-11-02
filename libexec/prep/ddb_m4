@@ -1,0 +1,16 @@
+#!/bin/sh -e
+#
+# Run m4 with macros describing the operating system
+#
+# This script is largely adapted from Unibuild.
+#
+
+. $(dirname $0)/common
+
+# Make macro definition arguments for M4.
+DEFINES=$(set \
+	      | egrep -e '^MACRO_[^=]{1,}=' \
+	      | sed -e "s/^MACRO_\\([A-Za-z0-9_]\\+\\)/__\1/g; s/='/=/; s/'\$//; s/^/-D '/; s/\$/'/" \
+	      | tr '\n' ' ')
+
+exec sh -c "exec m4 ${DEFINES}"

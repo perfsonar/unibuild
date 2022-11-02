@@ -1,0 +1,71 @@
+#!/bin/bash -e
+#
+# Docker entry point for DDB containers
+#
+
+set -e
+
+#
+# Set up the user account if one was passed in
+#
+
+USER_ENT=
+if [ "$1" = "--user-ent" ]
+then
+    USER_ENT=$2
+    shift
+    shift
+fi
+
+if [ -n "${USER_ENT}" ]
+then
+    USER_NAME=$(echo "${USER_ENT}" | cut -d : -f 1)
+    USER_UID=$(echo "${USER_ENT}" | cut -d : -f 3)
+    USER_GID=$(echo "${USER_ENT}" | cut -d : -f 4)
+    USER_GECOS=$(echo "${USER_ENT}" | cut -d : -f 5)
+    USER_HOME=$(echo "${USER_ENT}" | cut -d : -f 6)
+    USER_SHELL=$(echo "${USER_ENT}" | cut -d : -f 7)
+
+    groupadd -g "${USER_GID}" "${USER_NAME}"
+    useradd \
+	-u "${USER_UID}" \
+	-g "${USER_GID}" \
+	-c "${USER_GECOS}" \
+	-d "${USER_HOME}" --no-create-home \
+	-s "${USER_SHELL}" \
+	"${USER_NAME}"
+
+    # Give the account frictionless sudo
+    echo "${USER_NAME} ALL= (ALL) NOPASSWD:ALL" > "/etc/sudoers.d/${USER_NAME}"
+    chmod 440 "/etc/sudoers.d/${USER_NAME}"
+
+    echo "Added user account ${USER_NAME} (${USER_GECOS}) at %{USER_HOME}"
+fi
+
+systemctl mask systemd-firstboot.service systemd-udevd.service systemd-modules-load.service
+systemctl unmask systemd-logind
+systemctl enable ddb-entrypoint.service
+
+# Find Systemd
+
+for CANDIDATE in /lib/systemd/systemd /usr/lib/systemd/systemd /sbin/init
+do
+    if [ -x "${CANDIDATE}" ]
+    then
+	SYSTEMD="${CANDIDATE}"
+	break
+    fi
+done
+
+if [ -z "${SYSTEMD}" ]
+then
+	echo >&2 'ERROR: systemd is not installed'
+	exit 1
+fi
+
+# Run it.
+
+echo "$0: starting $SYSTEMD"
+exec $SYSTEMD
+
+# When systemd exits, the container will be destroyed.
