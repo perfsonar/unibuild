@@ -5,12 +5,6 @@
 
 set -e
 
-##
-# Run prep script
-WHEREAMI=$(dirname $0)
-. "${WHEREAMI}/prep"
-
-
 #
 # Set up the user account if one was passed in
 #
