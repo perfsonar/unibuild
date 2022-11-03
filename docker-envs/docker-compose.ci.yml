@@ -1,0 +1,94 @@
+version: '3.9'
+
+###
+# Services
+# Note: build: instructions are better moved to docker-bake.hcl
+###
+services:
+  el7:
+    image: ghcr.io/perfsonar/unibuild/el7:unify-deb-el7-jenkins
+    privileged: true
+    entrypoint: [ "bash", "/usr/share/unibuild/libexec/prep/ddb-entrypoint" ]
+
+  el8:
+    image: ghcr.io/perfsonar/unibuild/el8:unify-deb-el7-jenkins
+    privileged: true
+    entrypoint: [ "bash", "/usr/share/unibuild/libexec/prep/ddb-entrypoint" ]
+
+  el9:
+    image: ghcr.io/perfsonar/unibuild/el9:unify-deb-el7-jenkins
+    privileged: true
+    entrypoint: [ "bash", "/usr/share/unibuild/libexec/prep/ddb-entrypoint" ]
+
+  d10_amd64:
+    platform: "linux/amd64"
+    image: ghcr.io/perfsonar/unibuild/d10:unify-deb-el7-jenkins@sha256:bf3f6f7ce96591ebf91e31f7de6d112543c6de33a57beca4fe5f91a7f88e635a
+    privileged: true
+    entrypoint: [ "bash", "/usr/share/unibuild/libexec/prep/ddb-entrypoint" ]
+
+  d10_arm64:
+    platform: "linux/arm64"
+    image: ghcr.io/perfsonar/unibuild/d10:unify-deb-el7-jenkins@sha256:b1d1a63abfc8820a503800f1661643065650d8a0fd44990eb39a8608d7a9074a
+    privileged: true
+    entrypoint: [ "bash", "/usr/share/unibuild/libexec/prep/ddb-entrypoint" ]
+  
+  d10_armv7:
+    platform: "linux/arm/v7"
+    image: ghcr.io/perfsonar/unibuild/d10:unify-deb-el7-jenkins@sha256:b8faf21710fb7f85d9afe32a6e90e0e1bf9335798f0c00a58295094a3e06dca0
+    privileged: true
+    entrypoint: [ "bash", "/usr/share/unibuild/libexec/prep/ddb-entrypoint" ]
+  
+  d10_ppc64le:
+    platform: "linux/ppc64le"
+    image: ghcr.io/perfsonar/unibuild/d10:unify-deb-el7-jenkins@sha256:bc02d1f3128e26baf877310bd5a4dbae9fff4ff3f24c065db06a86b5fa1c9616
+    privileged: true
+    entrypoint: [ "bash", "/usr/share/unibuild/libexec/prep/ddb-entrypoint" ]
+
+  u18_amd64:
+    platform: "linux/amd64"
+    image: ghcr.io/perfsonar/unibuild/u18:unify-deb-el7-jenkins@sha256:125e4c4f9e20b12e1fad8850d1039c1a7cad1902dd0987f1140d3018017ab0a3
+    privileged: true
+    entrypoint: [ "bash", "/usr/share/unibuild/libexec/prep/ddb-entrypoint" ]
+
+  u18_arm64:
+    platform: "linux/arm64"
+    image: ghcr.io/perfsonar/unibuild/u18:unify-deb-el7-jenkins@sha256:b35a888e1f27a0b836b5d38ba7e9240dc6dbdc6decef000b2a911e5627089c59
+    privileged: true
+    entrypoint: [ "bash", "/usr/share/unibuild/libexec/prep/ddb-entrypoint" ]
+
+  u18_armv7:
+    platform: "linux/arm/v7"
+    image: ghcr.io/perfsonar/unibuild/u18:unify-deb-el7-jenkins@sha256:fcd60047295190ee406a82c4513249570d590bf8fc3c66e1a2fd243018bf6d87
+    privileged: true
+    entrypoint: [ "bash", "/usr/share/unibuild/libexec/prep/ddb-entrypoint" ]
+
+  u18_ppc64le:
+    platform: "linux/ppc64le"
+    image: ghcr.io/perfsonar/unibuild/u18:unify-deb-el7-jenkins@sha256:0dbffbff2181862ba4c3d57b52768f45d43294c28accf8465dc17a9a0800f9a5
+    privileged: true
+    entrypoint: [ "bash", "/usr/share/unibuild/libexec/prep/ddb-entrypoint" ]
+
+  u20_amd64:
+    platform: "linux/amd64"
+    image: ghcr.io/perfsonar/unibuild/u20:unify-deb-el7-jenkins@sha256:1308d5fe8f383ea1cf32042f18c2b2e60e609d644f92ad9c71c744247f7666ae
+    privileged: true
+    entrypoint: [ "bash", "/usr/share/unibuild/libexec/prep/ddb-entrypoint" ]
+
+  u20_arm64:
+    platform: "linux/arm64"
+    image: ghcr.io/perfsonar/unibuild/u20:unify-deb-el7-jenkins@sha256:23fcb03a3a02074bcdd17ecfa87a5e7ab28669791815d15684810e5479a24a3c
+    privileged: true
+    entrypoint: [ "bash", "/usr/share/unibuild/libexec/prep/ddb-entrypoint" ]
+
+  u20_armv7:
+    platform: "linux/arm/v7"
+    image: ghcr.io/perfsonar/unibuild/u20:unify-deb-el7-jenkins@sha256:55acaf39d7608e95986f300c0e93c68032c9842d0462309fdd0f894769f1a000
+    privileged: true
+    entrypoint: [ "bash", "/usr/share/unibuild/libexec/prep/ddb-entrypoint" ]
+
+  u20_ppc64le:
+    platform: "linux/ppc64le"
+    image: ghcr.io/perfsonar/unibuild/u20:unify-deb-el7-jenkins@sha256:c8cff7f444373310fb50cade399daa3f360f468c0a36314def2ba17b47da1854
+    privileged: true
+    entrypoint: [ "bash", "/usr/share/unibuild/libexec/prep/ddb-entrypoint" ]
+

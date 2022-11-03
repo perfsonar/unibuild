@@ -1,0 +1,34 @@
+#!/bin/sh -e
+#
+# Installs perfSONAR OS Package repo specified by command-line option
+#
+
+# Install unibuild macros
+. "${UNIBUILD}/common"
+
+#
+# Check if we need to do anything
+#
+REPO=$1
+if [ -z "$REPO" ] || [ "$REPO" == "none" ]; then
+    echo "No package repos to setup"
+    exit 0
+elif [ "$REPO" == "prod" ]; then
+    if [ "$OSINFO_FAMILY" == "RedHat" ]; then
+        yum install -y http://linux.mirrors.es.net/perfsonar/el${OSINFO_MAJOR}/x86_64/4/packages/perfSONAR-repo-0.10-1.noarch.rpm
+    fi
+elif [ "$REPO" == "staging" ]; then
+    if [ "$OSINFO_FAMILY" == "RedHat" ]; then
+        yum install -y http://linux.mirrors.es.net/perfsonar/el${OSINFO_MAJOR}/x86_64/4/packages/perfSONAR-repo-${REPO}-0.10-1.noarch.rpm
+    fi
+elif [ "$REPO" == "nightly-minor" ]; then
+    if [ "$OSINFO_FAMILY" == "RedHat" ]; then
+        yum install -y http://linux.mirrors.es.net/perfsonar/el${OSINFO_MAJOR}/x86_64/4/packages/perfSONAR-repo-${REPO}-0.10-1.noarch.rpm
+    fi
+elif [ "$REPO" == "nightly-patch" ]; then
+    if [ "$OSINFO_FAMILY" == "RedHat" ]; then
+        yum install -y http://linux.mirrors.es.net/perfsonar/el${OSINFO_MAJOR}/x86_64/4/packages/perfSONAR-repo-${REPO}-0.10-1.noarch.rpm
+    fi
+else
+    die "Unrecognized repo $REPO"
+fi
