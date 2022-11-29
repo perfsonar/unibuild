@@ -27,6 +27,7 @@ RPM or Debian format.  It consists of two parts:
    * RPMBuild (From `rpm-build`)
    * Spectool (From `rpmdevtools`, with no hyphen)
    * Which (From `which`)
+   * Quick install:  `yum -y install git make m4 rpm-build rpmdevtools createrepo which`
  * On Debian-based Systems:
    * Apt
    * DPkg
