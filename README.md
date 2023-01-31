@@ -30,7 +30,10 @@ RPM or Debian format.  It consists of two parts:
    * Quick install:  `yum -y install git make m4 rpm-build rpmdevtools createrepo which`
  * On Debian-based Systems:
    * Apt
-   * DPkg
+   * DPkg and dpkg-dev
+   * Dev Scripts
+   * Equivs
+   * Quick install: `apt install -y dpkg dpkg-dev devscripts equivs`
 
 
 Builds done by a user other than `root` (recommended) require that the
