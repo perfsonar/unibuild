@@ -127,13 +127,18 @@ do
 	continue
     fi
 
-    [ $# -eq 0 ] \
+    if package_has_switch "${FILE}" "${PACKAGE}" no-install
+    then
+ 	TARGETS=$(echo "$@" | sed -e 's/\s\+/\n/g' | fgrep -vx install)
+    else
+	TARGETS="$@"
+    fi
+
+    [ -z "${TARGETS}" ] \
 	&& section BUILDING ${PACKAGE} \
-	|| section BUILDING ${PACKAGE}: make $@
+	|| section BUILDING ${PACKAGE}: make ${TARGETS}
 
-    [ -d "${PACKAGE}" ] || die "\n${PACKAGE}: No such directory\n"
-
-    ${DRY} make -C "${PACKAGE}" "$@"
+    ${DRY} make -C "${PACKAGE}" ${TARGETS}
 
     if [ "${PACKAGE}" = "${STOP}" ]
     then

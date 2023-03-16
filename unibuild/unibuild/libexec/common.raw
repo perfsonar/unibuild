@@ -167,6 +167,49 @@ build_order()
 }
 
 
+# List the switches in effect for a package.
+# Args:
+#  1 - Build order file
+#  2 - Package name
+#
+# Output is one switch per line without the -- and with all arguments
+# following, e.g.:
+#   no-install
+#   bundle x
+package_switches()
+{
+    # Lke build_order, but different:
+    #  - Strip comments
+    #  - Run through M4
+    #  - Drop blank lines
+    #  - Filter bundles we want or don't want
+    #  - Break lines on --
+    #  - Ditch the blank ones
+    sed -e 's/\s*#.*$//' "$1" \
+	| unibuild_m4 \
+	| sed -e '/^\s*$/d; s/^\s\+//; s/\s\+$//' \
+	| egrep -e "^*$2\\s" \
+	| cut -d ' ' -f 2- \
+	| sed -e 's/--/\n/g' \
+	| fgrep -vx ''
+}
+
+# Determine whether or not a package has a switch
+# Args:
+#  1 - Build order file
+#  2 - Package name
+#  3 - Switch
+package_has_switch()
+{
+    if package_switches "$1" "$2" | egrep -q -e "^$3(\\s|\$)"
+    then
+	true
+    else
+	false
+    fi
+}
+
+
 
 # Make sure the START and STOP parameters refer to something in the
 # build list for a bundle
