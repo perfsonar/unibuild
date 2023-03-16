@@ -192,7 +192,7 @@ provided by Unibuild (e.g., `OS` or `ARCH`).
 Some projects separate packages into bundles that are built as
 separate packages containing only dependencies on those packages.
 Unibuild allows a package to be marked for a bundle by adding a
-`--bundle` switch` to the line naming the package, e.g.,:
+`--bundle` switch` to the line naming the package, e.g.:
 
 ```
 foo --bundle bar
@@ -203,6 +203,17 @@ command `unibuild order --bundle BUNDLE-NAME`.
 
 Packages where no `--bundle` option is specified are automatically
 included in a bundle named `none`.
+
+
+### Skipping Installation
+
+In some cases, it is preferable to skip the installation step for a
+package once its build is complete.  To do this, add a `--no-install`
+switch to the line naming the package, e.g.:
+
+```
+foo --no-install
+```
 
 
 ## Unibuild Commands
