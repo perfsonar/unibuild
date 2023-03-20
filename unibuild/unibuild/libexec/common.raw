@@ -24,6 +24,7 @@ export UNIBUILD_LIB="${UNIBUILD}/lib"
 UNIBUILD_ORDER_FILE=unibuild-order
 
 UNIBUILD_REPO_DIR=unibuild-repo
+UNIBUILD_LOG=unibuild-log
 
 
 

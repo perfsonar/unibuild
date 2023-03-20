@@ -373,6 +373,9 @@ There are three packages:
 
 Each package installs a program in `/usr/bin` named after itself.
 
+Note that building Hello WOrld requires that Unibuild be installed on
+the system.
+
 
 # Docker Containers
 

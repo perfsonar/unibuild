@@ -20,4 +20,8 @@ then
     die
 fi
 
-exec rm -rf ${UNIBUILD_REPO_DIR}
+${WHEREAMI}/make clean
+
+exec rm -rf \
+    ${UNIBUILD_REPO_DIR} \
+    ${UNIBUILD_LOG}

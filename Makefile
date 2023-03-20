@@ -54,8 +54,7 @@ $(REPO): build
 
 
 clean:
-	$(UNIBUILD) make $@
-	make -C hello-world $@
+	$(UNIBUILD) $@
 	rm -rf $(TO_CLEAN)
 
 

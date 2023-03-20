@@ -1,6 +1,8 @@
 #
 # Makefile for Unibuild Hello World
 #
+# Note that this requires an installed, functioning Unibuild.
+#
 
 ifdef RELEASE
 UNIBUILD_OPTS += --release
