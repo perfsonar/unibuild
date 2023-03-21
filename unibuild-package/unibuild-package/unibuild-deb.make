@@ -104,7 +104,7 @@ $(BUILD_UNPACK_DIR): $(PRODUCTS_DIR) $(BUILD_ORIG_DIR)
 	mkdir -p '$@/$(SOURCE_DIR)'
 ifneq ($(SOURCE_TARBALL),)
 	@printf "\nUnpacking tarball $(SOURCE_TARBALL).\n\n"
-	(cd '$@/$(SOURCE_DIR)' && tar xzf - --strip-components=1) < '$(SOURCE_TARBALL)'
+	(cd '$@/$(SOURCE_DIR)' && tar xzf - --exclude */debian* --strip-components=1) < '$(SOURCE_TARBALL)'
 	mv '$@/$(SOURCE_DIR)' '$@/$(TAR_UNPACK_DIR)'
 	ls -a '$@/$(TAR_UNPACK_DIR)' \
 		| egrep -vxe '[.]{1,2}' \
