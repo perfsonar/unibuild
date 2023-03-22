@@ -57,7 +57,7 @@ fi
 # Find whichever installer is available
 for INSTALLER in dnf yum
 do
-    if which ${INSTALLER} > /dev/null 2>&1
+    if command -v "${INSTALLER}" > /dev/null 2>&1
     then
 	INSTALL_PACKAGE=${INSTALLER}
 	break
