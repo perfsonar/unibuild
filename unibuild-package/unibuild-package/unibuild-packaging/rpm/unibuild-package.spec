@@ -31,6 +31,7 @@ BuildRequires:	rpm
 BuildRequires:	rpm-build
 BuildRequires:	rpm-with-deps
 BuildRequires:	rpmdevtools
+BuildRequires:	spectool
 BuildRequires:	sudo
 %if 0%{?el7}
 BuildRequires:	yum
@@ -44,6 +45,7 @@ Requires:	rpm
 Requires:	rpm-build
 Requires:	rpm-with-deps
 Requires:	rpmdevtools
+Requires:	spectool
 Requires:	sudo
 %if 0%{?el7}
 Requires:	yum
