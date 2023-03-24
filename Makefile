@@ -33,11 +33,13 @@ endif
 
 
 # Figure out what this system has for installing packages.
-ifneq ($(shell command -v dnf),)
-  PACKAGE_INSTALLER := dnf
-else ifneq ($(shell command -v yum),)
-  PACKAGE_INSTALLER := yum
-else ifneq ($(shell command -v apt-get),)
+ifneq ($(wildcard /etc/redhat-release),)
+  ifneq ($(shell command -v dnf),)
+    PACKAGE_INSTALLER := dnf
+  else ifneq ($(shell command -v yum),)
+    PACKAGE_INSTALLER := yum
+  endif
+else ifneq ($(wildcard /etc/debian_version),)
   PACKAGE_INSTALLER := apt-get
 else
   $(error "No support on this distribution.")
@@ -45,6 +47,9 @@ endif
 
 
 build:
+ifeq ($(PACKAGE_INSTALLER),apt-get)
+	$(RUN_AS_ROOT) $(PACKAGE_INSTALLER) update
+endif
 ifneq ($(PACKAGE_INSTALLER),apt-get)
 	$(RUN_AS_ROOT) $(PACKAGE_INSTALLER) install -y createrepo
 endif
