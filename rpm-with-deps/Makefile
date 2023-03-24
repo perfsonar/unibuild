@@ -21,6 +21,13 @@ else
 endif
 
 
+# Figure out what this system has for installing packages.
+ifneq ($(shell command -v dnf),)
+  PACKAGE_INSTALLER := dnf
+else
+  PACKAGE_INSTALLER := yum
+endif
+
 
 default: build
 
@@ -43,7 +50,7 @@ TO_CLEAN += $(TARBALL) $(FULLNAME)
 
 
 $(RPMDIR): $(TARBALL)
-	rpm -q rpm-build || yum -y install rpm-build
+	rpm -q rpm-build || $(RUN_AS_ROOT) $(PACKAGE_INSTALLER) -y install rpm-build
 	mkdir -p \
 		$(RPMDIR)/BUILD \
 		$(RPMDIR)/RPMS \
@@ -89,7 +96,7 @@ endif
 
 
 uninstall:
-	$(RUN_AS_ROOT) yum -y remove $(NAME) || true
+	$(RUN_AS_ROOT) $(PACKAGE_INSTALLER) -y remove $(NAME) || true
 
 
 clean:
