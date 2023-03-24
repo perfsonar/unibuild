@@ -22,6 +22,11 @@ endif
 
 ifneq ($(wildcard /etc/redhat-release),)
   PACKAGE_FORMAT := rpm
+  ifeq ($(shell command -v dnf),)
+    INSTALL_PACKAGE := yum
+  else
+    INSTALL_PACKAGE := dnf
+  endif
 else ifneq ($(wildcard /etc/debian_version),)
   PACKAGE_FORMAT := deb
 else
@@ -34,7 +39,13 @@ ifndef STAGE2
 
 # Stage 1: Do prep and launch the real thing.
 
+# This makes sure things we need to build are installed.
 %:
+ifeq ($(PACKAGE_FORMAT),rpm)
+	$(RUN_AS_ROOT) $(INSTALL_PACKAGE) -y install spectool
+else
+	apt-get -y dpkg-dev
+endif
 	$(MAKE) STAGE2=1 $@
 
 else
