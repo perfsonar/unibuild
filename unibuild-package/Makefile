@@ -42,9 +42,9 @@ ifndef STAGE2
 # This makes sure things we need to build are installed.
 %:
 ifeq ($(PACKAGE_FORMAT),rpm)
-	$(RUN_AS_ROOT) $(INSTALL_PACKAGE) -y install spectool
+	$(RUN_AS_ROOT) $(INSTALL_PACKAGE) -y install make spectool
 else
-	apt-get -y dpkg-dev
+	apt-get -y install make dpkg-dev
 endif
 	$(MAKE) STAGE2=1 $@
 
