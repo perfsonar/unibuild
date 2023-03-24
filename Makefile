@@ -24,7 +24,31 @@ TO_CLEAN += $(REPO)
 
 default: $(REPO)
 
+# Figure out what needs to be run to get root.
+ifeq ($(shell id -u),0)
+  RUN_AS_ROOT :=
+else
+  RUN_AS_ROOT := sudo
+endif
+
+
+# Figure out what this system has for installing packages.
+ifneq ($(shell command -v dnf),)
+  PACKAGE_INSTALLER := dnf
+else ifneq ($(shell command -v yum),)
+  PACKAGE_INSTALLER := yum
+else ifneq ($(shell command -v apt-get),)
+  PACKAGE_INSTALLER := apt-get
+else
+  $(error "No support on this distribution.")
+endif
+
+
 build:
+ifneq ($(PACKAGE_INSTALLER),apt-get)
+	$(RUN_AS_ROOT) $(PACKAGE_INSTALLER) install -y createrepo
+endif
+	$(RUN_AS_ROOT) $(PACKAGE_INSTALLER) install -y m4
 	(((( \
 		$(UNIBUILD) build $(UNIBUILD_BUILD_OPTS) ; \
 		echo $$? >&3 \
@@ -37,7 +61,6 @@ build:
 
 release:
 	RELEASE=1 $(MAKE)
-
 
 
 $(REPO): build

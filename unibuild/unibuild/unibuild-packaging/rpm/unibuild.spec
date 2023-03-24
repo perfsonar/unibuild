@@ -18,11 +18,14 @@ Provides:	%{name} = %{version}-%{release}
 # These two sections should be identical since the package uses its
 # own code to build itself.
 
+BuildRequires:	createrepo
 BuildRequires:	unibuild-package
+BuildRequires:	m4
 BuildRequires:	make
 
 Requires:       createrepo
 Requires:	unibuild-package
+Requires:	m4
 Requires:	make
 
 
