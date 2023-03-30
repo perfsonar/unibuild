@@ -120,11 +120,16 @@ else
 	@printf "\nNo tarball or source directory.\n\n"
 endif
 	@printf "\nBuilding 'orig' tarball $(ORIG_TARBALL).\n\n"
-	# TODO: the orig tarball shouldn't include the unibuild-packaging dir
 	mkdir -p $(BUILD_ORIG_PACKAGE_DIR)
+ifneq ($(SOURCE_TARBALL),)
+	# Copy the original tarball without modification
+	cp $(SOURCE_TARBALL) $(PRODUCTS_DIR)/$(ORIG_TARBALL)
+else
+	# Build from the unpacked sources since there wasn't one
 	(cd '$@' && tar cf - .) | (cd $(BUILD_ORIG_PACKAGE_DIR) && tar xpf -)
 	ls -alh $(BUILD_ORIG_PACKAGE_DIR)/..
 	(cd $(BUILD_ORIG_DIR) && tar czf - $(SOURCE_VERSION)) > $(PRODUCTS_DIR)/$(ORIG_TARBALL)
+endif
 	cp $(PRODUCTS_DIR)/$(ORIG_TARBALL) $(BUILD_UNPACK_DIR)/..
 	@printf "\nInstalling Debian build into $(BUILD_DEBIAN_DIR)..\n\n"
 	rm -rf '$(BUILD_DEBIAN_DIR)'
