@@ -128,7 +128,7 @@ else
 	# Build from the unpacked sources since there wasn't one
 	(cd '$@' && tar cf - .) | (cd $(BUILD_ORIG_PACKAGE_DIR) && tar xpf -)
 	ls -alh $(BUILD_ORIG_PACKAGE_DIR)/..
-	(cd $(BUILD_ORIG_DIR) && tar czf - $(SOURCE_VERSION)) > $(PRODUCTS_DIR)/$(ORIG_TARBALL)
+	(cd $(BUILD_ORIG_DIR) && tar cf - $(SOURCE_VERSION) | gzip -n ) > $(PRODUCTS_DIR)/$(ORIG_TARBALL)
 endif
 	cp $(PRODUCTS_DIR)/$(ORIG_TARBALL) $(BUILD_UNPACK_DIR)/..
 	@printf "\nInstalling Debian build into $(BUILD_DEBIAN_DIR)..\n\n"
