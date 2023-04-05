@@ -225,7 +225,7 @@ endif
 	) 4>&1
 
 	find '$(BUILD_DIR)' \( \
-		-name "*.deb" -o -name "*.dsc" -o -name "*.changes" -o -name "*.buildinfo" -o -name "*.build" -o -name "*.tar.*" \
+		-name "*.deb" -o -name "*.dsc" -o -name "*.changes" -o -name "*.buildinfo" -o -name "*.build" -o -name "*.tar.*" -o -name "*.diff.gz" \
 		\) -exec cp {} '$(PRODUCTS_DIR)' ';'
 
 
@@ -265,7 +265,7 @@ endif
 	    false ; \
 	fi
 	find "$(PRODUCTS_DIR)" \( \
-		-name "*.deb" -o -name "*.dsc" -o -name "*.changes" -o -name "*.buildinfo" -o -name "*.build" -o -name "*.tar.*" \
+		-name "*.deb" -o -name "*.dsc" -o -name "*.changes" -o -name "*.buildinfo" -o -name "*.build" -o -name "*.tar.*" -o -name "*.diff.gz" \
 		\) -exec cp {} "$(PRODUCTS_DEST)" \;
 	mkdir -p "$(REPO_UNIBUILD)"
 	sed -e ':a;/\\\s*$$/{N;s/\\\s*\n//;ba}' "$(CONTROL)" \
