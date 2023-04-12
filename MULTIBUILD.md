@@ -5,16 +5,23 @@ with their own finished package repository and then merging those
 repositories into one.
 
 
+## Running Multibuild
+
 To run Multibuild:
 ```
-$ multibuild [ DIR ]
+$ multibuild [ PATH ]
 ```
 
-Where `DIR` is the directory where the `multbuild-order` file
-(described below) lives.  If not provided, the current directory (`.`)
-will be used.
+Where `PATH ` is one of the following:
 
-For each 
+ * The path to a directory where a configuration file (described
+   below) named `multibuild-order` can be found.  The build will take
+   place in that directory.
+
+ * The path to a configuration file.  The build will take place in the
+   same directory as that file.
+
+If no `PATH` is provided, the current directory (`.`) will be used.
 
 
 ## Configuration File (`multibuild-order`)
@@ -31,12 +38,15 @@ filename except whitespace are valid.
 
 The `NAME-OPTIONS` are:
 
- * `--once` - Build once only.
- * `--no-collect` - Don't collect the results into the final repo.
+ * `--no-collect` - Don't collect the results of this build into the
+  final package repository.  Use this to build and install
+  prerequisites.
 
-`BUILD-TYPE` determines where Multibuild should get the source code to
-build the sub-repository.  `BUILD-TYPE-ARGUMENTS` vary by build type
-and are documented below.
+ * `--once` - Build once only.  This is useful for doing development.
+
+The `BUILD-TYPE` determines the method Multibuild should get the
+source code to build the sub-repository.  The `BUILD-TYPE-ARGUMENTS`
+are build-type-specific.  Both are documented below.
 
 Comments are supported; a pound sign (`#`) will be removed along with
 any other characters between it and the end of the line.
@@ -46,34 +56,6 @@ Examples:
 hello-world   --once --no-collect copy   /some/shared/dir/hello-world
 hello-again   --once --no-collect direct /home/me/work/hello-again
 owamp                             git    --branch 5.0.0 https://github.com/perfsonar/owamp.git
-```
-
-## Use Cases
-
-### Build for Release
-
-Multiple products can be built sequentially into a single package
-repository for release by acquiring them using Git and building them.
-
-Example:
-```
-product1 git --checkout release https://github.com/example/product1.git
-product2 git --checkout release https://github.com/example/product2.git
-product3 git --checkout release https://github.com/example/product3.git
-```
-
-### Development
-
-Prior to doing development on a product, its prerequisites can be
-built and installed.
-
-In this example, if `product3` is going to be developed and is
-dependent on `product1` and `product2`, `product3` can be cloned and
-built after its dependencies have been acquired and built:
-```
-product1 --once --no-collect git    https://github.com/example/product1.git
-product2 --once --no-collect git    https://github.com/example/product2.git
-product3                     direct .
 ```
 
 
@@ -111,7 +93,8 @@ direct .
 
 Usage: `git [ OPTIONS ] REPOSITORY
 
-`REPOSITORY` is a Git repository
+`REPOSITORY` is a Git repository that can be retrieved using `git
+clone`.
 
 `OPTIONS` are any of the following:
 
@@ -130,4 +113,37 @@ Usage: `null`
 Example:
 ```
 null
+```
+
+
+## Use Cases
+
+### Build for Release
+
+Multiple products can be built sequentially into a single package
+repository for release by acquiring them using Git and building them.
+
+Example:
+```
+product1 git --checkout release https://github.com/example/product1.git
+product2 git --checkout release https://github.com/example/product2.git
+product3 git --checkout release https://github.com/example/product3.git
+```
+
+### Development
+
+Prior to doing development on a product, its prerequisites can be
+built and installed.
+
+Example:
+```
+# These are product3's dependencies.  Build them once and don't make a
+# repository of the products.
+product1 --once --no-collect git https://github.com/example/product1.git
+product2 --once --no-collect git https://github.com/example/product2.git
+
+# This is the code to be developed.  It will be built every time
+# Multibuild is run but its products will not be collected into a
+# repo.
+product3 --no-collect direct .
 ```
