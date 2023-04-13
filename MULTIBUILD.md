@@ -1,6 +1,6 @@
 # Multibuild
 
-Multibuild extends the Unibuild by building multiple products, each
+Multibuild extends Unibuild by building multiple products, each
 with their own finished package repository and then merging those
 repositories into one.
 
