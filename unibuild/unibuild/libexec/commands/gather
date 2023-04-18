@@ -165,6 +165,7 @@ case "${OSINFO_PACKAGING}" in
 
     deb)
 	(cd "${REPO}" && dpkg-scanpackages . > Release)
+	(cd "${REPO}" && gzip -9c Release > Packages.gz)
 	;;
     
     *)

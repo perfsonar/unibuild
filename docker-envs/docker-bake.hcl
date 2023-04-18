@@ -7,7 +7,7 @@
 // https://github.com/zclconf/go-cty/tree/main/cty/function/stdlib
 
 variable "OSimage" {
-    default = "d10"
+    default = "u18"
 }
 variable "registry" {
     default = ""
