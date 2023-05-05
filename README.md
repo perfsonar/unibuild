@@ -391,3 +391,15 @@ Containers containing a minimal OS installation and Unibuild pre-installed are a
 | Debian | Ubuntu | 20 | `ghcr.io/perfsonar/unibuild/u20:latest` |
 
 Debian family containers are provided for different CPU architectures.
+
+There is also a Docker Compose file available for convenience. You can add the docker-compose.yml file into any repository then use it to start the containers for the target OSes. For example, to build the **pscheduler** project on **EL9** you'd run the following:
+
+```
+git clone https://github.com/perfsonar/pscheduler
+cd pscheduler
+wget https://raw.githubusercontent.com/perfsonar/unibuild/main/docker-envs/docker-compose.yml
+docker compose run el9 bash 
+unibuild build
+```
+
+Simply replace the project (pscheduler) with whatever perfSONAR repository you are trying to build and the target OS (el9) with the target OS to build packages.
