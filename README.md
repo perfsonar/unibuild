@@ -33,7 +33,7 @@ RPM or Debian format.  It consists of two parts:
    * DPkg and dpkg-dev
    * Dev Scripts
    * Equivs
-   * Quick install: `apt install -y dpkg dpkg-dev devscripts equivs`
+   * Quick install: `apt install -y git make m4 dpkg dpkg-dev devscripts equivs`
 
 
 Builds done by a user other than `root` (recommended) require that the
