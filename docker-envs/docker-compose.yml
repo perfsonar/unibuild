@@ -14,18 +14,21 @@ x-volumes:
 services:
   el7:
     image: ghcr.io/perfsonar/unibuild/el7:latest
+    platform: linux/amd64
     build:
       context: ../
       dockerfile: ./docker-envs/Dockerfile-el7
     volumes: *default-volumes
   el8:
     image: ghcr.io/perfsonar/unibuild/el8:latest
+    platform: linux/amd64
     build:
       context: ../
       dockerfile: ./docker-envs/Dockerfile-el8
     volumes: *default-volumes
   el9:
     image: ghcr.io/perfsonar/unibuild/el9:latest
+    platform: linux/amd64
     build:
       context: ../
       dockerfile: ./docker-envs/Dockerfile-el9

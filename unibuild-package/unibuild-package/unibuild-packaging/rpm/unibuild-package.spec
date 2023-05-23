@@ -60,7 +60,9 @@ systems.  See documentation in %{docdir}.
 
 %prep
 %setup -q
-
+%patch0 -p0
+%patch1 -p0
+%patch2 -p0
 
 %install
 %{__mkdir_p} $RPM_BUILD_ROOT/%{directory}
