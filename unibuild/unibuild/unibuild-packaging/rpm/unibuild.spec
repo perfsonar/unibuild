@@ -3,7 +3,7 @@
 #
 
 Name:		unibuild
-Version:	1.0
+Version:	1.1
 Release:	1%{?dist}
 
 Summary:	Unibuild repository builder
@@ -46,7 +46,8 @@ systems.  systems.  See documentation in %{docdir}.
 make \
     BINDIR=$RPM_BUILD_ROOT/%{_bindir} \
     LIBEXECDIR=$RPM_BUILD_ROOT/%{_libexecdir}/%{name} \
-    LIBEXECINSTALLEDDIR=%{_libexecdir}/%{name} \
+    LIBEXECBINDIR=$RPM_BUILD_ROOT/%{_libexecdir}/%{name}/bin \
+    LIBEXECINSTALLEDBINDIR=%{_libexecdir}/%{name}/bin \
     DOCDIR=$RPM_BUILD_ROOT/%{docdir} \
     VERSION=%{version} \
     install

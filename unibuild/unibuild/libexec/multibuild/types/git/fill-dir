@@ -1,0 +1,21 @@
+#!/bin/sh -e
+#
+# Create the directory specified by $1 and fill it using the remaining
+# arguments, which will have been validated with validate-args.
+#
+
+DIR="$1"
+shift
+
+. "$(dirname "$0")/args"
+
+rm -rf "${DIR}"
+git clone --quiet "${GIT_CLONE}" "${DIR}"
+
+if [ -n "${CHECKOUT}" ]
+then
+    cd "${DIR}"
+    git checkout --quiet "${CHECKOUT}"
+fi
+
+exit 0

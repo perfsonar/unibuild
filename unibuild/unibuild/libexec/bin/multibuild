@@ -1,0 +1,222 @@
+#!/bin/sh -e
+#
+# multibuild - Build multiple things using Unibuild
+#
+#BEGIN-HELP
+# Usage: multibuild [ OPTIONS ] [ PATH ]
+#
+# OPTIONS:
+#   --file F     Take input from file F
+#END-HELP
+
+WHOAMI=$(basename "$0")
+WHEREAMI=$(dirname "$0")
+
+WHEREAMI_CANONICAL=$(dirname $(readlink -e "$0"))
+export UNIBUILD="${WHEREAMI_CANONICAL}/.."
+LIBEXEC="${UNIBUILD}/multibuild"
+
+COMMON="${UNIBUILD}/common"
+if [ -e "${COMMON}" ]
+then
+    . "${COMMON}"
+elif [ -e "${COMMON}.raw" ]
+then
+    # This is a special case for an original build
+    . "${COMMON}.raw"
+else
+    echo "Unable to find ${COMMON}" 1>&2
+    exit 2
+fi
+
+
+# Gargle the arguments
+
+ORDER=
+while echo "$1" | egrep -qe '^--'
+do
+    OPT=$1
+    shift
+    case "${OPT}" in
+	--order)
+	    ORDER="$1"
+	    shift
+	    ;;
+	--help)
+	    self_help
+	    exit 0
+	    ;;
+	*)
+	    die "Unknown option '${OPT}'"
+    esac
+done
+
+if [ -n "$1" ]
+then
+    DIR="$1"
+else
+    DIR=.
+fi
+
+
+#
+# Identify and validate the order file
+#
+
+if [ -z "${ORDER}" ]
+then
+    ORDER="${DIR}/multibuild-order"
+fi
+
+[ -r "${ORDER}" ] || die "Unable to read ${ORDER}."
+
+decomment "${ORDER}" > "${TMPBASE}.order"
+ORDER="${TMPBASE}.order"
+
+[ $(awk '{ print $1 }' "${ORDER}" \
+	| sort \
+	| uniq -d \
+	| wc -l) \
+      -eq 0 ] \
+    || die "${ORDER} contains duplicate names."
+
+# TODO: Make sure the types are all valid
+
+USED="${TMPBASE}.used"
+cut -d ' ' -f 2 "${ORDER}" | sort | uniq > "${USED}"
+
+TYPES="${LIBEXEC}/types"
+
+# Run a type's method
+type_exec()
+{
+    EXEC_TYPE=$1
+    EXEC_METHOD=$2
+    EXEC_ARGS=$3
+
+    PROG="${TYPES}/${EXEC_TYPE}/${EXEC_METHOD}"
+
+    [ -x "${PROG}" ] \
+	|| die "INTERNAL ERROR: Type ${EXEC_TYPE} is missing its ${EXEC_METHOD} method"
+
+    echo "exec ${PROG} ${EXEC_ARGS}" | sh -e 2>&1 || return $?
+}
+
+
+TYPES_LIST="${TMPBASE}.types"
+find "${TYPES}" -type d | sed -e "s|${TYPES}/\\?||g; /^\$/d; /[/]/d" > "${TYPES_LIST}"
+
+MISSING="${TMPBASE}.missing"
+if fgrep -v -f "${TYPES_LIST}" "${USED}" > "${MISSING}"
+then
+    echo "Unknown types used in multibuild-order:" 1>&2
+    sed -e 's/^/    /g' "${MISSING}" 1>&2
+    die
+fi
+
+
+# Make sure the type arguments pass muster
+
+cat "${ORDER}" \
+    | (
+        while read LINE
+	do
+	    NAME=$(echo "${LINE}" | cut -d ' ' -f 1)
+	    TYPE=$(echo "${LINE}" | cut -d ' ' -f 2)
+	    ARGS=$(echo "${LINE}" | cut -d ' ' -f 3-)
+	    ERRORS="${TMPBASE}.error"
+	    if ! type_exec "${TYPE}" validate-args "${ARGS}" > "${ERRORS}" 2>&1
+	    then
+		printf "${NAME}: " 1>&2
+		cat "${ERRORS}" 1>&2
+		die
+	    fi
+	done
+    )
+
+
+#
+# Get to work on it.
+#
+
+WORK="${DIR}/multibuild-work"
+mkdir -p "${WORK}"
+
+REPO="${DIR}/multibuild-repo"
+
+# TODO: There's probably a nicer way to do this
+cat "${ORDER}" \
+    | (
+        while read LINE
+	do
+	    NAME=$(echo "${LINE}" | cut -d ' ' -f 1)
+	    TYPE=$(echo "${LINE}" | cut -d ' ' -f 2)
+	    ARGS=$(echo "${LINE}" | cut -d ' ' -f 3-)
+
+	    printf "\n#\n#\n#\n# BUILDING %s with %s\n#\n#\n#\n\n" "${NAME}" "${TYPE}"
+
+	    WORKING_DIR="${WORK}/${NAME} ${ARGS}"
+
+	    BUILD_DIR_FILE="${TMPBASE}.builddir"
+	    # This lets failures show through without running afoul of -e.
+	    if ! type_exec "${TYPE}" build-dir "${WORKING_DIR}" ${ARGS} > "${BUILD_DIR_FILE}"
+	    then
+		cat "${BUILD_DIR_FILE}" 1>&2
+		die
+	    fi
+	    BUILD_DIR=$(cat "${BUILD_DIR_FILE}")
+
+	    type_exec "${TYPE}" fill-dir "${WORKING_DIR}" ${ARGS}
+
+	    make -C "${BUILD_DIR}"
+	done
+    )
+
+
+#
+# Merge all of the repositories into the finished product.
+#
+
+printf "\n#\n#\n#\n# Merging repositories\n#\n#\n#\n\n"
+
+# TODO: There's probably a nicer way to do this
+cat "${ORDER}" \
+    | (
+        while read LINE
+	do
+	    NAME=$(echo "${LINE}" | cut -d ' ' -f 1)
+	    TYPE=$(echo "${LINE}" | cut -d ' ' -f 2)
+	    ARGS=$(echo "${LINE}" | cut -d ' ' -f 3-)
+
+	    WORKING_DIR="${WORK}/${NAME}"
+
+	    BUILD_DIR_FILE="${TMPBASE}.builddir"
+	    # This lets failures show through without running afoul of -e.
+	    echo type_exec "${TYPE}" build-dir "${WORKING_DIR}" ${ARGS}
+	    if ! type_exec "${TYPE}" build-dir "${WORKING_DIR}" ${ARGS} > "${BUILD_DIR_FILE}"
+	    then
+		cat "${BUILD_DIR_FILE}" 1>&2
+		die
+	    fi
+	    BUILD_DIR=$(cat "${BUILD_DIR_FILE}")
+
+	    BUILT_REPO="${WORKING_DIR}/unibuild-repo"
+
+	    mkdir -p "${REPO}"
+	    printf "%s... " "${NAME}"
+
+	    if [ ! -d "${BUILT_REPO}" ]
+	    then
+		echo "FAILED: No repository produced."
+		die
+	    fi
+
+	    if [ $(ls "${BUILT_REPO}" | wc -l) -eq 0 ]
+	    then
+		echo "Empty."
+		continue
+	    fi
+
+	    printf "OK\n"
+	done
+    )

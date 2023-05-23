@@ -1,0 +1,14 @@
+#!/bin/sh -e
+#
+# Create the directory specified by $1 and fill it using the remaining
+# arguments, which will have been validated with validate-args.
+
+LINK="$1"
+shift
+
+. "$(dirname "$0")/args"
+
+# Direct build uses a symlink
+ln -s "${DIR}" "${LINK}"
+
+exit 0

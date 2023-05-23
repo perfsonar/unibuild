@@ -98,11 +98,17 @@ clone`.
 
 `OPTIONS` are any of the following:
 
+
  * `--checkout B` - After cloning, check out branch `B`.
+ * `--subdir D` - Build starting in subdirectory `D`.
 
 Example:
 ```
-git --branch release https://github.com/some-org/kafoobulator.git
+# Build the 'release' branch of Kafoobulator
+git --checkout release https://github.com/some-org/kafoobulator.git
+
+# Build Unibuild's Hello World example
+git --subdir hello-world main https://github.com/perfsonar/unibuild.git
 ```
 
 

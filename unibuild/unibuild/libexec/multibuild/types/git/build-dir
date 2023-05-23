@@ -1,0 +1,13 @@
+#!/bin/sh -e
+#
+# Figure out what the actual build directory should be relative to $1.
+
+DIR="$1"
+shift
+
+# This will die if the arguments are bad
+. "$(dirname "$0")/args"
+
+echo "${DIR}/${SUBDIR}"
+
+exit 0

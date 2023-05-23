@@ -1,0 +1,8 @@
+#!/bin/sh -e
+#
+# Validate arguments passed as $@ for this type.
+#
+
+. "$(dirname "$0")/args"
+
+exit 0

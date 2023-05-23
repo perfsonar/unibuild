@@ -1,0 +1,44 @@
+#
+# Common script
+#
+
+die()
+{
+    echo "$@" 1>&2
+    exit 1
+}
+
+CHECKOUT=
+SUBDIR=
+while echo "$1" | egrep -qe '^--'
+do
+    OPT=$1
+    shift
+    case "${OPT}" in
+
+	--checkout)
+	    CHECKOUT="$1"
+	    shift
+	    echo "${CHECKOUT}" | egrep -qe '^([/A-Za-z0-9_.-])+$' \
+		|| die "Invalid branch '${CHECKOUT}'"
+	    ;;
+
+	--subdir)
+	    SUBDIR="$1"
+	    shift
+	    echo "${SUBDIR}" | egrep -qe '^[^/]' \
+		|| die "Absolute paths are not allowed"
+	    echo "${SUBDIR}" | egrep -vqe '(^\.\./|/\.\./|/\.\.$)' \
+		|| die "Upward relative paths are not allowed"
+	    ;;
+	*)
+	    die "Unknown option '${OPT}'"
+    esac
+done
+
+[ "$#" -eq 0 ] && die "Missing repository to clone"
+
+GIT_CLONE=$1
+shift
+
+[ "$#" -eq 0 ] || die "Unusable arguments '$@'"

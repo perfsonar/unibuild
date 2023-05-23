@@ -1,0 +1,16 @@
+#!/bin/sh -e
+#
+# Create the directory specified by $1 and fill it using the remaining
+# arguments, which will have been validated with validate-args.
+
+DEST="$1"
+shift
+
+. "$(dirname "$0")/args"
+
+rm -rf "${DEST}"
+mkdir -p "${DEST}"
+
+(cd "${DIR}" && tar cf - .) | (cd "${DEST}" && tar xf -)
+
+exit 0

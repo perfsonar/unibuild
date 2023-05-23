@@ -1,0 +1,8 @@
+#!/bin/sh -e
+#
+# Create the directory specified by $1 and fill it using the remaining
+# arguments, which will have been validated with validate-args.
+
+echo "This should never be executed."
+
+exit 1

@@ -1,0 +1,14 @@
+#!/bin/sh -e
+#
+# Validate arguments passed as $@ for this type.
+#
+
+# Only no arguments are valid.
+
+if [ "$#" -ne 0 ]
+then
+    echo "This type takes no arguments." 1>&2
+    exit 1
+fi
+
+exit 0

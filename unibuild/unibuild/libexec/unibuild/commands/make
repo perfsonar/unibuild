@@ -3,7 +3,7 @@
 # make - Run target(s) for all packages.
 #
 
-COMMON="$(dirname $0)/../common"
+COMMON="$(dirname $0)/../../common"
 if [ -e "${COMMON}" ]
 then
     . "${COMMON}"

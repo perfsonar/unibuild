@@ -3,7 +3,7 @@
 # clean - Remove build by-products
 #
 
-. "$(dirname $0)/../common"
+. "$(dirname $0)/../../common"
 
 help()
 {

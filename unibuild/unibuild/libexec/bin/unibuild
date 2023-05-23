@@ -3,11 +3,11 @@
 # unibuild - Front-end CLI program for Unibuild
 #
 
-WHOAMI=$(basename $0)
-WHEREAMI=$(dirname $0)
+WHOAMI=$(basename "$0")
+WHEREAMI=$(dirname "$0")
 
-UNIBUILD_CANONICAL=$(readlink -e "$0")
-export UNIBUILD=$(dirname "${UNIBUILD_CANONICAL}")
+WHEREAMI_CANONICAL=$(dirname $(readlink -e "$0"))
+export UNIBUILD="${WHEREAMI_CANONICAL}/.."
 
 COMMON="${UNIBUILD}/common"
 if [ -e "${COMMON}" ]

@@ -1,0 +1,10 @@
+#!/bin/sh -e
+#
+# Validate arguments passed as $@ for this type.
+#
+
+# Nothing is valid ever.
+
+echo "There are no valid arguments for this type." 1>&2
+
+exit 1

@@ -16,10 +16,19 @@ die()
     exit 1
 }
 
+self_help()
+{
+    sed -e '1,/^#BEGIN-HELP/d ; /^#END-HELP/,$d ; s/^#\s\{0,1\}//' "$0"
+    exit ${1:-0}
+}
+
+
 [ -d "${UNIBUILD}" ] || die "Can't find Unibuild directory."
 
-export UNIBUILD_COMMANDS="${UNIBUILD}/commands"
-export UNIBUILD_LIB="${UNIBUILD}/lib"
+export UNIBUILD_COMMANDS="${UNIBUILD}/unibuild/commands"
+export UNIBUILD_LIB="${UNIBUILD}/unibuild/lib"
+
+MULTIBUILD=
 
 UNIBUILD_ORDER_FILE=unibuild-order
 
@@ -264,4 +273,10 @@ section()
 unibuild_version()
 {
     echo '__VERSION__'
+}
+
+
+decomment()
+{
+    sed -e 's/\s*#.*$//; /^\s*$/d; s/^\s\+//; s/\s\+$//' "$@"
 }

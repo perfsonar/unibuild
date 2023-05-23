@@ -1,0 +1,12 @@
+#!/bin/sh -e
+#
+# Create the directory specified by $1 and fill it using the remaining
+# arguments, which will have been validated with validate-args.
+
+mkdir -p "$1"
+
+# This builds a Makefile that does nothing but build an empty repo
+
+printf "default::\n\t@echo Failing build on purpose.\n\t@false\n" > "$1/Makefile"
+
+exit 0

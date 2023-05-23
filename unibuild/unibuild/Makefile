@@ -24,16 +24,21 @@ endif
 	mkdir -p $(LIBEXECDIR)
 	cp -r libexec/* $(LIBEXECDIR)
 	rm -f $(LIBEXECDIR)/*.raw
-ifndef LIBEXECINSTALLEDDIR
-	@echo No LIBEXECINSTALLEDDIR defined.
-	false
-endif
 ifndef BINDIR
 	@echo No BINDIR defined.
 	false
 endif
+ifndef LIBEXECBINDIR
+	@echo No LIBEXECBINDIR defined.
+	false
+endif
+ifndef LIBEXECINSTALLEDBINDIR
+	@echo No LIBEXECINSTALLEDBINDIR defined.
+	false
+endif
 	mkdir -p $(BINDIR)
-	ln -s $(LIBEXECINSTALLEDDIR)/unibuild $(BINDIR)
+	ln -s $(LIBEXECINSTALLEDBINDIR)/unibuild $(BINDIR)/unibuild
+	ln -s $(LIBEXECINSTALLEDBINDIR)/multibuild $(BINDIR)/multibuild
 ifndef DOCDIR
 	@echo No DOCDIR defined.
 	false
