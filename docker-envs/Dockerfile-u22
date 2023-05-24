@@ -1,4 +1,4 @@
-FROM ubuntu:20.04 AS unibuild-image
+FROM ubuntu:22.04 AS unibuild-image
 
 # Install pre-requisites for building packages
 RUN DEBIAN_FRONTEND=noninteractive apt-get update -y && \
