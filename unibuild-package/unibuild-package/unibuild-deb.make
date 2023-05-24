@@ -213,7 +213,8 @@ endif
 	cd $(BUILD_UNPACK_DIR) \
 		&& mk-build-deps $(ROOT_CMD) --install --remove \
 			--tool='apt-get -o Debug::pkgProblemResolver=yes --no-install-recommends --yes' \
-			'debian/control'
+			'debian/control' \
+		&& rm -f *-build-deps_*.buildinfo *-build-deps_*.changes
 	@printf "\nBuild Package $(SOURCE) $(VERSION)\n\n"
 	(((( \
 		cd $(BUILD_UNPACK_DIR) && dpkg-buildpackage -sa \

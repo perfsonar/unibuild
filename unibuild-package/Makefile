@@ -44,7 +44,7 @@ ifndef STAGE2
 ifeq ($(PACKAGE_FORMAT),rpm)
 	$(RUN_AS_ROOT) $(INSTALL_PACKAGE) -y install make rpmdevtools
 else
-	apt-get -y install make devscripts
+	apt-get -y install make devscripts equivs
 endif
 	$(MAKE) STAGE2=1 $@
 
