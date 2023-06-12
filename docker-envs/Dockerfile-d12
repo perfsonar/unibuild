@@ -1,0 +1,20 @@
+# TODO: Change this to "debian:12" once that becomes available on
+# DockerHub.
+FROM debian:bookworm AS unibuild-image
+
+# Install pre-requisites for building packages
+RUN apt-get update -y && \
+    apt-get upgrade -y && \
+    apt-get install -y sudo apt-utils curl devscripts emacs-nox gnupg htop m4 pylint rsync screen tree vim
+
+# Copy unibuild source
+COPY . /usr/share/unibuild/
+
+# Install unibuild
+WORKDIR /usr/share/unibuild
+RUN make RELEASE=1
+RUN /usr/share/unibuild/libexec/prep/prep
+
+# Shared volume for code to build
+VOLUME /app
+WORKDIR /app
