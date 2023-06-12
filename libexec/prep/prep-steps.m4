@@ -44,7 +44,7 @@ ifelse(__FAMILY/__MAJOR,RedHat/7,yum update -y)
 ifelse(__FAMILY/eval(__MAJOR >= 8),RedHat/1,dnf update -y)
 
 ifelse(__FAMILY,Debian,
-       SOURCES_LIST = '/etc/apt/sources.list'
+       SOURCES_LIST='/etc/apt/sources.list'
        if [ -e "${SOURCES_LIST}" ]
        then
 	   sed -i -e 's/^\s*#\s*\(deb-src\s+.*\)$/\1/' "${SOURCES_LIST}"
