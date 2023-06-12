@@ -43,8 +43,12 @@ ifelse(__FAMILY/__MAJOR,RedHat/9,dnf config-manager --set-enabled crb)
 ifelse(__FAMILY/__MAJOR,RedHat/7,yum update -y)
 ifelse(__FAMILY/eval(__MAJOR >= 8),RedHat/1,dnf update -y)
 
+ifelse(__FAMILY/eval(__MAJOR < 12),Debian/1,
+       sed -i -e 's/^\s*#\s*\(deb-src\s+.*\)$/\1/' /etc/apt/sources.list,
+       true TODO: May not be needed for 12. sed -i -e 's/^\s*#\s*\(deb-src\s+.*\)$/\1/' /etc/apt/sources.list,
+      )
+
 ifelse(__FAMILY,Debian,
-       sed -i -e 's/^\s*#\s*\(deb-src\s+.*\)$/\1/' /etc/apt/sources.list
        apt-get update
       )
 
