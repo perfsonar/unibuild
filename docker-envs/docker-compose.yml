@@ -49,6 +49,22 @@ services:
     platform: "linux/ppc64le"
     image: ghcr.io/perfsonar/unibuild/d10:latest@sha256:1192ecbcf7b81acded3e3ca9c225accaf189fc2cf6fced3e3ed97f3446626ba4
     volumes: *default-volumes
+  d11_amd64:
+    platform: "linux/amd64"
+    image: ghcr.io/perfsonar/unibuild/d11:latest@sha256:9d78943784008fe297705104b6db31d6f4a438a82e5cc6320de81910a9865881
+    volumes: *default-volumes
+  d11_arm64:
+    platform: "linux/arm64"
+    image: ghcr.io/perfsonar/unibuild/d11:latest@sha256:0fc546c75ed6b8c06265b07a1764de403a0e08599d43c58904ee94633b6f42e6
+    volumes: *default-volumes
+  d11_armv7:
+    platform: "linux/arm/v7"
+    image: ghcr.io/perfsonar/unibuild/d11:latest@sha256:762c87418f8ac73c3fd524d0fd710c60e1efd8991795400b737457278fc7ca95
+    volumes: *default-volumes
+  d11_ppc64le:
+    platform: "linux/ppc64le"
+    image: ghcr.io/perfsonar/unibuild/d11:latest@sha256:1192ecbcf7b81acded3e3ca9c225accaf189fc2cf6fced3e3ed97f3446626ba4
+    volumes: *default-volumes
   u18_amd64:
     platform: "linux/amd64"
     image: ghcr.io/perfsonar/unibuild/u18:latest@sha256:6711fd1696e04fd9613012c359adf7158ef49e54645c88c13ba45ffc4aeced51
@@ -80,4 +96,20 @@ services:
   u20_ppc64le:
     platform: "linux/ppc64le"
     image: ghcr.io/perfsonar/unibuild/u20:latest@sha256:a64700b12b44f7cb540182dbee0867096831724dfd3665e53e83ff6a76bfc6d0
+    volumes: *default-volumes
+  u22_amd64:
+    platform: "linux/amd64"
+    image: ghcr.io/perfsonar/unibuild/u22:latest@sha256:f5fbb97dc8120455a552167fbeb06fa74e20eb1ced526d8c11e2f084e1ea67a6
+    volumes: *default-volumes
+  u22_arm64:
+    platform: "linux/arm64"
+    image: ghcr.io/perfsonar/unibuild/u22:latest@sha256:fbac3d1221c629e2b5801265006de8a84222f8bc132507ef8ec3588321edaf10
+    volumes: *default-volumes
+  u22_armv7:
+    platform: "linux/arm/v7"
+    image: ghcr.io/perfsonar/unibuild/u22:latest@sha256:a1a84dc588703aa4002074b671be836d77fb5fe34b1402b591b30ea2de6681f7
+    volumes: *default-volumes
+  u22_ppc64le:
+    platform: "linux/ppc64le"
+    image: ghcr.io/perfsonar/unibuild/u22:latest@sha256:a64700b12b44f7cb540182dbee0867096831724dfd3665e53e83ff6a76bfc6d0
     volumes: *default-volumes

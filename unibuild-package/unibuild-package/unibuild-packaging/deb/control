@@ -3,7 +3,7 @@ Section: net
 Priority: optional
 Maintainer: perfSONAR developers <debian@perfsonar.net>
 Uploaders: Mark Feit <mfeit@internet2.edu>
-Build-Depends: debhelper (>= 9)
+Build-Depends: debhelper (>= 10)
 Standards-Version: 3.9.8
 Homepage: https://github.com/perfsonar/unibuild
 Vcs-Git: git://github.com/perfsonar/unibuild
