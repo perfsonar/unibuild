@@ -1,11 +1,9 @@
-# TODO: Change this to "debian:12" once that becomes available on
-# DockerHub.
-FROM debian:bookworm AS unibuild-image
+FROM debian:12 AS unibuild-image
 
 # Install pre-requisites for building packages
 RUN apt-get update -y && \
     apt-get upgrade -y && \
-    apt-get install -y sudo apt-utils curl devscripts emacs-nox gnupg htop m4 pylint rsync screen tree vim
+    apt-get install -y sudo apt-utils curl emacs-nox gnupg htop m4 pylint rsync screen tree vim
 
 # Copy unibuild source
 COPY . /usr/share/unibuild/

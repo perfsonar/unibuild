@@ -65,6 +65,22 @@ services:
     platform: "linux/ppc64le"
     image: ghcr.io/perfsonar/unibuild/d11:latest@sha256:1192ecbcf7b81acded3e3ca9c225accaf189fc2cf6fced3e3ed97f3446626ba4
     volumes: *default-volumes
+  d12_amd64:
+    platform: "linux/amd64"
+    image: ghcr.io/perfsonar/unibuild/d12:latest@sha256:9d78943784008fe297705104b6db31d6f4a438a82e5cc6320de81910a9865881
+    volumes: *default-volumes
+  d12_arm64:
+    platform: "linux/arm64"
+    image: ghcr.io/perfsonar/unibuild/d12:latest@sha256:0fc546c75ed6b8c06265b07a1764de403a0e08599d43c58904ee94633b6f42e6
+    volumes: *default-volumes
+  d12_armv7:
+    platform: "linux/arm/v7"
+    image: ghcr.io/perfsonar/unibuild/d12:latest@sha256:762c87418f8ac73c3fd524d0fd710c60e1efd8991795400b737457278fc7ca95
+    volumes: *default-volumes
+  d12_ppc64le:
+    platform: "linux/ppc64le"
+    image: ghcr.io/perfsonar/unibuild/d12:latest@sha256:1192ecbcf7b81acded3e3ca9c225accaf189fc2cf6fced3e3ed97f3446626ba4
+    volumes: *default-volumes
   u18_amd64:
     platform: "linux/amd64"
     image: ghcr.io/perfsonar/unibuild/u18:latest@sha256:6711fd1696e04fd9613012c359adf7158ef49e54645c88c13ba45ffc4aeced51
