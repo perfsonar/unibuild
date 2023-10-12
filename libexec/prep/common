@@ -4,8 +4,6 @@
 
 # -----------------------------------------------------------------------------
 
-# This is adapted from Unibuild
-
 MACRO_OS=$(uname -s)
 
 # This page has some useful information about figuring out what
@@ -35,7 +33,7 @@ elif [ -e '/etc/debian_version' ]; then
 
 else
 
-    die "DDB is not supported on this OS family."
+    die "Unibuild is not supported on this OS family."
 
 fi
 
