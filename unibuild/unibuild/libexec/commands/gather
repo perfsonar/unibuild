@@ -164,8 +164,10 @@ case "${OSINFO_PACKAGING}" in
 	;;    
 
     deb)
-	(cd "${REPO}" && dpkg-scanpackages . > Release)
-	(cd "${REPO}" && gzip -9c Release > Packages.gz)
+# This can later be used with the simple APT setup below:
+# deb [trusted=yes] file:/full/path/to/local/unibuild-repo ./
+	(cd "${REPO}" && apt-ftparchive packages . > Packages)
+	(cd "${REPO}" && apt-ftparchive release . > Release)
 	;;
     
     *)
