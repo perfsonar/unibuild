@@ -2,11 +2,8 @@
 FROM debian:10.11 AS unibuild-image
 
 # Install pre-requisites for building packages
-# The rmdir/mkdir for java certs is needed to circumvent a Debian/Ubuntu Java packaging bug on D10
 RUN apt-get update -y && \
     apt-get upgrade -y && \
-    rmdir /etc/ssl/certs/java \
-    mkdir /etc/ssl/certs/java \
     apt-get install -y sudo apt-utils curl emacs-nox gnupg htop m4 make pylint rsync screen tree vim
 
 # Copy unibuild source
