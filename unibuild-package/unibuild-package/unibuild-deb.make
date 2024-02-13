@@ -127,7 +127,10 @@ ifneq ($(SOURCE_TARBALL),)
 else
 	# Build from the unpacked sources since there wasn't one
 	(cd '$@' && tar cf - .) | (cd $(BUILD_ORIG_PACKAGE_DIR) && tar xpf -)
-	ls -alh $(BUILD_ORIG_PACKAGE_DIR)/..
+	# Debian packaging guidelines dictate that the "orig" tarball
+	# must not change if the software doesn't, so remove any
+	# packaging information before creating it.
+	find '$(BUILD_ORIG_PACKAGE_DIR)' -name 'unibuild-packaging' -type d | xargs rm -rf
 	(cd $(BUILD_ORIG_DIR) && tar cf - $(SOURCE_VERSION) | gzip -n ) > $(PRODUCTS_DIR)/$(ORIG_TARBALL)
 endif
 	cp $(PRODUCTS_DIR)/$(ORIG_TARBALL) $(BUILD_UNPACK_DIR)/..
