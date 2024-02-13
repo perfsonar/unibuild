@@ -122,14 +122,14 @@ endif
 	@printf "\nBuilding 'orig' tarball $(ORIG_TARBALL).\n\n"
 	mkdir -p $(BUILD_ORIG_PACKAGE_DIR)
 ifneq ($(SOURCE_TARBALL),)
-	# Copy the original tarball without modification
+	-# Copy the original tarball without modification
 	cp $(SOURCE_TARBALL) $(PRODUCTS_DIR)/$(ORIG_TARBALL)
 else
-	# Build from the unpacked sources since there wasn't one
+	-# Build from the unpacked sources since there wasn't one
 	(cd '$@' && tar cf - .) | (cd $(BUILD_ORIG_PACKAGE_DIR) && tar xpf -)
-	# Debian packaging guidelines dictate that the "orig" tarball
-	# must not change if the software doesn't, so remove any
-	# packaging information before creating it.
+	-# Debian packaging guidelines dictate that the "orig" tarball
+	-# must not change if the software doesn't, so remove any
+	-# packaging information before creating it.
 	find '$(BUILD_ORIG_PACKAGE_DIR)' -name 'unibuild-packaging' -type d | xargs rm -rf
 	(cd $(BUILD_ORIG_DIR) && tar cf - $(SOURCE_VERSION) | gzip -n ) > $(PRODUCTS_DIR)/$(ORIG_TARBALL)
 endif
