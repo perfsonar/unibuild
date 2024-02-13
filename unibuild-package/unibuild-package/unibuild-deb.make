@@ -129,7 +129,9 @@ else
 	(cd '$@' && tar cf - .) | (cd $(BUILD_ORIG_PACKAGE_DIR) && tar xpf -)
 	-# Debian packaging guidelines dictate that the "orig" tarball
 	-# must not change if the software does not, so remove any
-	-# packaging information before creating it.
+	-# packaging information before creating it.  This causes a
+	-# diff between the sources and "orig" tarball, which is compensated
+	-# for in the "build" target.
 	find '$(BUILD_ORIG_PACKAGE_DIR)' -name 'unibuild-packaging' -type d | xargs rm -rf
 	(cd $(BUILD_ORIG_DIR) && tar cf - $(SOURCE_VERSION) | gzip -n ) > $(PRODUCTS_DIR)/$(ORIG_TARBALL)
 endif
@@ -219,8 +221,11 @@ endif
 			'debian/control' \
 		&& rm -f *-build-deps_*.buildinfo *-build-deps_*.changes
 	@printf "\nBuild Package $(SOURCE) $(VERSION)\n\n"
+	-# Note that we ignore unibuild-packaging differences here because that
+	-# directory it will have been deleted from the .orig tarball.
 	(((( \
 		cd $(BUILD_UNPACK_DIR) && dpkg-buildpackage -sa \
+			'--diff-ignore=^unibuild-packaging/.*$$' \
 			--root-command=fakeroot --no-sign 2>&1 ; \
 		echo $$? >&3 \
 	) \
