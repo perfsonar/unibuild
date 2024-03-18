@@ -2,10 +2,10 @@ FROM oraclelinux:8 AS unibuild-image
 
 #Install pre-requisites
 #Install utils like tree useful for debugging
-#Enable powertools since contains common dependencies
+#Enable codeready_builder since contains common dependencies
 RUN dnf update -y && \
     dnf install -y rpm rpm-build rpmdevtools m4 make sudo dnf-plugins-core epel-release tree && \
-    dnf config-manager --set-enabled powertools
+    dnf config-manager --enable ol8_codeready_builder
 
 #Copy unibuild source
 COPY . /usr/share/unibuild/
