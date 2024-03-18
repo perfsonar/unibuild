@@ -38,7 +38,7 @@ ifelse(__FAMILY/eval(__MAJOR >= 8),RedHat/1,
 	   epel-release
       )
 
-ifelse(__FAMILY/__MAJOR,RedHat/8,dnf config-manager --set-enabled powertools)
+ifelse(__DISTRO/__MAJOR,ol/8,dnf config-manager ---enable ol8_codeready_builder)
 ifelse(__FAMILY/__MAJOR,RedHat/9,dnf config-manager --set-enabled crb)
 ifelse(__FAMILY/__MAJOR,RedHat/7,yum update -y)
 ifelse(__FAMILY/eval(__MAJOR >= 8),RedHat/1,dnf update -y)
