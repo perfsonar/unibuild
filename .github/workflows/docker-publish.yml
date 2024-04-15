@@ -25,7 +25,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [ 'el7', 'el8', 'ol8', 'el9', 'd10', 'd11', 'd12', 'u18', 'u20', 'u22' ]
+        os: [ 'el7', 'el8', 'ol8', 'el9', 'd11', 'd12', 'u18', 'u20', 'u22' ]
 
     runs-on: ubuntu-latest
     permissions:
@@ -86,7 +86,7 @@ jobs:
       # https://github.com/docker/build-push-action
       - name: Build and push Docker multiarch images
         id: build-and-push-multiarch
-        if: ${{ matrix.os == 'd10' || matrix.os == 'd11' || matrix.os == 'd12' || matrix.os == 'u18' || matrix.os == 'u20' || matrix.os == 'u22' }}
+        if: ${{ matrix.os == 'd11' || matrix.os == 'd12' || matrix.os == 'u18' || matrix.os == 'u20' || matrix.os == 'u22' }}
         uses: docker/build-push-action@v3
         with:
           context: .
