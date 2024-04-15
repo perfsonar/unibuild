@@ -133,7 +133,18 @@ else
 	-# diff between the sources and "orig" tarball, which is compensated
 	-# for in the "build" target.
 	find '$(BUILD_ORIG_PACKAGE_DIR)' -name 'unibuild-packaging' -type d | xargs rm -rf
-	(cd $(BUILD_ORIG_DIR) && tar cf - $(SOURCE_VERSION) | gzip -n ) > $(PRODUCTS_DIR)/$(ORIG_TARBALL)
+	-# The extra tar arguments make the produced file idempotent.
+	-# See https://reproducible-builds.org/docs/archives
+	-# PORT: This requires GNU tar (should not be an issue since this is
+	-# PORT: a Debian-only operation.
+	(cd $(BUILD_ORIG_DIR) && tar \
+		--sort=name \
+		--mtime='GMT 1970-01-01' \
+		--owner=0 \
+		--group=0 \
+		--numeric-owner \
+		--pax-option='exthdr.name=%d/PaxHeaders/%f,delete=atime,delete=ctime' \
+		-cf - $(SOURCE_VERSION) | gzip -n ) > $(PRODUCTS_DIR)/$(ORIG_TARBALL)
 endif
 	cp $(PRODUCTS_DIR)/$(ORIG_TARBALL) $(BUILD_UNPACK_DIR)/..
 	@printf "\nInstalling Debian build into $(BUILD_DEBIAN_DIR)..\n\n"
