@@ -139,7 +139,7 @@ else
 	-# PORT: a Debian-only operation.
 	(cd $(BUILD_ORIG_DIR) && tar \
 		--sort=name \
-		--mtime='GMT 1970-01-01' \
+		--mtime='GMT 2011-11-11' \
 		--owner=0 \
 		--group=0 \
 		--numeric-owner \
@@ -288,8 +288,7 @@ endif
 		-name "*.deb" -o -name "*.dsc" -o -name "*.changes" -o -name "*.buildinfo" -o -name "*.build" -o -name "*.tar.*" -o -name "*.diff.gz" \
 		\) -exec cp {} "$(PRODUCTS_DEST)" \;
 	mkdir -p "$(REPO_UNIBUILD)"
-	sed -e ':a;/\\\s*$$/{N;s/\\\s*\n//;ba}' "$(CONTROL)" \
-		| awk '$$1 == "Source:" { print $$2; exit }' \
+	awk '$$1 == "Source:" { print $$2; exit }' *.dsc
 		>> "$(DEBIAN_PACKAGE_ORDER)"
 
 
