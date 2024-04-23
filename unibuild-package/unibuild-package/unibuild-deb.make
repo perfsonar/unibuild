@@ -288,7 +288,8 @@ endif
 		-name "*.deb" -o -name "*.dsc" -o -name "*.changes" -o -name "*.buildinfo" -o -name "*.build" -o -name "*.tar.*" -o -name "*.diff.gz" \
 		\) -exec cp {} "$(PRODUCTS_DEST)" \;
 	mkdir -p "$(REPO_UNIBUILD)"
-	awk '$$1 == "Source:" { print $$2; exit }' *.dsc
+	sed -e ':a;/\\\s*$$/{N;s/\\\s*\n//;ba}' "$(CONTROL)" \
+		| awk '$$1 == "Source:" { print $$2; exit }' \
 		>> "$(DEBIAN_PACKAGE_ORDER)"
 
 
