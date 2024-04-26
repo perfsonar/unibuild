@@ -35,7 +35,7 @@ clear_cache=false
 verbose=false
 build_type=
 registry=
-declare -a OSimages=("d10" "d11" "d12" "u18" "u20" "u22")
+declare -a OSimages=("d10" "d11" "d12" "u18" "u20" "u22" "u24")
 
 while getopts "chr:v" OPT; do
     case $OPT in

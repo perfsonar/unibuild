@@ -1,0 +1,18 @@
+FROM ubuntu:24.04 AS unibuild-image
+
+# Install pre-requisites for building packages
+RUN DEBIAN_FRONTEND=noninteractive apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y sudo apt-utils curl emacs-nox gnupg htop m4 make pylint rsync screen tree vim
+
+# Copy unibuild source
+COPY . /usr/share/unibuild/
+
+# Install unibuild
+WORKDIR /usr/share/unibuild
+RUN make RELEASE=1
+RUN /usr/share/unibuild/libexec/prep/prep
+
+# Shared volume for code to build
+VOLUME /app
+WORKDIR /app
