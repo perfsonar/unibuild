@@ -164,10 +164,10 @@ case "${OSINFO_PACKAGING}" in
 	;;    
 
     deb)
-# This can later be used with the simple APT setup below:
+# This can later be used with the simple APT source.list setup below:
 # deb [trusted=yes] file:/full/path/to/local/unibuild-repo ./
 	(cd "${REPO}" && apt-ftparchive packages . > Packages)
-	(cd "${REPO}" && apt-ftparchive release . > Release)
+	(cd "${REPO}" && apt-ftparchive -o APT::FTPArchive::Release::Origin=Unibuild -o APT::FTPArchive::Release::Suite=unibuild-snapshot -o APT::FTPArchive::Release::Codename=unibuild release . > Release)
 	;;
     
     *)
