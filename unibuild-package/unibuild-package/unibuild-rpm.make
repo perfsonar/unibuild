@@ -44,6 +44,11 @@ endif
 SOURCE_FILES := $(shell spectool -S $(SPEC) | awk '{ print $$2 }')
 PATCH_FILES := $(shell spectool -P $(SPEC) | awk '{ print $$2 }')
 
+# Dump a macro-expanded version of the spec to stdout
+specdump:
+	rpmspec -P "$(SPEC)"
+
+
 #
 # RPM Build Directory
 #

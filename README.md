@@ -292,6 +292,10 @@ In addition to the shorthands, the template provides several
 additional abbreviations for groups of targets: `cb`, `cbd`, `cbi`,
 `cbic` and `cdbc`.
 
+When building on systems that use RPMs, a `specdump` target is
+available that produces a macro-expanded version of the spec file on
+the standard output.  This is for informational/debug purposes only
+and should not be relied upon for finished builds.
 
 
 ## The `unibuild-packaging` Directory
