@@ -38,7 +38,7 @@ services:
     image: ghcr.io/perfsonar/unibuild/d11:latest@sha256:b9269f914fadbde9f2fc915d077c668fa92f372c19563cbfb3c486a5e1405bbc
     volumes: *default-volumes
   d11_arm64:
-    platform: "linux/arm64"
+    platform: "linux/arm64/v8"
     image: ghcr.io/perfsonar/unibuild/d11:latest@sha256:dff28ee104b9649128c2c03059df8db6b53ea46b741f449434497b02c661596a
     volumes: *default-volumes
   d11_armv7:
@@ -54,7 +54,7 @@ services:
     image: ghcr.io/perfsonar/unibuild/d12:latest@sha256:3d4d305254cb30f825359d3f95eb517a81be95c88e2864c98ae857fc8da6ea12
     volumes: *default-volumes
   d12_arm64:
-    platform: "linux/arm64"
+    platform: "linux/arm64/v8"
     image: ghcr.io/perfsonar/unibuild/d12:latest@sha256:64f3e174878cc86ab07899a3b01551409604a4d410b78d2b4a662f691faf8503
     volumes: *default-volumes
   d12_armv7:
@@ -70,7 +70,7 @@ services:
     image: ghcr.io/perfsonar/unibuild/u20:latest@sha256:ef92eada79085b091ad39f17d09d5508ec43cd6593157fbf49155e3f42db6528
     volumes: *default-volumes
   u20_arm64:
-    platform: "linux/arm64"
+    platform: "linux/arm64/v8"
     image: ghcr.io/perfsonar/unibuild/u20:latest@sha256:fb7ae46f697b2201d613077f017435f075fb2309e833cb20c65a862131899283
     volumes: *default-volumes
   u20_armv7:
@@ -86,7 +86,7 @@ services:
     image: ghcr.io/perfsonar/unibuild/u22:latest@sha256:8b6498dc22de69f18f9c12cb352143c9dd47fe9eb9b2f87ff735d8c1bc88b606
     volumes: *default-volumes
   u22_arm64:
-    platform: "linux/arm64"
+    platform: "linux/arm64/v8"
     image: ghcr.io/perfsonar/unibuild/u22:latest@sha256:8e0ea73269ed7748246caae5b6ec2bf04599070164935c5566497cb5a0ba3cb4
     volumes: *default-volumes
   u22_armv7:
@@ -102,7 +102,7 @@ services:
     image: ghcr.io/perfsonar/unibuild/u24:latest@sha256:576d17d92d1838797ec13c423257c13e79521cf2d00ee6cc036b6ca8472460ce
     volumes: *default-volumes
   u24_arm64:
-    platform: "linux/arm64"
+    platform: "linux/arm64/v8"
     image: ghcr.io/perfsonar/unibuild/u24:latest@sha256:002b744fbee0c3fdf646364e7e7f05e86b96969ee8b4d8841b571a528596b351
     volumes: *default-volumes
   u24_armv7:

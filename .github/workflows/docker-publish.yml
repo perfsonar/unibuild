@@ -86,7 +86,7 @@ jobs:
       # https://github.com/docker/build-push-action
       - name: Build and push Docker multiarch images
         id: build-and-push-multiarch
-        if: ${{ matrix.os == 'd11' || matrix.os == 'd12' || matrix.os == 'u18' || matrix.os == 'u20' || matrix.os == 'u22' || matrix.os == 'u24' }}
+        if: ${{ matrix.os == 'd11' || matrix.os == 'd12' || matrix.os == 'u20' || matrix.os == 'u22' || matrix.os == 'u24' }}
         uses: docker/build-push-action@v3
         with:
           context: .
