@@ -9,7 +9,7 @@
 my $filename = 'docker-compose.yml';
 my $registry_path = 'ghcr.io/perfsonar/unibuild/';
 my $registry_path_esc = $registry_path =~ s/\//\\\//gr;
-my @OSimages = ('d10:latest', 'd11:latest', 'd12:latest', 'u18:latest', 'u20:latest', 'u22:latest', "u24:latest');
+my @OSimages = ('d11:latest', 'd12:latest', 'u20:latest', 'u22:latest', 'u24:latest');
 my $file, $newsha, $count=0;
 
 # Announce what we'll do

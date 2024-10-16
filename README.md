@@ -390,9 +390,11 @@ Containers containing a minimal OS installation and Unibuild pre-installed are a
 | Red Hat | CentOS | 7 | `ghcr.io/perfsonar/unibuild/el7:latest` |
 | Red Hat | Alma Linux | 8 | `ghcr.io/perfsonar/unibuild/el8:latest` |
 | Red Hat | Alma Linux | 9 | `ghcr.io/perfsonar/unibuild/el9:latest` |
-| Debian | Debian | 10 | `ghcr.io/perfsonar/unibuild/d10:latest` |
-| Debian | Ubuntu | 18 | `ghcr.io/perfsonar/unibuild/u18:latest` |
+| Debian | Debian | 11 | `ghcr.io/perfsonar/unibuild/d11:latest` |
+| Debian | Debian | 12 | `ghcr.io/perfsonar/unibuild/d12:latest` |
 | Debian | Ubuntu | 20 | `ghcr.io/perfsonar/unibuild/u20:latest` |
+| Debian | Ubuntu | 22 | `ghcr.io/perfsonar/unibuild/u22:latest` |
+| Debian | Ubuntu | 24 | `ghcr.io/perfsonar/unibuild/u24:latest` |
 
 Debian family containers are provided for different CPU architectures.
 
