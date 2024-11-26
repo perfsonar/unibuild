@@ -3,8 +3,7 @@ FROM almalinux:10-kitten AS unibuild-image
 #Install pre-requisites
 #Install utils like tree useful for debugging
 #Enable powertools since contains common dependencies
-RUN microdnf install -y dnf \
-    && dnf update -y \
+RUN dnf update -y \
     && dnf install -y rpm rpm-build rpmdevtools m4 make sudo dnf-plugins-core epel-release tree \
     && dnf config-manager --enable crb
 
