@@ -1,4 +1,4 @@
-FROM almalinux:109-kitten AS unibuild-image
+FROM almalinux:10-kitten AS unibuild-image
 
 #Install pre-requisites
 #Install utils like tree useful for debugging
