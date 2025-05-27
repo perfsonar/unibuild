@@ -121,7 +121,7 @@ do
 
     [ -d "${PACKAGE}" ] || die "No directory for package '${PACKAGE}'."
 
-    if ! (find "${PACKAGE}" -type d | egrep -qe "/unibuild-packaging/${OSINFO_PACKAGING}\$")
+    if ! (find "${PACKAGE}" -type d | grep -E -qe "/unibuild-packaging/${OSINFO_PACKAGING}\$")
     then
 	section SKIPPING ${PACKAGE}:  No ${OSINFO_PACKAGING} build
 	continue
@@ -129,7 +129,7 @@ do
 
     if package_has_switch "${FILE}" "${PACKAGE}" no-install
     then
- 	TARGETS=$(echo "$@" | sed -e 's/\s\+/\n/g' | fgrep -vx install)
+ 	TARGETS=$(echo "$@" | sed -e 's/\s\+/\n/g' | grep -F -vx install)
     else
 	TARGETS="$@"
     fi

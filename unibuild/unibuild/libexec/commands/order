@@ -65,8 +65,8 @@ buildable_filter()
     while read LINE
     do
 	if find "${DIR}/${LINE}" -type d \
-		| fgrep -v '/unibuild-work/' \
-		| egrep -q -e "/unibuild-packaging/${OSINFO_PACKAGING}\$"
+		| grep -F -v '/unibuild-work/' \
+		| grep -E -q -e "/unibuild-packaging/${OSINFO_PACKAGING}\$"
 	then
 	    echo "${LINE}"
 	fi

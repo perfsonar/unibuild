@@ -8,7 +8,7 @@ CURDEB := $(CURDIR)/debian/unibuild
 
 
 PACKAGE_VERSION := $(shell dpkg-parsechangelog \
-	| egrep -e '^Version:' \
+	| grep -E -e '^Version:' \
 	| cut -d ' ' -f 2 \
 	| cut -d '-' -f 1)
 

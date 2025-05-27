@@ -42,7 +42,7 @@ set_osinfo_macro()
 # Set a user-defined macro
 set_user_macro()
 {
-    echo "$1" | egrep -q -e '^[A-Za-z0-9_]+=.*$' \
+    echo "$1" | grep -E -q -e '^[A-Za-z0-9_]+=.*$' \
 	|| die "Invalid macro definition '$1'"
 	
     MACRO=$(echo "$1" | sed -e 's/=.*$//')
@@ -58,7 +58,7 @@ macros()
 {
     set \
     | sort \
-    | egrep -e '^(OSINFO|UNIBUILD_USERDEF)_[^=]{1,}=' \
+    | grep -E -e '^(OSINFO|UNIBUILD_USERDEF)_[^=]{1,}=' \
     | sed -e "s/^OSINFO_//g; s/^UNIBUILD_USERDEF_//g; s/='/=/; s/'\$//" \
     | awk -F= '{ macros[$1] = $2 } END { for (macro in macros) { printf "%s=%s\n", macro, macros[macro] } }' \
     | sort
@@ -119,10 +119,10 @@ bundle_filter()
             cat
             ;;
         none)
-            egrep -v -e '--bundle\s*[^\s]+'
+            grep -E -v -e '--bundle\s*[^\s]+'
             ;;
         *)
-            egrep -e "--bundle\s{1,}$1"
+            grep -E -e "--bundle\s{1,}$1"
             ;;
     esac
 }
@@ -189,10 +189,10 @@ package_switches()
     sed -e 's/\s*#.*$//' "$1" \
 	| unibuild_m4 \
 	| sed -e '/^\s*$/d; s/^\s\+//; s/\s\+$//' \
-	| egrep -e "^*$2\\s" \
+	| grep -E -e "^*$2\\s" \
 	| cut -d ' ' -f 2- \
 	| sed -e 's/--/\n/g' \
-	| fgrep -vx ''
+	| grep -F -vx ''
 }
 
 # Determine whether or not a package has a switch
@@ -202,7 +202,7 @@ package_switches()
 #  3 - Switch
 package_has_switch()
 {
-    if package_switches "$1" "$2" | egrep -q -e "^$3(\\s|\$)"
+    if package_switches "$1" "$2" | grep -E -q -e "^$3(\\s|\$)"
     then
 	true
     else
@@ -223,7 +223,7 @@ validate_startstop()
     if [ -n "$1" ]
     then
 	build_order "$2" < "$3" \
-	    | fgrep -qx "$1" \
+	    | grep -F -qx "$1" \
 	    || die "$1: No such package."
     fi
 }

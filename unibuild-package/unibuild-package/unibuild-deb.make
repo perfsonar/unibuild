@@ -16,7 +16,7 @@ RUN_AS_ROOT += DEBIAN_FRONTEND=noninteractive
 # Basic package information
 
 # We don't care about rpm directories in anything we built
-DEBIAN_DIR := $(shell find . -type d -name "deb" | egrep -ve '^./$(UNIBUILD_DIR)/')
+DEBIAN_DIR := $(shell find . -type d -name "deb" | grep -E -ve '^./$(UNIBUILD_DIR)/')
 ifeq "$(DEBIAN_DIR)" ""
 $(error Unable to find Debian (deb) directory.)
 endif
@@ -107,7 +107,7 @@ ifneq ($(SOURCE_TARBALL),)
 	(cd '$@/$(SOURCE_DIR)' && tar xzf - --strip-components=1) < '$(SOURCE_TARBALL)'
 	mv '$@/$(SOURCE_DIR)' '$@/$(TAR_UNPACK_DIR)'
 	ls -a '$@/$(TAR_UNPACK_DIR)' \
-		| egrep -vxe '[.]{1,2}' \
+		| grep -E -vxe '[.]{1,2}' \
 		| xargs -I % mv '$@/$(TAR_UNPACK_DIR)'/% '$@'
 	rmdir '$@/$(TAR_UNPACK_DIR)'
 else ifeq ($(words $(wildcard $@/$(SOURCE))),1)
@@ -260,11 +260,11 @@ _built:
 install:: _built
 	@printf "\nInstall packages:\n"
 	@find '$(PRODUCTS_DIR)' -name '*.deb' \
-		| fgrep -v -- '-build-deps' \
+		| grep -F -v -- '-build-deps' \
 		| sed -e 's|^.*/||; s/^/  /'
 	@echo
 	@find '$(PRODUCTS_DIR)' -name '*.deb' \
-		| fgrep -v -- '-build-deps' \
+		| grep -F -v -- '-build-deps' \
 		| sed -e 's|^|./|g' \
 		| $(RUN_AS_ROOT) xargs apt-get -y --reinstall install
 

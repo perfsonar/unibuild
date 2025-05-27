@@ -87,4 +87,4 @@ clean:
 
 
 todo:
-	fgrep -r TODO .
+	grep -F -r TODO .

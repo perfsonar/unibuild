@@ -41,7 +41,7 @@ Commands:  (Use 'COMMAND --help' for further help.)"
 
 EOF
     ls "${UNIBUILD_COMMANDS}" \
-        | fgrep -x -v -e xyzzy \
+        | grep -F -x -v -e xyzzy \
 	| pr -4 -T -t \
 	| sed -e 's/^/    /g'
     echo
@@ -50,7 +50,7 @@ EOF
 
 # Handle options
 
-while echo "$1" | egrep -q -e '^--'
+while echo "$1" | grep -E -q -e '^--'
 do
     OPTION=$1
     shift

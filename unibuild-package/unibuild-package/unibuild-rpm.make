@@ -15,7 +15,7 @@ endif
 # RPM Directory
 
 # We don't care about rpm directories in anything we built
-RPM_DIR := $(shell find . -type d -name "rpm" | egrep -ve '^./$(UNIBUILD_DIR)/')
+RPM_DIR := $(shell find . -type d -name "rpm" | grep -E -ve '^./$(UNIBUILD_DIR)/')
 ifeq "$(RPM_DIR)" ""
 $(error Unable to find rpm directory.)
 endif

@@ -30,7 +30,7 @@ STATUS=$?
 
 # Figure out what packages were missing
 
-fgrep 'is needed by' $TMPBASE.first \
+grep -F 'is needed by' $TMPBASE.first \
     | awk '{ print $1 }' \
     > $TMPBASE.missing
 

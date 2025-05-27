@@ -126,7 +126,7 @@ cat ${FILE} \
     | while read PACKAGE
 do
 
-    if ! (find "${PACKAGE}" -type d | egrep -qe "/unibuild-packaging/${OSINFO_PACKAGING}\$")
+    if ! (find "${PACKAGE}" -type d | grep -E -qe "/unibuild-packaging/${OSINFO_PACKAGING}\$")
     then
 	section SKIPPING ${PACKAGE}:  No ${OSINFO_PACKAGING} build
 	continue

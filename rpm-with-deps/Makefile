@@ -7,8 +7,8 @@
 
 SPEC_FILE := ./rpm-with-deps/unibuild-packaging/rpm/rpm-with-deps.spec
 
-NAME=$(shell fgrep Name: $(SPEC_FILE) | awk '{ print $$2 }')
-VERSION=$(shell fgrep Version: $(SPEC_FILE) | awk '{ print $$2 }')
+NAME=$(shell grep -F Name: $(SPEC_FILE) | awk '{ print $$2 }')
+VERSION=$(shell grep -F Version: $(SPEC_FILE) | awk '{ print $$2 }')
 
 RPMDIR=$(shell pwd)/BUILD
 BUILDROOT=$(RPMDIR)/BUILDROOT

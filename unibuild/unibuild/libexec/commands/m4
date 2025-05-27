@@ -17,7 +17,7 @@ EOF
 
 PREFIX=""
 
-while echo "$1" | egrep -q -e '^--'
+while echo "$1" | grep -E -q -e '^--'
 do
     OPTION=$1
     shift
