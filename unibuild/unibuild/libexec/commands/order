@@ -59,6 +59,21 @@ do
     esac
 done
 
+
+dirs_exist()
+{
+    DIR=$(dirname "${FILE}")
+    LIST="${TMPBASE}.exist"
+    while read LINE
+    do
+        CANDIDATE="${DIR}/${LINE}"
+	[ -d "${CANDIDATE}" ] \
+	    || die "${FILE}: ${LINE}: No such directory"
+	echo "${LINE}" >> "${LIST}"
+    done
+    cat "${LIST}"
+}
+
 buildable_filter()
 {
     DIR=$(dirname "${FILE}")
@@ -76,6 +91,6 @@ buildable_filter()
 [ "${FILE}" != '-' -a ! -r "${FILE}" ] \
     && die "No ${FILE} file.  Not doing anything."
 
-cat ${FILE} | build_order "${BUNDLE}" | $BUILDABLE_FILTER
+cat ${FILE} | build_order "${BUNDLE}" | dirs_exist | $BUILDABLE_FILTER
 
 exit 0

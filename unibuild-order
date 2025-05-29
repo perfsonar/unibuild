@@ -1,5 +1,8 @@
 # Package order for Unibuild
 
+# Note that this file is not evaluated for the directories existing
+# because of the eat-your-own-dogfood build here.  Edit carefully.
+
 ifelse(PACKAGING,rpm,rpm-with-deps)
 unibuild-package
 unibuild
