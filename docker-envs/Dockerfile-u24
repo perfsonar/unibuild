@@ -3,7 +3,7 @@ FROM ubuntu:24.04 AS unibuild-image
 # Install pre-requisites for building packages
 RUN DEBIAN_FRONTEND=noninteractive apt-get update -y && \
     DEBIAN_FRONTEND=noninteractive apt-get upgrade -y && \
-    DEBIAN_FRONTEND=noninteractive apt-get install -y sudo apt-utils curl emacs-nox gnupg htop m4 make pylint rsync screen tree vim
+    DEBIAN_FRONTEND=noninteractive apt-get install -y sudo apt-utils curl emacs-nox gnupg htop m4 make pylint rsync screen tree vim libcap2-bin
 
 # Configure APT to regularly update its package lists and mirrors.
 RUN echo 'APT::Periodic::Update-Package-Lists "1";' > /etc/apt/apt.conf.d/10periodic
