@@ -3,9 +3,10 @@ FROM almalinux:10-minimal AS unibuild-image
 #Install pre-requisites
 #Install utils like tree useful for debugging
 #Enable powertools since contains common dependencies
-RUN dnf update -y \
-    && micro dnf install -y dnf rpm rpm-build rpmdevtools m4 make sudo dnf-plugins-core epel-release tree \
-    && dnf config-manager --enable crb
+RUN microdnf install -y dnf rpm rpm-build rpmdevtools m4 make sudo dnf-plugins-core epel-release tree \
+    && dnf config-manager --enable crb \
+    && dnf update -y
+
 
 #Copy unibuild source
 COPY . /usr/share/unibuild/
