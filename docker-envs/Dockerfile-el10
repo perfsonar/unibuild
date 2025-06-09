@@ -1,10 +1,11 @@
-FROM centos:7 AS unibuild-image
+FROM almalinux:10-minimal AS unibuild-image
 
 #Install pre-requisites
 #Install utils like tree useful for debugging
 #Enable powertools since contains common dependencies
-RUN yum update -y && \
-    yum install -y rpm rpm-build rpmdevtools m4 make sudo epel-release tree
+RUN dnf update -y \
+    && dnf install -y rpm rpm-build rpmdevtools m4 make sudo dnf-plugins-core epel-release tree \
+    && dnf config-manager --enable crb
 
 #Copy unibuild source
 COPY . /usr/share/unibuild/

@@ -28,7 +28,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [ 'ol8', 'el9', 'el10b', 'd11', 'd12', 'u20', 'u22', 'u24' ]
+        os: [ 'ol8', 'el9', 'el10', 'd11', 'd12', 'u20', 'u22', 'u24' ]
 
     runs-on: ubuntu-latest
     permissions:
@@ -76,7 +76,7 @@ jobs:
       # https://github.com/docker/build-push-action
       - name: Build and push Docker images
         id: build-and-push
-        if: ${{ matrix.os == 'ol8'|| matrix.os == 'el9' || matrix.os == 'el10b' }}
+        if: ${{ matrix.os == 'ol8'|| matrix.os == 'el9' || matrix.os == 'el10' }}
         uses: docker/build-push-action@v3
         with:
           context: .
