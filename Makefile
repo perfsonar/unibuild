@@ -82,7 +82,8 @@ $(REPO): build
 
 
 clean:
-	$(UNIBUILD) $@
+	find . -name unibuild-work | xargs rm -rf
+	find . -name unibuild-log | xargs rm -rf
 	rm -rf $(TO_CLEAN)
 
 
