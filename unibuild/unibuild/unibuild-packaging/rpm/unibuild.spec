@@ -31,6 +31,7 @@ Requires:	make
 
 
 %define directory %{_libexecdir}/%{name}
+%define include %{_includedir}/%{name}
 %define docdir %{_docdir}/%{name}-%{version}
 
 %description 
@@ -45,6 +46,7 @@ systems.  systems.  See documentation in %{docdir}.
 %install
 make \
     BINDIR=$RPM_BUILD_ROOT/%{_bindir} \
+    INCLUDEDIR=$RPM_BUILD_ROOT/%{include} \
     LIBEXECDIR=$RPM_BUILD_ROOT/%{_libexecdir}/%{name} \
     LIBEXECINSTALLEDDIR=%{_libexecdir}/%{name} \
     DOCDIR=$RPM_BUILD_ROOT/%{docdir} \
@@ -56,3 +58,4 @@ make \
 %{_bindir}/*
 %{directory}
 %{docdir}/*
+%{include}/*

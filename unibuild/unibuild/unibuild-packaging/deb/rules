@@ -16,6 +16,7 @@ override_dh_install:
 	make \
 	    BINDIR=$(CURDEB)/usr/bin \
 	    DOCDIR=$(CURDEB)/usr/share/unibuild \
+	    INCLUDEDIR=$(CURDEB)/usr/include/unibuild \
 	    LIBEXECDIR=$(CURDEB)/usr/libexec/unibuild \
 	    LIBEXECINSTALLEDDIR=/usr/libexec/unibuild \
 	    VERSION=$(PACKAGE_VERSION) \

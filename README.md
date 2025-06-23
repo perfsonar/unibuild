@@ -252,6 +252,50 @@ To disable this behavior for released versions of packages, add the
 `--release` flag to the `unibuild` invocation (e.g., `unibuild --release`).
 
 
+## Top-Level Makefile
+
+A generic `Makefile` suitable for use in most top-level repository
+directories can be included by using this for that directory's
+`Makefile`:
+
+```
+#
+# Top-level Makefile for any repository
+#
+include unibuild/unibuild.make
+```
+
+### Targets
+
+The targets in this `Makefile` include:
+
+ * `build` - Builds the repository.  This is the default target.
+
+ * `uninstall` - Does a `make uninstall` for all package directories.
+
+ * `clean` - Cleans all by-products of `build`.
+
+ * `fresh` - Equivalent to `make uninstall build`.
+
+All have double colons and can be extended by the including file, e.g.:
+
+```
+include unibuild/unibuild.make
+
+clean::
+        rm -rf whatever
+```
+
+### Variables
+
+The following variables can be set to alter the behavior of the build:
+
+ * `RELEASE` - If defined, run Unibuild in release mode.
+ * `START=P` - Start building with package `P`.
+ * `STOP=P` - End building with package `P`.
+
+
+
 
 # Preparing Individual Packages
 

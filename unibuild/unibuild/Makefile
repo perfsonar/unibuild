@@ -28,6 +28,13 @@ ifndef LIBEXECINSTALLEDDIR
 	@echo No LIBEXECINSTALLEDDIR defined.
 	false
 endif
+
+ifndef INCLUDEDIR
+	@echo No INCLUDEDIR defined.
+	false
+endif
+	mkdir -p $(INCLUDEDIR)
+	cp include/* $(INCLUDEDIR)
 ifndef BINDIR
 	@echo No BINDIR defined.
 	false
