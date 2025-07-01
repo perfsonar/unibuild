@@ -30,7 +30,7 @@ foreach my $OSimage (@OSimages) {
 
     while (<DOCKER_OUT>) {
         $newsha=$1 if /$OSimage\@sha256:([a-z0-9]*)/;
-        if (/Platform:.*(linux\/(amd64|arm64|arm\/v7|ppc64le))/) {
+        if (/Platform:.*(linux\/(amd64|arm64\/v8|arm\/v7|ppc64le))/) {
             # Replace for the platforms we support
             my $platform = $1;
             $count++;
