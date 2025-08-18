@@ -2,7 +2,8 @@ FROM debian:13 AS unibuild-image
 
 # Install pre-requisites for building packages
 # D12 on GitHub actions need make to be installed here
-RUN apt-get -y install netselect-apt && \
+RUN apt-get update -y && \
+    apt-get -y install netselect-apt && \
     netselect-apt && \
     apt-get update -y && \
     apt-get upgrade -y && \

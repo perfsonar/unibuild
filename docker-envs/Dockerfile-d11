@@ -1,7 +1,8 @@
 FROM debian:11.10 AS unibuild-image
 
 # Install pre-requisites for building packages
-RUN apt-get -y install netselect-apt && \
+RUN apt-get update -y && \
+    apt-get -y install netselect-apt && \
     netselect-apt && \
     apt-get update -y && \
     apt-get upgrade -y && \
