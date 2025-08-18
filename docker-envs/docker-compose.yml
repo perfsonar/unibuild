@@ -65,6 +65,22 @@ services:
     platform: "linux/ppc64le"
     image: ghcr.io/perfsonar/unibuild/d12:latest@sha256:e3a0b4e50cbb49a05f422839827d815fa8f1b85317cdf9e2864e6b249786c21a
     volumes: *default-volumes
+  d13_amd64:
+    platform: "linux/amd64"
+    image: ghcr.io/perfsonar/unibuild/d13:latest@sha256:0b1d3f57853f16d7251ac328d670c6af209578550c3b4b9ec48c24ffc7c8c740
+    volumes: *default-volumes
+  d13_arm64:
+    platform: "linux/arm64/v8"
+    image: ghcr.io/perfsonar/unibuild/d13:latest@sha256:64f3e174878cc86ab07899a3b01551409604a4d410b78d2b4a662f691faf8503
+    volumes: *default-volumes
+  d13_armv7:
+    platform: "linux/arm/v7"
+    image: ghcr.io/perfsonar/unibuild/d13:latest@sha256:dff9d9cd902df20c4e91a9c357a6d50414f95921f32eea1960f27fdb138dae52
+    volumes: *default-volumes
+  d13_ppc64le:
+    platform: "linux/ppc64le"
+    image: ghcr.io/perfsonar/unibuild/d13:latest@sha256:e3a0b4e50cbb49a05f422839827d815fa8f1b85317cdf9e2864e6b249786c21a
+    volumes: *default-volumes
   u20_amd64:
     platform: "linux/amd64"
     image: ghcr.io/perfsonar/unibuild/u20:latest@sha256:cb587c42b7d12575c8510c1d09beaa0d52c14523316737f7714b90a7870e000e

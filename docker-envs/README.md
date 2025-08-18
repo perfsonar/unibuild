@@ -1,15 +1,21 @@
 # Build developers Docker images of unibuild with different distros and CPU architectures.
+
 ## Requirements
+
 This setup is using `docker compose` version 2.
 
+
 ## Update SHA256 in docker-compose
+
 Using multi-architecture images with docker compose requires referencing them using their full SHA256 hash.  The script `update-sha256-images` takes care of collecting the newest built iamges from this repository registry and updating the local `docker-compose.yml` file. This script will be useful to any repository where the build is done with Unibuild.
 
 TODO: We should find a way to update these hashes automatically whenever new images are built and posted to the registry.
 
 See the [script itself](update-sha256-images) for details.
 
+
 ## Build Developers' Images
+
 ### Usage
 To create and publish your own Unibuild Docker images, simply run:
 `build-dev-images`

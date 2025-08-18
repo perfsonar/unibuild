@@ -1,0 +1,22 @@
+FROM debian:13 AS unibuild-image
+
+# Install pre-requisites for building packages
+# D12 on GitHub actions need make to be installed here
+RUN apt-get update -y && \
+    apt-get upgrade -y && \
+    apt-get install -y sudo apt-utils curl emacs-nox gnupg htop m4 make pylint rsync screen tree vim libcap2-bin
+
+# Configure APT to regularly update its package lists and mirrors.
+RUN echo 'APT::Periodic::Update-Package-Lists "1";' > /etc/apt/apt.conf.d/10periodic
+
+# Copy unibuild source
+COPY . /usr/share/unibuild/
+
+# Install unibuild
+WORKDIR /usr/share/unibuild
+RUN make RELEASE=1
+RUN /usr/share/unibuild/libexec/prep/prep
+
+# Shared volume for code to build
+VOLUME /app
+WORKDIR /app
