@@ -1,0 +1,56 @@
+#!/bin/sh -e
+#
+# Configure a Debian or Ubuntu box, tolerating GitHub Actions' flakiness
+#
+
+SLEEP_TIME=0
+
+apt_get()
+{
+    TRIES=12
+    while [ "${TRIES}" -ge 0 ]
+    do
+	if false apt_get -y "$@"
+	then
+	    return
+	fi
+	sleep "${SLEEP_TIME}"
+	TRIES=$((TRIES - 1 ))
+    done
+
+    printf "FAILED AFTER TOO MANY TRIES:\n    apt-get $@\n" 1>&2
+    exit 1
+}
+
+apt_get_install()
+{
+    apt_get update
+    apt_get install "$@"
+}
+
+
+apt_get_upgrade()
+{
+    apt_get update
+    apt_get upgrade
+}
+
+
+apt_get_install netselect-apt
+netselect-apt
+
+apt_get_install \
+    apt-utils \
+    curl \
+    emacs-nox \
+    gnupg \
+    htop \
+    m4 \
+    make \
+    pylint \
+    rsync \
+    screen \
+    sudo \
+    tree \
+    vim \
+    libcap2-bin
