@@ -1,7 +1,8 @@
 FROM debian:11.10 AS unibuild-image
 
 # Install pre-requisites for building packages
-RUN ./docker-envs/configure-debian
+COPY ./docker-envs/configure-debian /tmp
+RUN /tmp/configure-debian
 
 # Configure APT to regularly update its package lists and mirrors.
 RUN echo 'APT::Periodic::Update-Package-Lists "1";' > /etc/apt/apt.conf.d/10periodic
