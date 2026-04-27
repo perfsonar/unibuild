@@ -440,6 +440,7 @@ Containers containing a minimal OS installation and Unibuild pre-installed are a
 | Debian | Ubuntu | 20 | `ghcr.io/perfsonar/unibuild/u20:latest` |
 | Debian | Ubuntu | 22 | `ghcr.io/perfsonar/unibuild/u22:latest` |
 | Debian | Ubuntu | 24 | `ghcr.io/perfsonar/unibuild/u24:latest` |
+| Debian | Ubuntu | 26 | `ghcr.io/perfsonar/unibuild/u26:latest` |
 
 Debian family containers are provided for different CPU architectures.
 

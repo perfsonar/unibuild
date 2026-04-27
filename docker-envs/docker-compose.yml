@@ -129,3 +129,19 @@ services:
     platform: "linux/ppc64le"
     image: ghcr.io/perfsonar/unibuild/u24:latest@sha256:fd95fd2006814a9ab6fd7d8e677b2c25243068441b9b943bdc470298598f4316
     volumes: *default-volumes
+  u26_amd64:
+    platform: "linux/amd64"
+    image: ghcr.io/perfsonar/unibuild/u26:latest@sha256:98d77e7dec8c6a96065592ac24fea2d4dcf8852910034fbccaa4fcc1dbb5dc10
+    volumes: *default-volumes
+  u26_arm64:
+    platform: "linux/arm64/v8"
+    image: ghcr.io/perfsonar/unibuild/u26:latest@sha256:002b744fbee0c3fdf646364e7e7f05e86b96969ee8b4d8841b571a528596b351
+    volumes: *default-volumes
+  u26_armv7:
+    platform: "linux/arm/v7"
+    image: ghcr.io/perfsonar/unibuild/u26:latest@sha256:98a9787c78bfcc57105cfe74544a9c9e109e2194e83b4e68baca253598ca61b0
+    volumes: *default-volumes
+  u26_ppc64le:
+    platform: "linux/ppc64le"
+    image: ghcr.io/perfsonar/unibuild/u26:latest@sha256:fd95fd2006814a9ab6fd7d8e677b2c25243068441b9b943bdc470298598f4316
+    volumes: *default-volumes
