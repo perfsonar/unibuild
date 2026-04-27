@@ -93,7 +93,7 @@ jobs:
       # https://github.com/docker/build-push-action
       - name: Build and push Docker multiarch images
         id: build-and-push-multiarch
-        if: ${{ startsWith(matrix.os, 'd' || startsWith(matrix.os, 'u') }}
+        if: ${{ startsWith(matrix.os, 'd') || startsWith(matrix.os, 'u') }}
         uses: docker/build-push-action@v7
         with:
           context: .
