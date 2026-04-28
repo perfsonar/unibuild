@@ -74,34 +74,36 @@ jobs:
             type=ref,event=pr
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
 
-      # OL and RHEL
-      # Build and push Docker image with Buildx (don't push on PR)
-      # https://github.com/docker/build-push-action
-      - name: Build and push Docker images
-        id: build-and-push
-        ### if: ${{ startsWith(matrix.os, 'ol') || startsWith(matrix.os, 'el') }}
-        uses: docker/build-push-action@v7
-        with:
-          context: .
-          file: ./docker-envs/Dockerfile-${{ matrix.os }}
-          #platforms: linux/amd64, linux/arm64
-          platforms: linux/ppc64le
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
+      #
+      # Platform Builds
+      #
 
-      # Debian and Ubuntu
-      # Build and push Docker image with Buildx (don't push on PR)
-      # https://github.com/docker/build-push-action
-      - name: Build and push Docker multiarch images
-        id: build-and-push-multiarch
-        ###  if: ${{ startsWith(matrix.os, 'd') || startsWith(matrix.os, 'u') }}
+      # amd64 and arm64 -- OL, EL, Debian and Ubuntu
+
+      - name: Build and push amd64 and arm64
+        id: build-and-push
+        # No condition here; build everything on these platforms.
         if: ${{ false }}
         uses: docker/build-push-action@v7
         with:
           context: .
           file: ./docker-envs/Dockerfile-${{ matrix.os }}
-          platforms: linux/arm/v7, linux/ppc64le
+          platforms: linux/amd64, linux/arm64
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+
+      # armv7 and ppc64le - Debian and Ubuntu
+
+      - name: Build and push armv7 and ppc64le
+        id: build-and-push-multiarch
+        if: ${{ startsWith(matrix.os, 'd') || startsWith(matrix.os, 'u') }}
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./docker-envs/Dockerfile-${{ matrix.os }}
+          platforms: linux/arm/v7
+          ### platforms: linux/arm/v7, linux/ppc64le
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
