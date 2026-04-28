@@ -79,11 +79,12 @@ jobs:
       # https://github.com/docker/build-push-action
       - name: Build and push Docker images
         id: build-and-push
-        if: ${{ startsWith(matrix.os, 'ol') || startsWith(matrix.os, 'el') }}
+        ### if: ${{ startsWith(matrix.os, 'ol') || startsWith(matrix.os, 'el') }}
         uses: docker/build-push-action@v7
         with:
           context: .
           file: ./docker-envs/Dockerfile-${{ matrix.os }}
+          platforms: linux/amd64
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
@@ -98,7 +99,7 @@ jobs:
         with:
           context: .
           file: ./docker-envs/Dockerfile-${{ matrix.os }}
-          platforms: linux/amd64, linux/arm64, linux/arm/v7, linux/ppc64le
+          platforms: linux/arm64, linux/arm/v7, linux/ppc64le
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
