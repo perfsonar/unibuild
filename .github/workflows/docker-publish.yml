@@ -29,7 +29,7 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [ 'ol8', 'el9', 'el10', 'd12', 'd13', 'u20', 'u22', 'u24', 'u26' ]
+        os: [ 'ol8', 'el9', 'el10', 'u20', 'u22', 'u24', 'u26' ]
 
     runs-on: ubuntu-latest
     permissions:
@@ -96,9 +96,7 @@ jobs:
 
       - name: Build and push armv7 and ppc64le
         id: build-and-push-multiarch
-        ### TODO: Re-enable this when we can do them reliably.
-        if: ${{ false }}
-        ### if: ${{ startsWith(matrix.os, 'd') || startsWith(matrix.os, 'u') }}
+        if: ${{ startsWith(matrix.os, 'd') || startsWith(matrix.os, 'u') }}
         uses: docker/build-push-action@v7
         with:
           context: .
