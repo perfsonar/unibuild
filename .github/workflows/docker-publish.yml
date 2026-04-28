@@ -83,7 +83,6 @@ jobs:
       - name: Build and push amd64 and arm64
         id: build-and-push
         # No condition here; build everything on these platforms.
-        if: ${{ false }}
         uses: docker/build-push-action@v7
         with:
           context: .
@@ -97,14 +96,15 @@ jobs:
 
       - name: Build and push armv7 and ppc64le
         id: build-and-push-multiarch
-        if: ${{ startsWith(matrix.os, 'd') || startsWith(matrix.os, 'u') }}
+        ### TODO: Re-enable this when we can do them reliably.
+        if: ${{ false }}
+        ### if: ${{ startsWith(matrix.os, 'd') || startsWith(matrix.os, 'u') }}
         uses: docker/build-push-action@v7
         with:
           context: .
           file: ./docker-envs/Dockerfile-${{ matrix.os }}
-          # These platforms fail: linux/arm/v7
-          platforms: linux/ppc64le
-          ### platforms: linux/arm/v7, linux/ppc64le
+          # These platforms fail: linux/arm/v7, linux/ppc64le
+          platforms: linux/arm/v7, linux/ppc64le
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
