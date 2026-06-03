@@ -103,9 +103,13 @@ jobs:
           file: ./docker-envs/Dockerfile-${{ matrix.os }}
           # Dynamically builds whatever platforms are defined for this specific runner/OS match
           platforms: >-
-            ${{ matrix.platform }}${{ 
-              (matrix.arch == 'amd64' && startsWith(matrix.os, 'u')) 
-              && ',linux/arm/v7,linux/ppc64le' 
+            ${{ matrix.arch == 'arm64' && 'linux/arm64' || '' }}${{
+              (matrix.arch == 'amd64' && (matrix.os == 'u20' || matrix.os == 'u22' || matrix.os == 'u24'))
+              && 'linux/amd64,linux/arm/v7,linux/ppc64le'
+              || ''
+            }}${{
+              (matrix.arch == 'amd64' && (matrix.os == 'ol8' || matrix.os == 'el9' || matrix.os == 'el10' || matrix.os == 'u26'))
+              && 'linux/amd64'
               || '' 
             }}
           push: ${{ github.event_name != 'pull_request' }}
