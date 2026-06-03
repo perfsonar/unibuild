@@ -115,6 +115,7 @@ jobs:
 
       - name: Build and push armv7 and ppc64le
         id: build-and-push-multiarch
+        if: matrix.arch == 'amd64' && (startsWith(matrix.os, 'u') || startsWith(matrix.os, 'd'))
         # if: ${{ startsWith(matrix.os, 'd') || startsWith(matrix.os, 'u') }}
         uses: docker/build-push-action@v7
         with:
