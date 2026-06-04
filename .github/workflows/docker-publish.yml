@@ -33,11 +33,9 @@ jobs:
           # Intel Runner: Compiles native x86 AND safely triggers emulated tasks for supported OS versions
           - arch: amd64
             runner: ubuntu-latest
-            # The trick: Conditionally append arm/v7 and ppc64le ONLY if it's Ubuntu ('u')
-            platforms: >-
-              linux/amd64
+            platforms: linux/amd64
           - arch: arm64
-            runner: ubuntu-24.04-arm64
+            runner: ubuntu-24.04-arm
             platforms: linux/arm64
 
     runs-on: ${{ matrix.runner }}
