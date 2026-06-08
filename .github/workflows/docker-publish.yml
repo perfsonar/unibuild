@@ -1,3 +1,4 @@
+---
 name: Unbuild Docker Environments
 
 # This action builds Docker images of unibuild for
@@ -6,14 +7,17 @@ name: Unbuild Docker Environments
 
 on:
   push:
-    branches: [ '*' ]
+    branches:
+      - 'main'
+      - '*-test'
+      - 'live'
     # Publish semver tags as releases.
-    tags: [ 'v*.*.*' ]
+    tags:
+      -  'v*.*.*'
   pull_request:
-    branches: [ 'main' ]
+    branches:
+      - 'main'
   workflow_dispatch:
-    branches: [ '*' ]
-    tags: [ 'v*.*.*' ]
 
 env:
   REGISTRY: ghcr.io
@@ -24,6 +28,7 @@ env:
 
 jobs:
   build:
+    if: github.ref != 'refs/heads/live'
     strategy:
       fail-fast: true
       matrix:
@@ -63,7 +68,7 @@ jobs:
           buildkitd-config-inline: |
             [worker.containerd]
               prefer32 = true
- 
+
 
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
@@ -89,6 +94,7 @@ jobs:
             type=ref,event=tag
             type=ref,event=pr
             type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+            type=sha,format=long,prefix=
 
       #
       # Platform Builds
@@ -108,9 +114,39 @@ jobs:
             }}${{
               (matrix.arch == 'amd64' && (matrix.os == 'ol8' || matrix.os == 'el9' || matrix.os == 'el10' || matrix.os == 'u26'))
               && 'linux/amd64'
-              || '' 
+              || ''
             }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
+  # -------------------------------------------------------------------
+  # NEW JOB: Fires ONLY on a push to live (like your fast-forward merge)
+  # -------------------------------------------------------------------
+  promote-to-live:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/live'
+    permissions:
+      packages: write
+    strategy:
+      matrix:
+        os: [ 'ol8', 'el9', 'el10', 'u20', 'u22', 'u24', 'u26' ]
+    steps:
+      - name: Log into registry ${{ env.REGISTRY }}
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Reg-client is a super fast utility to tag images directly inside the registry
+      # without downloading/pulling the actual image layers.
+      - name: Set up regctl
+        uses: regclient/actions/regctl-installer@main
+
+      - name: Promote SHA image to Live tag
+        run: |
+          IMAGE_PATH="${{ env.REGISTRY }}/${{ env.IMAGE_BASE }}/${{ matrix.os }}"
+
+          # Copy the existing SHA tag (built previously on main) to the live tag inside GHCR
+          regctl image copy "${IMAGE_PATH}:${{ github.sha }}" "${IMAGE_PATH}:live"

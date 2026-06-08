@@ -455,3 +455,7 @@ unibuild build
 ```
 
 Simply replace the project (pscheduler) with whatever perfSONAR repository you are trying to build and the target OS (el9) with the target OS to build packages.
+
+## Live image tagging
+
+To avoid the necessity of keeping individual Dockerfiles/docker-compose files current with the latest build, the `live` branch can be pointed at any commit with a successful build and it will be copied to `ghcr.io.perfsonar/unibuild/<platform>:live`, which should be used in any repo that needs a current unibuild image.
