@@ -48,7 +48,7 @@ jobs:
 
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v4
-		with:
+        with:
           # Keeps 32-bit QEMU compilation from breaking on the 64-bit host
           buildkitd-config-inline: |
             [worker.containerd]
