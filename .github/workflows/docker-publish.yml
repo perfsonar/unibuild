@@ -45,17 +45,12 @@ jobs:
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
-
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v4
         with:
-          # Explicitly enables the containerd system worker and flips on prefer32
-          buildkitd-config-inline: |
-            [worker.oci]
-              enabled = false
-            [worker.containerd]
-              enabled = true
-              prefer32 = true
+          # This forces BuildKit to drop the 64-bit structural extensions 
+          # when extracting layers, bypassing the 32-bit emulation crash entirely.
+          buildkitd-flags: --oci-worker-snapshotter=overlayfs
 
       # Login against a Docker registry except on PR
       # https://github.com/docker/login-action
