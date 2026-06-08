@@ -28,7 +28,7 @@ env:
 
 jobs:
   build:
-    if: github.ref != 'refs/heads/live'
+    github.ref == 'refs/heads/live'
     strategy:
       fail-fast: true
       matrix:
@@ -125,7 +125,7 @@ jobs:
   # -------------------------------------------------------------------
   promote-to-live:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/live'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/live'
     permissions:
       packages: write
     strategy:
