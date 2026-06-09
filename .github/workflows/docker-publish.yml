@@ -20,7 +20,6 @@ env:
 
 jobs:
   build-amd64:
-    if: github.ref != 'refs/heads/live'
     # See https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs
     strategy:
       fail-fast: true
@@ -96,7 +95,6 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
 
   build-arm:
-    if: github.ref != 'refs/heads/live'
     strategy:
       fail-fast: true
       matrix:
@@ -173,7 +171,7 @@ jobs:
 
   merge-manifests:
     needs: [build-amd64, build-arm]
-    if: github.event_name != 'pull_request' && github.ref != 'refs/heads/live'
+    if: github.event_name != 'pull_request' && github.ref
     strategy:
       matrix:
         os: [ 'ol8', 'el9', 'el10', 'u20', 'u22', 'u24', 'u26' ]
@@ -196,10 +194,10 @@ jobs:
           IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_BASE }}/${{ matrix.os }}"
           TAG="${{ github.ref_name }}"
 
-          SOURCES="${IMAGE}:${TAG}-amd64 ${IMAGE}:${TAG}-arm64"
+          SOURCES="--ref ${IMAGE}:${TAG}-amd64 --ref ${IMAGE}:${TAG}-arm64"
 
           if [[ "${{ matrix.os }}" == "u20" || "${{ matrix.os }}" == "u22" || "${{ matrix.os }}" == "u24" ]]; then
-            SOURCES="$SOURCES ${IMAGE}:${TAG}-armv7"
+            SOURCES="$SOURCES --ref ${IMAGE}:${TAG}-armv7"
           fi
 
           regctl index create "${IMAGE}:${TAG}" $SOURCES
