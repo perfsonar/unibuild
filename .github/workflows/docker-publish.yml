@@ -1,13 +1,8 @@
 name: Unbuild Docker Environments
 
-# This action builds Docker images of unibuild for
-# various OSes and then pushes result to GitHub
-# Container Registry.
-
 on:
   push:
     branches: [ '*' ]
-    # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
   pull_request:
     branches: [ 'main' ]
@@ -15,43 +10,33 @@ on:
 
 env:
   REGISTRY: ghcr.io
-  # github.repository as <account>/<repo>
   IMAGE_BASE: ${{ github.repository }}
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
-
 jobs:
-  build:
-    # Iterates through each OS using a matrix strategy
-    # See https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs
+  build-amd64:
+    if: github.ref != 'refs/heads/live'
     strategy:
-      fail-fast: false  # setting false to work out u26 builds.
+      fail-fast: true
       matrix:
         os: [ 'ol8', 'el9', 'el10', 'u20', 'u22', 'u24', 'u26' ]
-
     runs-on: ubuntu-latest
     permissions:
       contents: read
       packages: write
-      # This is used to complete the identity challenge
-      # with sigstore/fulcio when running outside of PRs.
       id-token: write
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v4
+        with:
+          image: tonistiigi/binfmt:qemu-v8.1.5
+
       - name: Setup Docker buildx
         uses: docker/setup-buildx-action@v4
-        with:
-          # This forces BuildKit to drop the 64-bit structural extensions 
-          # when extracting layers, bypassing the 32-bit emulation crash entirely.
-          buildkitd-flags: --oci-worker-snapshotter=overlayfs
 
-      # Login against a Docker registry except on PR
-      # https://github.com/docker/login-action
       - name: Log into registry ${{ env.REGISTRY }}
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v4
@@ -60,50 +45,141 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      # Extract metadata (tags, labels) for Docker
-      # https://github.com/docker/metadata-action
-      #  uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
       - name: Extract Docker metadata
         id: meta
         uses: docker/metadata-action@v6
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_BASE }}/${{ matrix.os }}
           tags: |
-            type=schedule
-            type=ref,event=branch
-            type=ref,event=tag
-            type=ref,event=pr
-            type=raw,value=latest,enable=${{ github.ref == format('refs/heads/{0}', 'main') }}
+            type=ref,event=branch,suffix=-amd64
+            type=ref,event=tag,suffix=-amd64
+            type=ref,event=pr,suffix=-amd64
 
-      #
-      # Platform Builds
-      #
-
-      # amd64 and arm64 -- OL, EL, Debian and Ubuntu
-
-      - name: Build and push amd64 and arm64
-        id: build-and-push
-        # No condition here; build everything on these platforms.
+      - name: Build and push
         uses: docker/build-push-action@v7
         with:
           context: .
           file: ./docker-envs/Dockerfile-${{ matrix.os }}
-          platforms: linux/amd64, linux/arm64
+          platforms: >-
+            ${{
+              (matrix.os == 'u20' || matrix.os == 'u22' || matrix.os == 'u24')
+              && 'linux/amd64,linux/ppc64le'
+              || 'linux/amd64'
+            }}
           push: ${{ github.event_name != 'pull_request' }}
+          provenance: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
 
-      # armv7 and ppc64le - Debian and Ubuntu
+  build-arm:
+    if: github.ref != 'refs/heads/live'
+    strategy:
+      fail-fast: true
+      matrix:
+        os: [ 'ol8', 'el9', 'el10', 'u20', 'u22', 'u24', 'u26' ]
+    runs-on: ubuntu-24.04-arm
+    permissions:
+      contents: read
+      packages: write
+      id-token: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
 
-      - name: Build and push armv7 and ppc64le
-        id: build-and-push-multiarch
-        if: ${{ startsWith(matrix.os, 'd') || startsWith(matrix.os, 'u') }}
+      - name: Enable armhf support
+        run: |
+          sudo dpkg --add-architecture armhf
+          sudo apt-get update -qq
+          sudo apt-get install -y libc6:armhf
+
+      - name: Setup Docker buildx
+        uses: docker/setup-buildx-action@v4
+
+      - name: Log into registry ${{ env.REGISTRY }}
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract Docker metadata (arm64)
+        id: meta
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_BASE }}/${{ matrix.os }}
+          tags: |
+            type=ref,event=branch,suffix=-arm64
+            type=ref,event=tag,suffix=-arm64
+            type=ref,event=pr,suffix=-arm64
+
+      - name: Extract Docker metadata (armv7)
+        id: meta-armv7
+        if: matrix.os == 'u20' || matrix.os == 'u22' || matrix.os == 'u24'
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_BASE }}/${{ matrix.os }}
+          tags: |
+            type=ref,event=branch,suffix=-armv7
+            type=ref,event=tag,suffix=-armv7
+            type=ref,event=pr,suffix=-armv7
+
+      - name: Build and push arm64
         uses: docker/build-push-action@v7
         with:
           context: .
           file: ./docker-envs/Dockerfile-${{ matrix.os }}
-          # These platforms fail: linux/arm/v7, linux/ppc64le
-          platforms: linux/arm/v7, linux/ppc64le
+          platforms: linux/arm64
           push: ${{ github.event_name != 'pull_request' }}
+          provenance: false
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+
+      - name: Build and push armv7
+        if: matrix.os == 'u20' || matrix.os == 'u22' || matrix.os == 'u24'
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./docker-envs/Dockerfile-${{ matrix.os }}
+          platforms: linux/arm/v7
+          push: ${{ github.event_name != 'pull_request' }}
+          provenance: false
+          tags: ${{ steps.meta-armv7.outputs.tags }}
+          labels: ${{ steps.meta-armv7.outputs.labels }}
+
+  merge-manifests:
+    needs: [build-amd64, build-arm]
+    if: github.event_name != 'pull_request' && github.ref != 'refs/heads/live'
+    strategy:
+      matrix:
+        os: [ 'ol8', 'el9', 'el10', 'u20', 'u22', 'u24', 'u26' ]
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+    steps:
+      - name: Log into registry ${{ env.REGISTRY }}
+        uses: docker/login-action@v4
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up regctl
+        uses: regclient/actions/regctl-installer@main
+
+      - name: Merge manifests
+        run: |
+          IMAGE="${{ env.REGISTRY }}/${{ env.IMAGE_BASE }}/${{ matrix.os }}"
+          TAG="${{ github.ref_name }}"
+
+          SOURCES="${IMAGE}:${TAG}-amd64 ${IMAGE}:${TAG}-arm64"
+
+          if [[ "${{ matrix.os }}" == "u20" || "${{ matrix.os }}" == "u22" || "${{ matrix.os }}" == "u24" ]]; then
+            SOURCES="$SOURCES ${IMAGE}:${TAG}-armv7"
+          fi
+
+          regctl index create "${IMAGE}:${TAG}" $SOURCES
+
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            regctl image copy "${IMAGE}:${TAG}" "${IMAGE}:latest"
+          fi
