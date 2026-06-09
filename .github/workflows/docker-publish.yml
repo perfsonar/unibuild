@@ -9,7 +9,7 @@ on:
     # Publish semver tags as releases.
     tags: [ 'v*.*.*' ]
   pull_request:
-    branches: [ 'main' ]
+    branches: [ 'main', '*-stage']
   workflow_dispatch:
 
 env:
@@ -169,6 +169,7 @@ jobs:
           tags: ${{ steps.meta-armv7.outputs.tags }}
           labels: ${{ steps.meta-armv7.outputs.labels }}
 
+  # This step combines all the build steps into a single repo for upstream workers.
   merge-manifests:
     needs: [build-amd64, build-arm]
     if: github.event_name != 'pull_request' && github.ref
