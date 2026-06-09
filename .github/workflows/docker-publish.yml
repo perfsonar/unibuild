@@ -12,8 +12,6 @@ on:
   pull_request:
     branches: [ 'main' ]
   workflow_dispatch:
-    branches: [ '*' ]
-    tags: [ 'v*.*.*' ]
 
 env:
   REGISTRY: ghcr.io
@@ -27,7 +25,7 @@ jobs:
     # Iterates through each OS using a matrix strategy
     # See https://docs.github.com/en/actions/using-jobs/using-a-matrix-for-your-jobs
     strategy:
-      fail-fast: true
+      fail-fast: false  # setting false to work out u26 builds.
       matrix:
         os: [ 'ol8', 'el9', 'el10', 'u20', 'u22', 'u24', 'u26' ]
 
