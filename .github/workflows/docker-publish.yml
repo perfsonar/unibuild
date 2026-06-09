@@ -76,7 +76,7 @@ jobs:
       # amd64 and arm64 -- OL, EL, Debian and Ubuntu
       
 
-      - name: Build and push amd64 and arm64
+      - name: Build and push amd64 and ppc64le
         id: build-and-push
         # No condition here; build everything on these platforms.
         uses: docker/build-push-action@v7
@@ -198,7 +198,7 @@ jobs:
           SOURCES="--ref ${IMAGE}:${TAG}-amd64 --ref ${IMAGE}:${TAG}-arm64"
 
           if [[ "${{ matrix.os }}" == "u20" || "${{ matrix.os }}" == "u22" || "${{ matrix.os }}" == "u24" ]]; then
-            SOURCES="$SOURCES --ref ${IMAGE}:${TAG}-armv7"
+            SOURCES="$SOURCES --ref ${IMAGE}:${TAG}-armv7 --ref ${IMAGE}:${TAG}-ppc64le"
           fi
 
           regctl index create "${IMAGE}:${TAG}" $SOURCES
