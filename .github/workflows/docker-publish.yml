@@ -67,28 +67,45 @@ jobs:
             type=ref,event=tag,suffix=-amd64
             type=ref,event=pr,suffix=-amd64
 
+      - name: Extract Docker metadata (ppc64le)
+        id: meta-ppc64le
+        if: matrix.os == 'u20' || matrix.os == 'u22' || matrix.os == 'u24'
+        uses: docker/metadata-action@v6
+        with:
+          images: ${{ env.REGISTRY }}/${{ env.IMAGE_BASE }}/${{ matrix.os }}
+          tags: |
+            type=ref,event=branch,suffix=-ppc64le
+            type=ref,event=tag,suffix=-ppc64le
+            type=ref,event=pr,suffix=-ppc64le
+
+      - name: Build and push ppc64le
+        if: matrix.os == 'u20' || matrix.os == 'u22' || matrix.os == 'u24'
+        uses: docker/build-push-action@v7
+        with:
+          context: .
+          file: ./docker-envs/Dockerfile-${{ matrix.os }}
+          platforms: linux/ppc64le
+          push: ${{ github.event_name != 'pull_request' }}
+          provenance: false
+          tags: ${{ steps.meta-ppc64le.outputs.tags }}
+          labels: ${{ steps.meta-ppc64le.outputs.labels }}
 
 
       #
       # Platform Builds
       #
 
-      # amd64 and arm64 -- OL, EL, Debian and Ubuntu
+      # amd64 -- OL, EL, Debian and Ubuntu
       
 
-      - name: Build and push amd64 and ppc64le
+      - name: Build and push amd64
         id: build-and-push
         # No condition here; build everything on these platforms.
         uses: docker/build-push-action@v7
         with:
           context: .
           file: ./docker-envs/Dockerfile-${{ matrix.os }}
-          platforms: >-
-            ${{
-              (matrix.os == 'u20' || matrix.os == 'u22' || matrix.os == 'u24')
-              && 'linux/amd64,linux/ppc64le'
-              || 'linux/amd64'
-            }}
+          platforms: 'linux/amd64'
           push: ${{ github.event_name != 'pull_request' }}
           provenance: false
           tags: ${{ steps.meta.outputs.tags }}
