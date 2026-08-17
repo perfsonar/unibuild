@@ -60,9 +60,16 @@ systems.  See documentation in %{docdir}.
 
 %prep
 %setup -q
+%if 0%{?el8}%{?ol8}
 %patch0 -p0
 %patch1 -p0
 %patch2 -p0
+%else
+%patch 0 -p0
+%patch 1 -p0
+%patch 2 -p0
+%endif
+
 
 %install
 %{__mkdir_p} $RPM_BUILD_ROOT/%{directory}
